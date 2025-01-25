@@ -159,6 +159,7 @@ return [
         /*
          * Package Service Providers...
          */
+        App\Providers\MongoDBServiceProvider::class,
 
         /*
          * Application Service Providers...
