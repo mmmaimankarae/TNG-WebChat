@@ -1,18 +1,19 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthenController;
+use App\Http\Controllers\controlForm\controlFormAuthen;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
+/* authentication */
+Route::get('/', [controlFormAuthen::class, 'signin']);
 
-Route::get('/', function () {
-    return view('signin');
+Route::prefix('authen')->group(function () {
+    Route::post('/', [AuthenController::class, 'authValidate']);
+    Route::post('/reset-forgot', [AuthenController::class, 'forgotPopupValidate']);
+    Route::post('/reset', [AuthenController::class, 'resetPopupValidate']);
+});
+
+
+Route::get('/welcome', function () {
+    return view('welcome');
 });
