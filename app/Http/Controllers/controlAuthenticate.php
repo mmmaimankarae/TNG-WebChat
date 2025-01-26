@@ -8,10 +8,11 @@ use Firebase\JWT\JWT;
 
 use Illuminate\Http\Request;
 
-use App\Models\Auth;
+use App\Models\authenticate as Auth;
 
-class AuthenController extends Controller
+class controlAuthenticate extends Controller
 {
+    /* ตรวจสอบการกรอกข้อมูล เพื่อเข้าสู่ระบบ */
     public function authValidate(Request $req){
         $req->validate(
             [ /* ตรวจสอบ req */
@@ -26,6 +27,7 @@ class AuthenController extends Controller
         return $this->authenCheck($req);
     }
 
+    /* ตรวจสอบการกรอกข้อมูล username สำหรับการลืมรหัสผ่าน */
     public function forgotPopupValidate(Request $req){
         $req->validate(
             [ /* ตรวจสอบ req */
@@ -38,6 +40,7 @@ class AuthenController extends Controller
         return $this->authenCheck($req);
     }
 
+    /* ตรวจสอบการกรอกข้อมูลเปลี่ยนรหัสผ่าน */
     public function resetPopupValidate(Request $req){
         $req->validate(
             [ /* ตรวจสอบ req */

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 
-class Auth extends Model
+class Authenticate extends Model
 {
     public static function resetPassword($accName, $password = null)
     {

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\controlForm;
+namespace App\Http\Controllers\controlDupView;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class controlFormAuthen extends Controller
+class dupFormAuthen extends Controller
 {
     public function signin() {
         $accName = '';

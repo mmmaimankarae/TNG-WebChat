@@ -1,16 +1,16 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthenController;
-use App\Http\Controllers\controlForm\controlFormAuthen;
+use App\Http\Controllers\controlAuthenticate as authen;
+use App\Http\Controllers\controlDupView\dupFormAuthen;
 
 /* authentication */
-Route::get('/', [controlFormAuthen::class, 'signin']);
+Route::get('/', [dupFormAuthen::class, 'signin']);
 
 Route::prefix('authen')->group(function () {
-    Route::post('/', [AuthenController::class, 'authValidate']);
-    Route::post('/reset-forgot', [AuthenController::class, 'forgotPopupValidate']);
-    Route::post('/reset', [AuthenController::class, 'resetPopupValidate']);
+    Route::post('/', [authen::class, 'authValidate']);
+    Route::post('/reset-forgot', [authen::class, 'forgotPopupValidate']);
+    Route::post('/reset', [authen::class, 'resetPopupValidate']);
 });
 
 
