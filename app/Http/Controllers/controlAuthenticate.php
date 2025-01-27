@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
+
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Firebase\JWT\JWT;
-
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cookie;
 
 use App\Models\authenticate as Auth;
 
@@ -55,19 +56,18 @@ class controlAuthenticate extends Controller
         return $this->authenCheck($req);
     }
 
+    /* ตรวจสอบความถูกต้องของการเข้าสู่ระบบ */
     public function authenCheck(Request $req){
         $accName = $req->input('accName') ?? $req->input('forgotAcc');
         $password = $req->input('password') ?? null;
         $oldPass = $req->input('oldPass') ?? null;
         $action = $req->input('actionFor');
 
-        $account = DB::table('ACCOUNT')
-                    ->where('AccName', $accName)
-                    ->first();
+        $account = $this->haveAccount($accName);
 
         /* ถ้ามี username ที่ระบุ */
         if($account) {
-            /* เช็ค username เพื่อจะ reset รหัส "กรณีลืม Password" */
+            /* ตั้ง Password ใหม่ "กรณีลืม Password" */
             if ($password == null) {
                 $reset = Auth::resetPassword($accName);
                 if ($reset) {
@@ -77,22 +77,24 @@ class controlAuthenticate extends Controller
                     return redirect()->back()->withErrors(['forgotAcc' => 'เกิดข้อผิดพลาดในการตั้งรหัสผ่านใหม่']);
                 }
             }
-            /* เช็ครหัสผ่าน */
+            /* เช็ค Password เพื่อเข้าสู่ระบบ */
             else if (Hash::check($password, $account->AccPass)) {
                 $branchCode = $this->getBranchCode($accName);
                 $payload = [
-                    'accCode' => $account->AccCode,
-                    'empCode' => $account->AccEmpCode,
-                    'roleCode' => $account->AccRoleCode,
-                    'branchCode' => $branchCode,
+                    'accCode' => trim($account->AccCode),
+                    'empCode' => trim($account->AccEmpCode),
+                    'roleCode' => trim($account->AccRoleCode),
+                    'branchCode' => trim($branchCode->EmpBrchCode),
                     'iat' => time(),
                     'exp' => time() + (8 * 3600)
                 ];
+                /* encode Info ด้วย JWT */
                 $jwt = JWT::encode($payload, env('JWT_SECRET'), 'HS256');
-                setcookie('access-jwt', $jwt, time() + (8 * 3600), '/', '', false, true);
-                return redirect('/welcome');
+
+                Cookie::queue(Cookie::make('access-jwt', $jwt, (8 * 60), '/', null, false, true));
+                return redirect()->route('sale-admin.new-tasks');
             }
-            /* เช็ครหัสผ่านเก่า เพื่อเปลี่ยน Password ไหม */
+            /* เช็ค Password เก่า เพื่อเปลี่ยน Password ใหม่ */
             else if ($oldPass != null) {
                 if (Hash::check($oldPass, $account->AccPass)) {
                     $reset = Auth::resetPassword($accName, $password);
@@ -113,14 +115,21 @@ class controlAuthenticate extends Controller
             return redirect()->back()->withErrors(['forgotAcc' => 'ชื่อผู้ใช้งานไม่ถูกต้อง']);
         }
         /* ถ้าไม่มี username ที่ระบุ */
-        return redirect()->back()->withErrors(['errorInput' => 'ชื่อผู้ใช้งานไม่ถูกต้อง']);
-    }
-    
-    public function authenSignout(){
-        setcookie('access-jwt', '', time() - 3600, '/', '', false, true);
-        return redirect('/');
+        else {
+            return redirect()->back()->withErrors(['accName' => 'ชื่อผู้ใช้งานไม่ถูกต้อง']);
+        }
     }
 
+    /* ตรวจสอบว่ามี Account หรือไม่ */
+    private function haveAccount($accName)
+    {
+        $account = DB::table('ACCOUNT')
+                    ->where('AccName', $accName)
+                    ->first();
+        return $account;
+    }
+
+    /* ดึง BranchCode จากฐานข้อมูล */
     private function getBranchCode($accName)
     {
         $branchCode = DB::table('EMPLOYEE')
@@ -129,5 +138,11 @@ class controlAuthenticate extends Controller
                     ->select('EMPLOYEE.EmpBrchCode')
                     ->first();
         return $branchCode;
+    }
+
+    /* ออกจากระบบ */
+    public function authenSignout(){
+        Cookie::queue(Cookie::forget('access-jwt'));
+        return redirect('/');
     }
 }

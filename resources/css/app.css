@@ -1,2 +1,29 @@
 @import "tailwindcss";
 @source "../views";
+
+body {
+    font-family: 'Kodchasan', sans-serif;
+}
+
+.content.shifted {
+    padding-left: 12rem;
+    transition: margin-left 0.3s;
+}
+
+.nav-style {
+    @apply px-3 py-2 text-black tracking-wider rounded-2xl;
+}
+
+.nav-style:hover,
+[aria-current="page"] {
+    @apply bg-[#FF0000] text-white font-bold tracking-wider;
+}
+
+.notiHead-style {
+    @apply inline-flex items-center justify-center w-6 h-6 ml-2 text-base font-bold text-white bg-[#FF4343] rounded-full;
+}
+
+.nav-style:hover .notiHead-style,
+[noti="hover"] {
+    @apply text-[#FF0000] bg-white;
+}

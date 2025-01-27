@@ -5,19 +5,21 @@ document.addEventListener("DOMContentLoaded", () => {
   const cancelForgotPopup = document.getElementById('cancelForgotPopup');
   const forgotPopup = document.getElementById('forgotPopup');
 
-  showForgotPopup.addEventListener('click', () => {
-    forgotPopup.classList.remove('hidden');
-  });
+  if (showForgotPopup) {
+    showForgotPopup.addEventListener('click', () => {
+      forgotPopup.classList.remove('hidden');
+    });
 
-  closeForgotPopup.addEventListener('click', () => {
-    forgotPopup.classList.add('hidden');
-    clearErrors();
-  });
+    closeForgotPopup.addEventListener('click', () => {
+      forgotPopup.classList.add('hidden');
+      clearErrors();
+    });
 
-  cancelForgotPopup.addEventListener('click', () => {
-    forgotPopup.classList.add('hidden');
-    clearErrors();
-  });
+    cancelForgotPopup.addEventListener('click', () => {
+      forgotPopup.classList.add('hidden');
+      clearErrors();
+    });
+  }
 
   /* Show and Hide Reset Password Popup */
   const showResetPopup = document.getElementById('showResetPopup');
@@ -25,19 +27,21 @@ document.addEventListener("DOMContentLoaded", () => {
   const cancelResetPopup = document.getElementById('cancelResetPopup');
   const resetPopup = document.getElementById('resetPopup');
 
-  showResetPopup.addEventListener('click', () => {
-    resetPopup.classList.remove('hidden');
-  });
+  if (showResetPopup) {
+    showResetPopup.addEventListener('click', () => {
+      resetPopup.classList.remove('hidden');
+    });
 
-  closeResetPopup.addEventListener('click', () => {
-    resetPopup.classList.add('hidden');
-    clearErrors();
-  });
+    closeResetPopup.addEventListener('click', () => {
+      resetPopup.classList.add('hidden');
+      clearErrors();
+    });
 
-  cancelResetPopup.addEventListener('click', () => {
-    resetPopup.classList.add('hidden');
-    clearErrors();
-  });
+    cancelResetPopup.addEventListener('click', () => {
+      resetPopup.classList.add('hidden');
+      clearErrors();
+    });
+  }
 
   /* Clear Error on Popup when it closed */
   function clearErrors() {

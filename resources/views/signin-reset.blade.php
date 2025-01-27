@@ -4,19 +4,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   @vite('resources/css/app.css')
-  <script src="{{ asset('/js/auth/showHideIcon.js') }}"></script>
-  <script src="{{ asset('/js/auth/popup.js') }}"></script>
-  <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Kodchasan:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,200;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
+  
   <title>{{ $title }}</title>
+  <script src="{{ asset('/js/auth/showHideIcon.js') }}"></script>
+  <script src="{{ asset('/js/auth/popup.js') }}"></script>
 </head>
 <body class="flex flex-col items-center justify-center h-screen font-[Kodchasan] ">
   @if($isReset)
   {{-- breadcrumb navigation --}}
-  <nav class="flex pt-10 ml-10" aria-label="Breadcrumb">
+  <nav class="absolute top-0 left-0 pt-10 ml-10" aria-label="Breadcrumb">
     <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
       <li class="inline-flex items-center">
         <a onclick="history.back()" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
@@ -26,12 +26,12 @@
           กลับไปหน้าที่แล้ว
         </a>
       </li>
-      <li aria-current="page">
+      <li>
         <div class="flex items-center">
           <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
           </svg>
-          <span class="ms-2 text-red-600">เปลี่ยนรหัสผ่าน</span>
+          <span class="ml-2 text-red-600">เปลี่ยนรหัสผ่าน</span>
         </div>
       </li>
     </ol>
@@ -40,7 +40,7 @@
 
   {{-- logo --}}
   <div class="sm:w-full sm:max-w-md sm:mx-auto">
-    <img class="w-auto h-auto mx-auto " src="{{'images/logo2.png'}}" alt="TANGNAM_LOGO">
+    <img class="w-auto h-auto mx-auto " src="{{ asset('images/logo2.png') }}" alt="TANGNAM_LOGO">
   </div>
   {{-- form --}}
   <div class="sm:w-full sm:max-w-lg sm:mx-auto mt-10">
@@ -54,9 +54,9 @@
         </label>
         <div class="mt-2">
           <input type="text" name="accName" id="accName" autocomplete="accName" 
-          class="block w-full px-3 py-2 bg-white rounded-md outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-[#FF0000]
+          class="block w-full px-3 py-2 bg-white rounded-md outline-1 -outline-offset-1 outline-gray-300 @if(!$accName) focus:outline-2 focus:-outline-offset-2 focus:outline-[#FF0000] @endif
           placeholder:text-sm placeholder:text-gray-400" placeholder=" โปรดกรอกชื่อผู้ใช้"
-          value="{{ old('accName', $accName) }}" @if($accName) readonly @endif>
+          value="{{ old('accName', $accName->AccName ?? '') }}" @if($accName) readonly @endif>
         </div>
       </div>
 
@@ -91,7 +91,7 @@
 
       @if ($isReset)
         <div class="flex justify-center">
-          <button type="button" id="showResetPassPopup" class="px-10 py-1.5 text-base font-semibold text-white bg-[#FF0000] shadow-sm rounded-full hover:text-black hover:bg-slate-300">เข้าสู่ระบบ</button>
+          <button type="button" id="showResetPassPopup" class="px-10 py-1.5 text-base font-semibold text-white bg-[#FF0000] shadow-sm rounded-full hover:text-black hover:bg-slate-300">เปลี่ยนรหัสผ่าน</button>
         </div>          
       @else
         <div class="flex justify-center">

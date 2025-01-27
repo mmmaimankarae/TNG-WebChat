@@ -14,7 +14,7 @@
         @error('oldPass')
           <p id="oldPassError"class="mb-2 text-sm text-red-500"> {{$message}} </p>
         @enderror
-        <from method="POST" action="/authen/reset">
+        <from method="POST" action="/authen/reset-password">
           <input type="password" name="oldPass" id="oldPass"
             class="block w-full px-3 py-2 mb-3 bg-white rounded-md outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-[#FF0000]
             placeholder:text-sm placeholder:text-gray-400" placeholder=" โปรดกรอกรหัสผ่านเดิม">
