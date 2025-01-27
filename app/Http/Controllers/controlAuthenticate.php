@@ -114,6 +114,9 @@ class controlAuthenticate extends Controller
         else if ($action == 'forgotPass') {
             return redirect()->back()->withErrors(['forgotAcc' => 'ชื่อผู้ใช้งานไม่ถูกต้อง']);
         }
+        else if ($password != null) {
+            return redirect()->back()->withErrors(['errorInput' => 'ชื่อผู้ใช้งานหรือรหัสผ่านไม่ถูกต้อง']);
+        }
         /* ถ้าไม่มี username ที่ระบุ */
         else {
             return redirect()->back()->withErrors(['accName' => 'ชื่อผู้ใช้งานไม่ถูกต้อง']);

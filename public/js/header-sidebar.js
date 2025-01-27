@@ -71,10 +71,12 @@ function toggleSidebar() {
 function sideAction() {
   const sidebar = document.getElementById('sidebar');
   const content = document.getElementById('content');
-  if (sidebar.classList.contains('hidden')) {
-    content.classList.remove('shifted');
-  } else {
-    content.classList.add('shifted');
+  if (sidebar) {
+    if (sidebar.classList.contains('hidden')) {
+      content.classList.remove('shifted');
+    } else {
+      content.classList.add('shifted');
+    }
   }
 }
 
