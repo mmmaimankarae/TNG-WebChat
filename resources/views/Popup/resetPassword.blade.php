@@ -14,13 +14,16 @@
         @error('oldPass')
           <p id="oldPassError"class="mb-2 text-sm text-red-500"> {{$message}} </p>
         @enderror
-        <from method="POST" action="/authen/reset-password">
+        <form id="reset" method="POST" action="/authen/reset-password">
+          @csrf
           <input type="password" name="oldPass" id="oldPass"
             class="block w-full px-3 py-2 mb-3 bg-white rounded-md outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-[#FF0000]
             placeholder:text-sm placeholder:text-gray-400" placeholder=" โปรดกรอกรหัสผ่านเดิม">
+          <input type="hidden" name="accName" value="{{ old('accName', $accName->AccName ?? '') }}">
+          <input type="hidden" name="newPass" id="newPass" value="{{ old('newPass') }}">
           <button type="submit" class="px-10 py-1.5 text-white bg-[#FF0000] shadow-sm rounded-lg hover:text-black hover:bg-slate-300">ตกลง</button>
           <button id="cancelResetPopup" type="button" class="px-10 py-1.5 bg-white shadow-sm rounded-lg hover:bg-slate-200">ยกเลิก</button>
-        </from>
+        </form>
     </div>
   </div>
 </div>

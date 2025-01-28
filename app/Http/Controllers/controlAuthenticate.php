@@ -46,11 +46,10 @@ class controlAuthenticate extends Controller
         $req->validate(
             [ /* ตรวจสอบ req */
             'oldPass' => 'required',
-            'password' => 'required'
+            'newPass' => 'required'
             ],
             [ /* ข้อความแจ้งเตือน */
             'oldPass.required' => '* กรุณากรอกรหัสผ่านเดิม',
-            'password.required' => '* กรุณากรอกรหัสผ่านใหม่'
             ]
         );
         return $this->authenCheck($req);
@@ -59,7 +58,7 @@ class controlAuthenticate extends Controller
     /* ตรวจสอบความถูกต้องของการเข้าสู่ระบบ */
     public function authenCheck(Request $req){
         $accName = $req->input('accName') ?? $req->input('forgotAcc');
-        $password = $req->input('password') ?? null;
+        $password = $req->input('password') ?? $req->input('newPass') ?? null;
         $oldPass = $req->input('oldPass') ?? null;
         $action = $req->input('actionFor');
 
@@ -98,12 +97,10 @@ class controlAuthenticate extends Controller
             else if ($oldPass != null) {
                 if (Hash::check($oldPass, $account->AccPass)) {
                     $reset = Auth::resetPassword($accName, $password);
-                    if ($reset) {
-                        $this->authenSignout();
-                    }
+                    return $this->authenSignout();
                 }
                 else {
-                    return redirect()->back()->withErrors(['oldPass' => 'เกิดข้อผิดพลาดในการตั้งรหัสผ่านใหม่']);
+                    return redirect()->back()->withErrors(['errorInput' => 'รหัสผ่านเก่าไม่ถูกต้อง']);
                 }
             }
             else {

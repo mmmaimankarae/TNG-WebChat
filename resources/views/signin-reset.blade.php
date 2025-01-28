@@ -62,6 +62,7 @@
 
       <div>
         <label for="password" class="block font-medium">รหัสผ่าน
+          <span id="passError" class="hidden ml-2 text-xs text-red-500"> * กรุณากรอกรหัสผ่านใหม่ </span>
           @error('password')
             <span class="ml-2 text-xs text-red-500"> {{$message}} </span>
           @enderror

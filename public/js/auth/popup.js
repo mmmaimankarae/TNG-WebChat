@@ -22,14 +22,26 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* Show and Hide Reset Password Popup */
-  const showResetPopup = document.getElementById('showResetPopup');
+  const showResetPassPopup = document.getElementById('showResetPassPopup');
   const closeResetPopup = document.getElementById('closeResetPopup');
   const cancelResetPopup = document.getElementById('cancelResetPopup');
   const resetPopup = document.getElementById('resetPopup');
-
-  if (showResetPopup) {
-    showResetPopup.addEventListener('click', () => {
-      resetPopup.classList.remove('hidden');
+  const passError = document.getElementById('passError');
+  const oldPassError = document.getElementById('oldPassError');
+  
+  if (showResetPassPopup) {
+    showResetPassPopup.addEventListener('click', () => {
+      const pass = document.getElementById('password');
+      if (pass.value.trim() === '') {
+        passError.classList.remove('hidden');
+      } else {
+        resetPopup.classList.remove('hidden');
+        if (passError.classList.contains('hidden')) {
+          passError.classList.add('hidden');
+        }
+        const newPass = document.getElementById('newPass');
+        newPass.value = pass.value.trim();
+      }
     });
 
     closeResetPopup.addEventListener('click', () => {
@@ -41,6 +53,12 @@ document.addEventListener("DOMContentLoaded", () => {
       resetPopup.classList.add('hidden');
       clearErrors();
     });
+
+    if (oldPassError) {
+      resetPopup.classList.remove('hidden');
+    } else {
+      resetPopup.classList.add('hidden');
+    }
   }
 
   /* Clear Error on Popup when it closed */
