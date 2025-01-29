@@ -3,18 +3,19 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\controlAuthenticate as authen;
 use App\Http\Controllers\controlDupView\dupFormAuthen;
+use App\Http\Controllers\controlDupView\dupListOfTasks;
+use App\Http\Controllers\controlDupView\dupDetailMsg;
 
 Route::middleware(['access.jwt', 'authorize.pages'])->group(function () {
     Route::prefix('internal-sale')->group(function () {
-        Route::get('/new-tasks', function () {
-            return view('listOfTasks');
-        })->name('internal-sale.new-tasks');
+        Route::get('/new-tasks', [dupListOfTasks::class, 'newTasks'])
+        ->name('internal-sale.new-tasks');
 
         Route::prefix('current-tasks')->group(function () {
-            Route::get('/', [dupFormAuthen::class, 'editTasks'])
+            Route::get('/', [dupListOfTasks::class, 'currentTasks'])
             ->name('internal-sale.current-tasks');
 
-            Route::post('/detail-message', [dupFormAuthen::class, 'editTasks'])
+            Route::post('/detail-message', [dupListOfTasks::class, 'detail'])
             ->name('internal-sale.detail-message');
 
             Route::post('/assign-task', [dupFormAuthen::class, 'editTasks'])

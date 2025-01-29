@@ -14,7 +14,6 @@ class authenCookieJWT
         if ($jwt = Cookie::get('access-jwt')) {
             try {
                 $decoded = JWT::decode($jwt, new Key(env('JWT_SECRET'), 'HS256'));
-                // dd($decoded);
                 $request->attributes->add(['decoded' => $decoded]);
             } catch (\Exception $e) {
                 return redirect('/');

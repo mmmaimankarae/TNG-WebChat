@@ -58,7 +58,8 @@ class controlAuthenticate extends Controller
     /* ตรวจสอบความถูกต้องของการเข้าสู่ระบบ */
     public function authenCheck(Request $req){
         $accName = $req->input('accName') ?? $req->input('forgotAcc');
-        $password = $req->input('password') ?? $req->input('newPass') ?? null;
+        $password = $req->input('password') ?? null;
+        $newPass = $req->input('newPass') ?? null;
         $oldPass = $req->input('oldPass') ?? null;
         $action = $req->input('actionFor');
 
@@ -67,7 +68,7 @@ class controlAuthenticate extends Controller
         /* ถ้ามี username ที่ระบุ */
         if($account) {
             /* ตั้ง Password ใหม่ "กรณีลืม Password" */
-            if ($password == null) {
+            if ($password == null && $newPass == null) {
                 $reset = Auth::resetPassword($accName);
                 if ($reset) {
                     return redirect()->back()->withErrors(['successReset' => 'ระบบทำการตั้งรหัสผ่านใหม่ให้คุณแล้ว กดปุ่ม "ปิด" หรือ "ยกเลิก" และใส่รหัสที่ตกลงกันไว้']);
@@ -96,7 +97,7 @@ class controlAuthenticate extends Controller
             /* เช็ค Password เก่า เพื่อเปลี่ยน Password ใหม่ */
             else if ($oldPass != null) {
                 if (Hash::check($oldPass, $account->AccPass)) {
-                    $reset = Auth::resetPassword($accName, $password);
+                    $reset = Auth::resetPassword($accName, $newPass);
                     return $this->authenSignout();
                 }
                 else {

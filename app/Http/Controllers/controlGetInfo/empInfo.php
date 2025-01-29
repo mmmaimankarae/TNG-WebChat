@@ -13,8 +13,13 @@ class empInfo extends Controller
         $this->decoded = request()->attributes->get('decoded');
     }
 
-    public function getAccName() {
+    public function getAccCode() {
         $accCode = $this->decoded->accCode;
+        return $accCode;
+    }
+
+    public function getAccName() {
+        $accCode = $this->getAccCode();
         $accName = $this->getNameFromDB($accCode);
         return $accName;
     }
@@ -25,5 +30,10 @@ class empInfo extends Controller
             ->select('AccName')
             ->first();
         return $accName;
+    }
+
+    public function getBranchCode() {
+        $branchCode = $this->decoded->branchCode;
+        return $branchCode;
     }
 }
