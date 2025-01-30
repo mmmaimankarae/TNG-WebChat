@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
       let taskCode = document.getElementById("taskCode").value;
       let cusCode = document.getElementById("cusCode").value;
       let cusName = document.getElementById("cusName").value;
+      let taskStatus = document.getElementById("status").value;
 
       /* ตรวจสอบว่าอยู่ที่ sale-admin หรือ internal-sale */
       let currentPath = window.location.pathname;
@@ -16,6 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
       document.getElementById("taskCode").value = taskCode;
       document.getElementById("cusCode").value = cusCode;
       document.getElementById("cusName").value = cusName;
+      document.getElementById("status").value = taskStatus;
 
       /* ส่งฟอร์ม */
       if (currentPath.includes("internal-sale") || currentPath.includes("sale-admin")) {

@@ -36,4 +36,9 @@ class empInfo extends Controller
         $branchCode = $this->decoded->branchCode;
         return $branchCode;
     }
+
+    public function getRole() {
+        $roleCode = $this->decoded->roleCode;
+        return $roleCode;
+    }
 }

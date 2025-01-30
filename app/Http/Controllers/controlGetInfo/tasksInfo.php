@@ -23,7 +23,7 @@ class tasksInfo extends Controller
         ->join('CUSTOMER as c', 'c.CusCode', '=', 'l.CustomerCode')
         ->leftJoin('TASKSTATUS_HISTORICAL as th', 'th.TaskHisCode', '=', 't.TasksCode')
         ->leftJoin('ACCOUNT as a', 'th.TaskHisEmpCusCode', '=', 'a.AccEmpCode')
-        ->whereNotIn('t.TasksStatusCode', [2, 3, 6, 8, 11, 12, 13, 14, 15])
+        ->whereNotIn('t.TasksStatusCode', [2, 3, 6, 7, 8, 11, 12, 13, 14, 15])
         ->where('t.TasksBrchCode', '=', $brch)
         ->where(function ($q) {
             $q->whereNull('th.TaskHisArriveTime')
