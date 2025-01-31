@@ -71,7 +71,7 @@ class controlAuthenticate extends Controller
             if ($password == null && $newPass == null) {
                 $reset = Auth::resetPassword($accName);
                 if ($reset) {
-                    return redirect()->back()->withErrors(['successReset' => 'ระบบทำการตั้งรหัสผ่านใหม่ให้คุณแล้ว กดปุ่ม "ปิด" หรือ "ยกเลิก" และใส่รหัสที่ตกลงกันไว้']);
+                    return redirect('/');
                 }
                 else {
                     return redirect()->back()->withErrors(['forgotAcc' => 'เกิดข้อผิดพลาดในการตั้งรหัสผ่านใหม่']);

@@ -10,7 +10,7 @@
         <svg class="w-12 h-12 mx-auto mb-4 text-amber-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
           <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
         </svg>
-        <p class="mb-3 font-normal text-gray-500"> กรุณารหัสผ่านเดิม แล้วกดปุ่ม "ตกลง" หลังจากนั้นระบบจะให้ท่าน <span class="underline underline-offset-4 decoration-amber-300"> เข้าสู่ระบบใหม่ด้วยรหัสผ่านใหม่</span></p>
+        <p class="mb-3 font-normal text-gray-500"> <span class="text-red-500 underline underline-offset-4 decoration-amber-300"> กรุณาใส่รหัสผ่านเดิม </span> เพื่อยืนยันการเปลี่ยนรหัสผ่าน</p>
         @error('oldPass')
           <p id="oldPassError"class="mb-2 text-sm text-red-500"> {{$message}} </p>
         @enderror
