@@ -2,7 +2,7 @@
 <nav class="sticky top-0 z-20 py-0.5 text-sm font-medium tracking-wider bg-white shadow-md ">
   <div class="flex items-center mx-auto w-full h-12 px-2 sm:px-3 lg:px-5">
     {{-- LOGO --}}
-    <a href="/" class="flex-shrink-0"><img class="w-auto h-10" src="{{ asset('images/logo.png') }}" alt="logo"></a>
+    <a href="{{ route('internal-sale.new-tasks') }}" class="flex-shrink-0"><img class="w-auto h-10" src="{{ asset('images/logo.png') }}" alt="logo"></a>
     {{-- Navigation Menu --}}
     <div class="hidden sm:flex sm:ml-6 space-x-6 lg:space-x-10"> 
       <a href="{{ route('internal-sale.new-tasks') }}" class="nav-style" aria-current="false">

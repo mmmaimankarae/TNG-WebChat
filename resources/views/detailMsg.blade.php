@@ -1,3 +1,4 @@
+<script src="{{ asset('/js/handleNoImage.js') }}"></script>
 @extends('Header-Sidebar.layout')
 @section('title')
   ข้อความ คุณ{{ $cusName }}
@@ -36,13 +37,13 @@
   @endphp
   <div class="flex flex-1 h-screen">
     <div class="flex-1 flex flex-col">
-      <!-- ส่วนข้อมูลลูกค้า -->
+      {{-- ส่วนข้อมูลลูกค้า --}}
       <div class="sticky top-12 p-4 tracking-wider bg-white shadow-md">
         <div class="grid grid-cols-2 divide-x text-sm">
-          <!-- Column 1: รูป + ข้อมูล -->
+          {{-- Column 1: รูป + ข้อมูล --}}
           <div class="flex items-center ml-20 space-x-4">
             <div>
-              <!-- ชื่อลูกค้า -->
+              {{-- ชื่อลูกค้า --}}
               <div class="relative">
                 <span class="font-semibold">ชื่อลูกค้า:</span>
                 <input id="cusName" type="text" value="{{ $cusName }}" class="w-8/12 truncate" disabled readonly>
@@ -61,7 +62,7 @@
                 </button>
               </div>
 
-              <!-- รหัสลูกค้า -->
+              {{-- รหัสลูกค้า --}}
               <div class="relative mt-2.5">
                 <label for="cusName" class="sr-only">Label</label>
                 <span class="font-semibold">รหัสลูกค้า:</span>
@@ -81,6 +82,7 @@
                 </button>
               </div>
 
+              {{-- ปุ่มส่งต่อให้สาขา --}}
               @if ($roleCode == 2)
               <div class="mt-3">
                 <form method="POST" action="">
@@ -129,9 +131,46 @@
           </div>
         </div>
       </div>
-      <!-- ประวัติแชท -->
-      <div class="ml-20 pb-5 flex-1 overflow-y-auto">
 
+      {{-- ประวัติแชท --}}
+      <div class="ml-20 pb-5 flex-1 overflow-y-auto">
+        @foreach ($messages as $msg)
+          @if (strpos($msg['userId'], 'TNG') === 0)
+            <div class="flex items-start justify-end gap-2.5 mt-5 mr-2">
+              <div class="flex flex-col w-full max-w-[320px] leading-1.5 p-4 bg-red-100 rounded-xl">
+          @else
+            <div class="flex items-start justify-start gap-2.5 mt-5">
+              <div class="flex flex-col w-full max-w-[320px] leading-1.5 px-4 py-2 bg-blue-100 rounded-xl">
+          @endif
+                <div class="flex items-center space-x-2 rtl:space-x-reverse text-xs">
+                  <span id="userName" class="font-semibold">{{ $msg['userName'] }}</span>
+                  <span class="text-gray-700">{{ $msg['messageDate'] . ' ' . $msg['messagetime'] }}</span>
+                </div>
+                @switch($msg['messageType'])
+                    @case('text')
+                      <p id="content" class="py-2.5 mt-2 text-sm text-gray-900">{{ $msg['messageContent'] }}</p>
+                      @break
+                    @case('image')
+                      <form id="imageForm" method="POST" action="{{ route('view.image') }}" target="_blank">
+                        @csrf
+                        <input type="hidden" name="messageId" value="{{ $msg['messageId'] }}">
+                        <button type="submit" class="mt-2">
+                          <img id="messageImage" class="rounded-md" src="{{ route('preview.image', ['messageId' => $msg['messageId']]) }}" 
+                            onerror="handleImageError()">
+                        </button>
+                      </form>
+                      <a id="downloadLink" class="flex justify-end mt-2 text-xs underline text-blue-950" href="{{ route('download.image', ['messageId' => $msg['messageId']]) }}">
+                        ดาวน์โหลดรูปภาพ
+                      </a>
+                      @break
+                    @case('sticker')
+                      <img src="{{ $msg['messageContent'] }}" alt="image" class="w-2/3 h-auto mt-2"/>
+                      @break
+                    @default
+                @endswitch
+              </div>
+            </div>
+        @endforeach
       </div>
 
       {{-- ช่องส่งข้อมูล --}}

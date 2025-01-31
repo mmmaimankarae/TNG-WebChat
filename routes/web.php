@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\controlAuthenticate as authen;
 use App\Http\Controllers\controlDupView\dupFormAuthen;
+use App\Http\Controllers\controlGetInfo\msgInfo;
 
 require __DIR__.'/sale-admin.php';
 require __DIR__.'/internal-sale.php';
@@ -21,6 +22,10 @@ Route::middleware(['access.jwt'])->group(function () {
         Route::get('/reset', [dupFormAuthen::class, 'reset']);
         Route::post('/reset-password', [authen::class, 'resetPopupValidate']);
     });
+    /* แสดงรูปภาพ */
+    Route::get('/preview/{messageId}', [msgInfo::class, 'previewImage'])->name('preview.image');
+    Route::get('/download/{messageId}', [msgInfo::class, 'downloadImage'])->name('download.image');
+    Route::post('/view', [msgInfo::class, 'viewImage'])->name('view.image');
 });
 
 /* ออกจากระบบ */
