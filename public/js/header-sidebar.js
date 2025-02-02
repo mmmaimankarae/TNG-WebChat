@@ -17,7 +17,8 @@ document.addEventListener('DOMContentLoaded', function () {
     if (linkPath) {
       linkPath = linkPath.split('/').pop();
       if (linkPath === currentPage || 
-        (linkPath.includes('current-tasks') && currentPage.includes('detail-message') || currentPage.includes('assign-task')) 
+        (linkPath.includes('current-tasks') && currentPage.includes('detail-message')) 
+        || (linkPath.includes('current-tasks') && currentPage.includes('assign-task'))
         || (linkPath.includes('credit-debit') && currentPage.includes('detail-credit-debit'))) {
         link.setAttribute('aria-current', 'page');
         link.querySelector('.notiHead-style').setAttribute('noti', 'hover');

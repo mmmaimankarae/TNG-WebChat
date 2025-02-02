@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\controlAuthenticate as authen;
+use App\Http\Controllers\controlAssignTask as assignTask;
 use App\Http\Controllers\controlDupView\dupFormAuthen;
 use App\Http\Controllers\controlDupView\dupListOfTasks;
 use App\Http\Controllers\controlDupView\dupDetailMsg;
@@ -18,8 +19,11 @@ Route::middleware(['access.jwt', 'authorize.pages'])->group(function () {
             Route::post('/detail-message', [dupDetailMsg::class, 'detail'])
             ->name('sale-admin.detail-message');
 
-            Route::post('/assign-task', [dupFormAuthen::class, 'editTasks'])
+            Route::post('/assign-task', [assignTask::class, 'wilAssign'])
             ->name('sale-admin.assign-task');
+
+            Route::post('/assign', [assignTask::class, 'assignTask'])
+            ->name('sale-admin.confirm-assign');
         });
 
         Route::prefix('credit-debit')->group(function () {

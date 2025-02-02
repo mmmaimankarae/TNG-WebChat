@@ -84,7 +84,7 @@
               {{-- ปุ่มส่งต่อให้สาขา --}}
               @if ($roleCode == 2)
               <div class="mt-3">
-                <form method="POST" action="">
+                <form method="POST" action="{{ route('sale-admin.assign-task') }}">
                   @csrf
                   <input type="hidden" name="taskCode" value="{{ $taskCode }}">
                   <button type="submit" class="text-xs py-1 px-3 border border-gray-500 rounded-2xl hover:bg-gray-300">มอบหมายให้สาขา</button>
@@ -196,7 +196,7 @@
       </div>
     </div>
 
-    <!-- รายการสินค้า -->
+    {{-- รายการสินค้า --}}
     <div>
       <div id="side-right" class="right-0 w-80 h-screen overflow-y-auto pl-3 bg-white border-l border-gray-200">
         <p class="my-5 text-center tracking-wider underline underline-offset-4 decoration-dashed"> รายการรหัสสินค้าที่เกี่ยวข้อง </p>

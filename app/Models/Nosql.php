@@ -2,15 +2,24 @@
 
 namespace App\Models;
 
-use Jenssegers\Mongodb\Eloquent\Model as Eloquent;
+use MongoDB\Client;
 
-class Nosql extends Eloquent
+class Nosql
 {
-    protected $connection = 'mongodb';
+    protected $client;
+    protected $collection;
 
-    public function __construct(array $attributes = [])
+    public function __construct()
     {
-        parent::__construct($attributes);
-        $this->collection = env('MONGO_COLLECTION');
+        $host = env('MONGO_HOST');
+        $port = env('MONGO_PORT');
+        $database = env('MONGO_DATABASE');
+        $username = env('MONGO_USERNAME');
+        $password = env('MONGO_PASSWORD');
+        $authDatabase = env('DB_AUTHENTICATION_DATABASE', 'admin');
+
+        $uri = "mongodb://{$username}:{$password}@{$host}:{$port}/{$authDatabase}";
+        $this->client = new Client($uri);
+        $this->collection = $this->client->$database->{env('MONGO_COLLECTION')};
     }
 }
