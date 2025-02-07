@@ -93,6 +93,50 @@ class msgInfo extends Controller
 
         return response($imageContent)
             ->header('Content-Type', 'image/jpeg')
-            ->header('Content-Disposition', 'attachment; filename="image.jpg"');
+            ->header('Content-Disposition', 'attachment; filename="image.jpeg"');
+    }
+
+    
+    public function getMsgByUser($userID)
+    {
+        $collection = $this->getCollections();
+
+        /* ค้นหาข้อความทั้งหมดของ userID ที่ระบุ */
+        $userMessages = $collection->find(['userId' => $userID])->toArray();
+        /* ยกเว้นมั Group ID */
+        $userMessages = array_filter($userMessages, function($userMessages) {
+            return empty($userMessages['groupId']);
+        });
+        /* หาจาก gtoupId*/
+        if (empty($userMessages)) {
+            $userMessages = $collection->find(['groupId' => $userID])->toArray();
+        }
+
+        /* ดึง taskId ทั้งหมด และลบค่าซ้ำ */
+        $taskIds = array_unique(array_column($userMessages, 'taskId'));
+
+        if (empty($taskIds)) {
+            return [];
+        }
+        $taskIds = array_values(array_filter($taskIds));
+
+        /* ค้นหาข้อความทั้งหมดที่มี taskId ตรงกับที่หาได้ */
+        $messages = $collection->find(['taskId' => ['$in' => $taskIds]])->toArray();
+
+        $uniqueMessages = [];
+        foreach ($messages as $message) {
+            $uniqueMessages[(string) $message['_id']] = $message;
+        }
+
+        $messages = array_values($uniqueMessages);
+
+        /* เรียงข้อมูลตาม messageDate และ messagetime */
+        usort($messages, function ($a, $b) {
+            $dateA = strtotime($a['messageDate'] . ' ' . $a['messagetime']);
+            $dateB = strtotime($b['messageDate'] . ' ' . $b['messagetime']);
+            return $dateA - $dateB;
+        });
+
+        return $messages;
     }
 }

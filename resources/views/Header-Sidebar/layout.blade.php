@@ -27,5 +27,9 @@
   <div id="content" class="content">
     @yield('content')
   </div>
+  @if ($select)
+    @include('Popup.quotation')
+    @include('Popup.invoice')
+  @endif
 </body>
 </html>

@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\controlAuthenticate as authen;
 use App\Http\Controllers\controlDupView\dupFormAuthen;
 use App\Http\Controllers\controlGetInfo\msgInfo;
+use App\Models\Tasks;
 
 require __DIR__.'/sale-admin.php';
 require __DIR__.'/internal-sale.php';
@@ -27,6 +28,9 @@ Route::middleware(['access.jwt'])->group(function () {
     Route::get('/download/{messageId}', [msgInfo::class, 'downloadImage'])->name('download.image');
     Route::post('/view', [msgInfo::class, 'viewImage'])->name('view.image');
 });
+
+Route::get('/update-taskStatus', [Tasks::class, 'updateStatus']);
+Route::post('/send-line-message', [LineMessageController::class, 'sendMessage'])->name('send-line-message');
 
 /* ออกจากระบบ */
 Route::get('/signout', [authen::class, 'authenSignout']);

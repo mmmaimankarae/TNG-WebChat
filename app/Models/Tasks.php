@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 
 use App\Models\Nosql;
+use Carbon\Carbon;
 
 class Tasks extends Model
 {   
@@ -38,5 +39,34 @@ class Tasks extends Model
     {
         $nosql = new Nosql();
         $docunment = $nosql->collection->findoOne(['TasksCode' => $taskCode]);
+    }
+
+    public static function updateStatus($taskCode, $statusCode, $empCode)
+    {
+        $updated = DB::table('TASKS')
+        ->where('TasksCode', $taskCode)
+        ->update(['TasksStatusCode' => $statusCode]);
+        self::setTaskHis($taskCode, $empCode, $statusCode);
+        return $updated;
+    }
+
+    private static function setTaskHis($taskCode, $empCode, $taskHisStatus)
+    {
+        // ดึงค่า TaskHisSeq สูงสุดจาก TASKSTATUS_HISTORICAL
+        $maxSeq = DB::table('TASKSTATUS_HISTORICAL')
+        ->where('TaskHisCode', $taskCode)
+        ->max('TaskHisSeq');
+
+        // เพิ่มค่า TaskHisSeq ขึ้น 1
+        $taskHisSeq = $maxSeq ? $maxSeq + 1 : 1;
+
+        // แทรกข้อมูลใหม่ลงใน TASKSTATUS_HISTORICAL
+        DB::table('TASKSTATUS_HISTORICAL')->insert([
+            'TaskHisCode' => $taskCode,
+            'TaskHisSeq' => $taskHisSeq,
+            'TaskHisEmpCusCode' => $empCode,
+            'TaskHisStatusCode' => $taskHisStatus,
+            'TaskHisUpdate' => Carbon::now()
+        ]);
     }
 }

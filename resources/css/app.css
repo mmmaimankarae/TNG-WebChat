@@ -27,3 +27,14 @@ body {
 [noti="hover"] {
     @apply text-[#FF0000] bg-white;
 }
+
+
+  #preview-container {
+    max-height: 300px; /* กำหนดขนาดสูงสุดของพื้นที่แสดงผล */
+    overflow-y: auto; /* ทำให้พื้นที่แสดงผลสามารถเลื่อนดูได้ */
+  }
+
+  #preview-image {
+    max-width: 150%; /* กำหนดขนาดกว้างสุดของรูปภาพ */
+    height: auto; /* ทำให้รูปภาพปรับขนาดตามอัตราส่วน */
+  }

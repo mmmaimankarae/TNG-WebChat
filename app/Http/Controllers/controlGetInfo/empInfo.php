@@ -41,4 +41,9 @@ class empInfo extends Controller
         $roleCode = $this->decoded->roleCode;
         return $roleCode;
     }
+
+    public function getEmpCode() {
+        $empCode = $this->decoded->empCode;
+        return $empCode;
+    }
 }
