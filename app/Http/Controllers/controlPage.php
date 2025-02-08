@@ -35,8 +35,7 @@ class controlPage extends Controller
         } else {
             $sidebarChat = $sidebarInfo->getEmpTasks($branchCode);
         }
-        
-        $select = $req->boolean('select');
+        $select = $req->boolean('select') || session('select');
         $update = $req->boolean('update');
         $taskStatus = $req->input('taskStatus');
 
@@ -54,7 +53,10 @@ class controlPage extends Controller
                 'cusName' => $req->input('cusName'),
                 'taskLineID' => $taskLineID,
                 'statusThai' => $this->statusThai,
-                'taskStatus' => $taskStatus
+                'taskStatus' => $taskStatus,
+                'accName' => $empInfo->getAccName(),
+                'accCode' => $accCode,
+                'empCode' => $empCode,
             ];
 
             if ($update) {

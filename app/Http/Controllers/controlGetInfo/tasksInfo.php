@@ -61,4 +61,12 @@ class tasksInfo extends Controller
         return $result;
     }
     
+    public static function getLastEmp($taskCode)
+    {
+        $result = DB::table('TASKSTATUS_HISTORICAL')
+                    ->where('TaskHisCode', $taskCode)
+                    ->orderBy('TaskHisUpdate', 'DESC')
+                    ->value('TaskHisEmpCusCode');
+        return $result;
+    }
 }

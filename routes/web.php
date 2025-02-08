@@ -5,6 +5,7 @@ use App\Http\Controllers\controlAuthenticate as authen;
 use App\Http\Controllers\controlDupView\dupFormAuthen;
 use App\Http\Controllers\controlGetInfo\msgInfo;
 use App\Models\Tasks;
+use App\Http\Controllers\sendMsg;
 
 require __DIR__.'/sale-admin.php';
 require __DIR__.'/internal-sale.php';
@@ -30,7 +31,7 @@ Route::middleware(['access.jwt'])->group(function () {
 });
 
 Route::get('/update-taskStatus', [Tasks::class, 'updateStatus']);
-Route::post('/send-line-message', [LineMessageController::class, 'sendMessage'])->name('send-line-message');
+Route::post('/send-message', [sendMsg::class, 'sendMessage'])->name('send-message');
 
 /* ออกจากระบบ */
 Route::get('/signout', [authen::class, 'authenSignout']);

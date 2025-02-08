@@ -23,7 +23,7 @@ class sidebarInfo extends Controller
             'T.TasksUpdate',
             'T.TasksStatusCode',
             'CL.cusLineType',
-            DB::raw('MAX(TH.TaskHisEmpCusCode) OVER (PARTITION BY T.TasksLineID ORDER BY T.TasksUpdate) AS PrevEmpCode'),
+            DB::raw('LAST_VALUE(TH.TaskHisEmpCusCode) OVER (PARTITION BY T.TasksLineID ORDER BY T.TasksUpdate DESC) AS PrevEmpCode'),
             DB::raw('ROW_NUMBER() OVER (
                 PARTITION BY T.TasksLineID 
                 ORDER BY 

@@ -44,8 +44,11 @@ class Tasks extends Model
     public static function updateStatus($taskCode, $statusCode, $empCode)
     {
         $updated = DB::table('TASKS')
-        ->where('TasksCode', $taskCode)
-        ->update(['TasksStatusCode' => $statusCode]);
+                    ->where('TasksCode', $taskCode)
+                    ->update([
+                        'TasksStatusCode' => $statusCode,
+                        'TasksUpdate' => Carbon::now()
+                    ]);
         self::setTaskHis($taskCode, $empCode, $statusCode);
         return $updated;
     }

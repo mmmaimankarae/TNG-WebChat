@@ -29,13 +29,17 @@
             $tasksUpdate = Carbon::parse($chat->TasksUpdate);
             $timeAgo = $tasksUpdate->diffForHumans();
           @endphp
-          <form action="{{ route('sale-admin.new-tasks') }}" method="POST" id="chat-form-{{ $chat->TasksLineID }}">
+          <form action="{{ route('sale-admin.current-tasks') }}" method="POST" id="chat-form-{{ $chat->TasksLineID }}">
             @csrf
             <input type="hidden" name="TasksLineID" value="{{ $chat->TasksLineID }}">
             <input type="hidden" name="TasksCode" value="{{ $chat->TasksCode }}">
             <input type="hidden" name="cusCode" value="{{ $chat->CusCode }}">
             <input type="hidden" name="cusName" value="{{ $chat->CusName }}">
             <input type="hidden" name="taskStatus" value="{{ $chat->TasksStatusCode }}">
+            @if ($chat->TasksStatusCode == '1')
+              <input type="hidden" name="update" value="true">
+              <input type="hidden" name="taskStatus" value="2">
+            @endif
             <input type="hidden" name="select" value="true">
             <div class="grid grid-cols-4 items-center p-2 rounded-lg cursor-pointer hover:bg-gray-200" onclick="document.getElementById('chat-form-{{ $chat->TasksLineID }}').submit();">
               <div class="flex justify-center -ml-5">

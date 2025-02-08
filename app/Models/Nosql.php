@@ -22,4 +22,9 @@ class Nosql
         $this->client = new Client($uri);
         $this->collection = $this->client->$database->{env('MONGO_COLLECTION')};
     }
+
+    public function insertDocument($document)
+    {
+        $this->collection->insertOne($document);
+    }
 }

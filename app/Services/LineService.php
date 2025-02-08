@@ -35,4 +35,29 @@ class LineService
         
         return $content;
     }
+
+    public function sendMessage($userId, $message)
+    {
+        try {
+            $response = $this->client->post('https://api.line.me/v2/bot/message/push', [
+                'headers' => [
+                    'Authorization' => "Bearer {$this->accessToken}",
+                    'Content-Type' => 'application/json',
+                ],
+                'json' => [
+                    'to' => $userId,
+                    'messages' => [
+                        [
+                            'type' => 'text',
+                            'text' => $message,
+                        ],
+                    ],
+                ],
+            ]);
+
+            return $response;
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
 }
