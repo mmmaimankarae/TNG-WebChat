@@ -4,7 +4,7 @@
 @endphp
 
 {{-- SIDEBAR --}}
-<div id="sidebar" class="fixed left-0 z-10 w-72 h-screen overflow-y-auto bg-white shadow-md">
+<div id="sidebar" class="fixed left-0 z-20 w-72 h-screen overflow-y-auto bg-white shadow-md">
   {{-- Close Button --}}
   <button id="close-side" class="flex ml-auto mx-4 my-2 text-xl text-black hover:text-[#FF0000]">&times;</button>
   {{-- Search --}}

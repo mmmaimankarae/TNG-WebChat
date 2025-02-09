@@ -32,6 +32,7 @@ Route::middleware(['access.jwt'])->group(function () {
 
 Route::get('/update-taskStatus', [Tasks::class, 'updateStatus']);
 Route::post('/send-message', [sendMsg::class, 'sendMessage'])->name('send-message');
+Route::post('/unsend', [sendMsg::class, 'unsendMsg'])->name('unsend');
 
 /* ออกจากระบบ */
 Route::get('/signout', [authen::class, 'authenSignout']);

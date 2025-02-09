@@ -27,6 +27,7 @@ class sendMsg extends Controller
         $replyId = $request->input('replyId');
         $message = $request->input('message');
         $file = $request->file('file');
+        $quote = $request->input('quoteToken');
 
         $empCode = $request->input('empCode');
         $taskCode = $request->input('taskCode');
@@ -50,12 +51,24 @@ class sendMsg extends Controller
             // } else {
             //     return response()->json(['status' => 'error', 'message' => $response ? $response->getBody()->getContents() : 'Error occurred'], 500);
             // } 
+        } else if ($quote) {
+            $response = $this->lineService->quoteMessage($replyId, $message, $quote);
+
+            if ($response && $response->getStatusCode() === 200) {
+                $request->merge(['quoteType' => 'text']);
+                $this->saveMessage($request);
+                Tasks::setUpdateTime($taskCode);
+                return redirect()->back()->withInput()->with('select', true);
+            } else {
+                return response()->json(['status' => 'error', 'message' => $response ? $response->getBody()->getContents() : 'Error occurred'], 500);
+            }
         } else {
             $response = $this->lineService->sendMessage($replyId, $message);
 
             if ($response && $response->getStatusCode() === 200) {
                 $this->saveMessage($request);
                 Tasks::setUpdateTime($taskCode);
+                $request->session()->flash('TasksLineID', $replyId);
                 return redirect()->back()->withInput()->with('select', true);
 
             } else {
@@ -82,6 +95,9 @@ class sendMsg extends Controller
             'replyToName' => $request->input('replyName'),
             'userId' => "TNG-" . $request->input('userId'),
             'userName' => $request->input('userName'),
+            'quoteToken' => $request->input('quoteToken'),
+            'quoteType' => $request->input('quoteType'),
+            'quoteContent' => $request->input('quoteContentInput'),
         ];
     }
 }

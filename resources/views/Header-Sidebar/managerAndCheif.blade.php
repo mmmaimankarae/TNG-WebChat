@@ -8,7 +8,7 @@ if (request()->attributes->get('decoded')->roleCode == '3') {
 @endphp
 
 {{-- HEADER --}}
-<nav class="sticky top-0 z-20 py-0.5 text-sm font-medium tracking-wider bg-white shadow-md ">
+<nav class="sticky top-0 z-30 py-0.5 text-sm font-medium tracking-wider bg-white shadow-md ">
   <div class="flex items-center mx-auto w-full h-12 px-2 sm:px-3 lg:px-5">
     {{-- LOGO --}}
     <a href="{{ route($rolePath . 'new-tasks') }}" class="flex-shrink-0"><img class="w-auto h-10" src="{{ asset('images/logo.png') }}" alt="logo"></a>

@@ -111,10 +111,8 @@ class msgInfo extends Controller
         if (empty($userMessages)) {
             $userMessages = $collection->find(['groupId' => $userID])->toArray();
         }
-
         /* ดึง taskId ทั้งหมด และลบค่าซ้ำ */
         $taskIds = array_unique(array_column($userMessages, 'taskId'));
-
         if (empty($taskIds)) {
             return [];
         }
@@ -122,6 +120,9 @@ class msgInfo extends Controller
 
         /* ค้นหาข้อความทั้งหมดที่มี taskId ตรงกับที่หาได้ */
         $messages = $collection->find(['taskId' => ['$in' => $taskIds]])->toArray();
+
+        $replyMessages = $collection->find(['replyToId' => $userID])->toArray();
+        $messages = array_merge($messages, $replyMessages);
 
         $uniqueMessages = [];
         foreach ($messages as $message) {

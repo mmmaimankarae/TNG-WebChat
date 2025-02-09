@@ -27,4 +27,10 @@ class Nosql
     {
         $this->collection->insertOne($document);
     }
+
+    public function updateDocument($filter, $update)
+    {
+        $result = $this->collection->updateOne($filter, ['$set' => $update]);
+        return $result->getModifiedCount();
+    }
 }

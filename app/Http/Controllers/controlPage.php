@@ -40,7 +40,7 @@ class controlPage extends Controller
         $taskStatus = $req->input('taskStatus');
 
         if ($select || $update) {
-            $taskLineID = $req->input('TasksLineID');
+            $taskLineID = $req->input('TasksLineID') ?? session('TasksLineID');
             $messages = $this->msgInfo->getMsgByUser($taskLineID);
             
             $viewData = [
