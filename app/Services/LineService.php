@@ -60,4 +60,35 @@ class LineService
             return null;
         }
     }
+
+    
+    public function sendImageMessage($userId, $originalContentUrl, $previewImageUrl)
+    {
+        try {
+            \Log::info("Sending Image to LINE:", [
+                'originalContentUrl' => $originalContentUrl,
+                'previewImageUrl' => $previewImageUrl
+            ]);
+            $response = $this->client->post('https://api.line.me/v2/bot/message/push', [
+                'headers' => [
+                    'Authorization' => "Bearer {$this->accessToken}",
+                    'Content-Type' => 'application/json',
+                ],
+                'json' => [
+                    'to' => $userId,
+                    'messages' => [
+                        [
+                            'type' => 'image',
+                            'originalContentUrl' => $originalContentUrl,
+                            'previewImageUrl' => $previewImageUrl,
+                        ],
+                    ],
+                ],
+            ]);
+
+            return $response;
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
 }

@@ -8,6 +8,7 @@ use App\Models\Nosql;
 use Carbon\Carbon;
 use App\Models\Tasks;
 use App\Http\Controllers\controlGetInfo\tasksInfo;
+use Illuminate\Support\Facades\Storage;
 
 class sendMsg extends Controller
 {
@@ -25,6 +26,8 @@ class sendMsg extends Controller
     {
         $replyId = $request->input('replyId');
         $message = $request->input('message');
+        $file = $request->file('file');
+
         $empCode = $request->input('empCode');
         $taskCode = $request->input('taskCode');
 
@@ -32,13 +35,32 @@ class sendMsg extends Controller
             Tasks::updateStatus($taskCode, $request->input('taskStatus'), $empCode);
         }
 
-        $response = $this->lineService->sendMessage($replyId, $message);
+        if ($file) {
+            // $path = $file->store('uploads', 'public');
+            // $url = url(Storage::url($path));
+            // \Log::info('Image URL: ' . $url);
+            
+            // // dd($url);
 
-        if ($response && $response->getStatusCode() === 200) {
-            $this->saveMessage($request);
-            return redirect()->back()->with('select', true);
+            // $response = $this->lineService->sendImageMessage($replyId, $url, $url);
+
+            // if ($response && $response->getStatusCode() === 200) {
+            //     //$this->saveMessage($request, $url);
+            //     return redirect()->back()->withInput()->with('select', true);
+            // } else {
+            //     return response()->json(['status' => 'error', 'message' => $response ? $response->getBody()->getContents() : 'Error occurred'], 500);
+            // } 
         } else {
-            return response()->json(['status' => 'error', 'message' => $response ? $response->getBody()->getContents() : 'Error occurred'], 500);
+            $response = $this->lineService->sendMessage($replyId, $message);
+
+            if ($response && $response->getStatusCode() === 200) {
+                $this->saveMessage($request);
+                Tasks::setUpdateTime($taskCode);
+                return redirect()->back()->withInput()->with('select', true);
+
+            } else {
+                return response()->json(['status' => 'error', 'message' => $response ? $response->getBody()->getContents() : 'Error occurred'], 500);
+            }
         }
     }
 

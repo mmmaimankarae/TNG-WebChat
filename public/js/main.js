@@ -10,5 +10,10 @@ window.onload = function () {
         fileButton.addEventListener('click', function() {
             document.getElementById('fileInput').click();
         });
+
+        document.getElementById('fileInput').addEventListener('change', function() {
+            console.log('change');
+            document.getElementById('lineMessageForm').submit();
+        });
     }
 };

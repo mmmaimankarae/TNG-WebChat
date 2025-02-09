@@ -4,7 +4,8 @@
   มอบหมายงานให้สาขา
 @endsection
 @section('content')
-  <div class="px-20 py-8 overflow-x-auto">
+  <div class="pl-36 pr-20 py-8 overflow-x-auto">
+    <p class="text-center font-medium tracking-wider mb-3 break-words whitespace-pre-wrap"> หมอบหมายงานคุณ ' {{ $cusName}} ' ให้สาขา </p>
     <p class="font-medium tracking-wider mb-3"> เลือกภูมิภาคของสาขา </p>
     <form id="regionForm" method="POST" action="{{ route('sale-admin.assign-task') }}">
       @csrf
@@ -15,6 +16,7 @@
             onchange="document.getElementById('regionForm').submit();">
           <label class="w-full py-4 ms-2 text-sm"> {{ $region }} </label>
           <input type="hidden" name="taskCode" value="{{ $taskCode }}">
+          <input type="hidden" name="cusName" value="{{ $cusName }}">
         </div>
       @endforeach
       </div>

@@ -28,8 +28,10 @@
           @php
             $tasksUpdate = Carbon::parse($chat->TasksUpdate);
             $timeAgo = $tasksUpdate->diffForHumans();
+            $prevEmpAccName = $chat->PrevEmpAccName;
+            $path = request()->segment(1);
           @endphp
-          <form action="{{ route('sale-admin.current-tasks') }}" method="POST" id="chat-form-{{ $chat->TasksLineID }}">
+          <form action="{{ route( $path . '.current-tasks') }}" method="POST" id="chat-form-{{ $chat->TasksLineID }}">
             @csrf
             <input type="hidden" name="TasksLineID" value="{{ $chat->TasksLineID }}">
             <input type="hidden" name="TasksCode" value="{{ $chat->TasksCode }}">
@@ -50,9 +52,16 @@
                 </svg>
               </div>
               <div class="col-span-2 -ml-4">
-                <p class="text-sm font-medium w-8/12 truncate">{{ $chat->CusName }}</p>
-                @if ($chat->PrevEmpAccName != null)
-                  <p class="inline-block px-2 text-xs border border-green-700 rounded-2xl">{{ $chat->PrevEmpAccName }}</p>
+                @if ($chat->cusLineType == 'G')
+                  <p class="text-sm font-medium w-8/12 truncate"><span class="text-gray-500">(กลุ่ม) </span>{{ $chat->CusName }}</p>
+                @else
+                  <p class="text-sm font-medium w-8/12 truncate">{{ $chat->CusName }}</p>
+                @endif
+
+                @if ($chat->TasksStatusCode == '5')
+                  <p class="inline-block px-2 text-xs border border-red-700 rounded-2xl">เสร็จสิ้น</p>
+                @elseif ($prevEmpAccName != null)
+                  <p class="inline-block px-2 text-xs border border-green-700 rounded-2xl">{{ $prevEmpAccName }}</p>
                 @endif
               </div>
               <div class="flex justify-end -ml-5 overflow-y-auto text-xs font-semibold text-blue-500">{{ $timeAgo }}</div>

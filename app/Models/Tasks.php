@@ -14,10 +14,15 @@ class Tasks extends Model
     public static function assign($taskCode, $branchCode)
     {
         $newTask = self::getNewTask($branchCode);
-        //$nosql = self::upDateTaskNosql($taskCode, $newTask);
         $updated = DB::table('TASKS')
         ->where('TasksCode', $taskCode)
-        ->update(['TasksCode' => $newTask, 'TasksBrchCode' => $branchCode]);
+        ->update([
+            'TasksCode' => $newTask, 
+            'TasksBrchCode' => $branchCode, 
+            'TasksStatusCode' => '1', 
+            'TasksUpdate' => Carbon::now()
+        ]);   
+        self::setTaskHis($taskCode, NULL, '1');
         return $updated;
     }
 
@@ -26,19 +31,16 @@ class Tasks extends Model
                     ->where('TasksBrchCode', $branchCode)
                     ->orderBy('TasksCode', 'desc')
                     ->first();
+        $lastTask = $lastTask ? $lastTask->TasksCode : NULL;
         if (substr($lastTask, 2, 2) != substr((date('Y')), 2)) {
-            $newTask = $branchCode . substr((date('Y')), 2) . '001';
+            $newTask = $branchCode . substr((date('Y')), 2) . (date('m')) . '001';
+        } elseif (substr($lastTask, 2, 2) == substr((date('Y')), 2) && substr($lastTask, 4, 2) != (date('m'))) {
+            $newTask = $branchCode . substr((date('Y')), 2) . (date('m')) . '001';
         } else {
-            $num = substr($lastTask, 4) + 1;
-            $newTask = $branchCode . substr((date('Y')), 2) . str_pad($num, 3, '0', STR_PAD_LEFT);
+            $num = substr($lastTask, 6) + 1;
+            $newTask = $branchCode . substr((date('Y')), 2) . (date('m')) . str_pad($num, 3, '0', STR_PAD_LEFT);
         }
         return $newTask;
-    }
-
-    private static function upDateTaskNosql($taskCode, $newTask)
-    {
-        $nosql = new Nosql();
-        $docunment = $nosql->collection->findoOne(['TasksCode' => $taskCode]);
     }
 
     public static function updateStatus($taskCode, $statusCode, $empCode)
@@ -63,13 +65,27 @@ class Tasks extends Model
         // เพิ่มค่า TaskHisSeq ขึ้น 1
         $taskHisSeq = $maxSeq ? $maxSeq + 1 : 1;
 
-        // แทรกข้อมูลใหม่ลงใน TASKSTATUS_HISTORICAL
-        DB::table('TASKSTATUS_HISTORICAL')->insert([
+        // สร้างอาร์เรย์ข้อมูลที่จะแทรก
+        $data = [
             'TaskHisCode' => $taskCode,
             'TaskHisSeq' => $taskHisSeq,
-            'TaskHisEmpCusCode' => $empCode,
             'TaskHisStatusCode' => $taskHisStatus,
             'TaskHisUpdate' => Carbon::now()
-        ]);
+        ];
+
+        // เพิ่ม TaskHisEmpCusCode ถ้า $empCode ไม่เป็น NULL
+        if ($empCode !== NULL) {
+            $data['TaskHisEmpCusCode'] = $empCode;
+        }
+
+        // แทรกข้อมูลใหม่ลงใน TASKSTATUS_HISTORICAL
+        DB::table('TASKSTATUS_HISTORICAL')->insert($data);
+    }
+
+    public static function setUpdateTime($taskCode)
+    {
+        $update = DB::table('TASKS')
+                ->where('TasksCode', $taskCode)
+                ->update(['TasksUpdate' => Carbon::now()]);
     }
 }

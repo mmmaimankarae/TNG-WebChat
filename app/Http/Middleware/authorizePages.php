@@ -33,10 +33,10 @@ class authorizePages
                 return redirect()->route('sale-admin.new-tasks');
                 break;
             case '3':
-                return redirect()->route('branch-manager.tasks');
+                return redirect()->route('branch-manager.new-tasks');
                 break;
             case '4':
-                return redirect()->route('office-chief.tasks');
+                return redirect()->route('office-chief.new-tasks');
                 break;
             default:
                 return redirect('/');

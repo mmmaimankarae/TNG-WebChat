@@ -21,6 +21,7 @@
     @include('Header-Sidebar.sidebar')
   @elseif (in_array(request()->attributes->get('decoded')->roleCode, ['3', '4']))
     @include('Header-Sidebar.managerAndCheif')
+    @include('Header-Sidebar.sidebar')
   @endif
 
   {{-- แสดงเนื้อหาในแต่ละหน้า --}}

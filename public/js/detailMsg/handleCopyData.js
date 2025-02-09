@@ -21,19 +21,31 @@ document.addEventListener('DOMContentLoaded', (event) => {
   }
 
   // Add event listeners to copy buttons
-  document.getElementById('cusNameCopy').addEventListener('click', () => {
-    copyToClipboard('cusName', 'icon-cusNamecopy', 'suc-cusNamecopy');
-  });
+  const cusNameCopy = document.getElementById('cusNameCopy');
+  if (cusNameCopy) {
+    cusNameCopy.addEventListener('click', () => {
+      copyToClipboard('cusName', 'icon-cusNamecopy', 'suc-cusNamecopy');
+    });
+  }
 
-  document.getElementById('cusCodeCopy').addEventListener('click', () => {
-    copyToClipboard('cusCode', 'icon-cusCodecopy', 'suc-cusCodecopy');
-  });
+  const cusCodeCopy = document.getElementById('cusCodeCopy');
+  if (cusCodeCopy) {
+    cusCodeCopy.addEventListener('click', () => {
+      copyToClipboard('cusCode', 'icon-cusCodecopy', 'suc-cusCodecopy');
+    });
+  }
 
-  document.getElementById('prodCodecopy').addEventListener('click', () => {
-    copyToClipboard('prodCode', 'icon-prodCodecopy', 'suc-prodCodecopy');
-  });
+  const prodCodeCopy = document.getElementById('prodCodecopy');
+  if (prodCodeCopy) {
+    prodCodeCopy.addEventListener('click', () => {
+      copyToClipboard('prodCode', 'icon-prodCodecopy', 'suc-prodCodecopy');
+    });
+  }
 
-  document.getElementById('prodNamecopy').addEventListener('click', () => {
-    copyToClipboard('prodName', 'icon-prodNamecopy', 'suc-prodNamecopy');
-  });
+  const prodNameCopy = document.getElementById('prodNamecopy');
+  if (prodNameCopy) {
+    prodNameCopy.addEventListener('click', () => {
+      copyToClipboard('prodName', 'icon-prodNamecopy', 'suc-prodNamecopy');
+    });
+  }
 });

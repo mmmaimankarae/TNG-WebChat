@@ -4,8 +4,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\controlAuthenticate as authen;
 use App\Http\Controllers\controlAssignTask as assignTask;
 use App\Http\Controllers\controlDupView\dupFormAuthen;
-use App\Http\Controllers\controlDupView\dupListOfTasks;
-use App\Http\Controllers\controlDupView\dupDetailMsg;
 use App\Http\Controllers\controlPage as page;
 
 Route::middleware(['access.jwt', 'authorize.pages'])->group(function () {

@@ -51,6 +51,7 @@
                 <form method="POST" action="{{ route('sale-admin.assign-task') }}">
                   @csrf
                   <input type="hidden" name="taskCode" value="{{ $taskCode }}">
+                  <input type="hidden" name="cusName" value="{{ $cusName }}">
                   <button type="submit" class="text-xs py-1 px-3 border border-gray-500 rounded-2xl hover:bg-gray-300">มอบหมายให้สาขา</button>
                 </form>
               </div>
@@ -79,7 +80,7 @@
                 </div>
                 @switch($msg['messageType'])
                   @case('text')
-                    <p id="content" class="py-2.5 mt-2 text-sm text-gray-900">{{ $msg['messageContent'] }}</p>
+                    <p id="content" class="py-2.5 mt-2 text-sm text-gray-900 break-words whitespace-pre-wrap">{{ $msg['messageContent'] }}</p>
                     @break
                   @case('image')
                     <form id="imageForm" method="POST" action="{{ route('view.image') }}" target="_blank">
@@ -115,25 +116,27 @@
           <div id="quoteContent" class="text-sm ml-28 w-8/12 truncate"></div>
         </div>
         <div class="flex items-center py-4 pr-2 ml-28 space-x-2">
-          {{-- ปุ่มอัพโหลดไฟล์ --}}
-          <input type="file" id="fileInput" style="display: none;" accept=".JPEG, .PNG" multiple>
-          <svg id="fileButton" class="w-9 h-9 text-sky-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-            <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4.243a1 1 0 1 0-2 0V11H7.757a1 1 0 1 0 0 2H11v3.243a1 1 0 1 0 2 0V13h3.243a1 1 0 1 0 0-2H13V7.757Z" clip-rule="evenodd"/>
-          </svg>
-          
-          {{-- ช่องกรอกข้อความ --}}
-          <form id="lineMessageForm" method="POST" action="{{ route('send-message') }}" class="flex w-full">
+          <form id="lineMessageForm" method="POST" action="{{ route('send-message') }}" enctype="multipart/form-data" class="flex w-full">
             @csrf
-            <input type="hidden" name="replyId" value="{{ $taskLineID }}">
-            <input type="hidden" name="replyName" value="{{ $cusName }}">
-            <input type="hidden" name="taskCode" value="{{ $taskCode }}">
+            {{-- ปุ่มอัพโหลดไฟล์ --}}
+            <input type="file" id="fileInput" name="file" style="display: none;" accept=".JPEG, .PNG" multiple>
+            <svg id="fileButton" class="w-9 h-9 text-sky-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+              <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4.243a1 1 0 1 0-2 0V11H7.757a1 1 0 1 0 0 2H11v3.243a1 1 0 1 0 2 0V13h3.243a1 1 0 1 0 0-2H13V7.757Z" clip-rule="evenodd"/>
+            </svg>
+          
+            {{-- ช่องกรอกข้อความ --}}
+            <input type="hidden" name="replyId" value="{{ old('replyId', $taskLineID) }}">
+            <input type="hidden" name="replyName" value="{{ old('replyName', $cusName) }}">
+            <input type="hidden" name="cusCode" value="{{ old('cusCode', $cusCode) }}">
+            <input type="hidden" name="taskCode" value="{{ old('taskCode', $taskCode) }}">
             <input type="hidden" name="messageType" value="text">
-            <input type="hidden" name="userId" value="{{ $accCode }}">
-            <input type="hidden" name="userName" value="{{ $accName->AccName }}">
+            <input type="hidden" name="userId" value="{{ old('userId', $accCode) }}">
+            <input type="hidden" name="userName" value="{{ old('userName', $accName->AccName) }}">
             <input type="hidden" name="select" value="true">
-            <input type="hidden" name="taskStatus" value="{{ $taskStatus }}">
-            <input type="hidden" name="empCode" value="{{ $empCode }}">
+            <input type="hidden" name="taskStatus" value="{{ old('taskStatus', $taskStatus) }}">
+            <input type="hidden" name="empCode" value="{{ old('empCode', $empCode) }}">
             <input type="text" name="message" autocomplete="off" class="flex-1 px-3 py-2 border border-gray-500 rounded-full focus:outline-none focus:border-blue-500 text-sm" placeholder="พิมพ์ข้อความ..." required/>
+
             <button type="submit" class="ml-2 mr-2 text-blue-500 rounded-full hover:bg-blue-100">
               <svg class="w-7 h-7 text-sky-600 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24" transform="rotate(90)">
                 <path fill-rule="evenodd" d="M12 2a1 1 0 0 1 .932.638l7 18a1 1 0 0 1-1.326 1.281L13 19.517V13a1 1 0 1 0-2 0v6.517l-5.606 2.402a1 1 0 0 1-1.326-1.281l7-18A1 1 0 0 1 12 2Z" clip-rule="evenodd"/>

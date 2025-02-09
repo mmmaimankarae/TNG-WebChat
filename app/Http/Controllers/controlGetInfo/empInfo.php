@@ -46,4 +46,14 @@ class empInfo extends Controller
         $empCode = $this->decoded->empCode;
         return $empCode;
     }
+
+    public function checkEmpBranch($accName) {
+        $results = DB::table('ACCOUNT as A')
+        ->leftJoin('EMPLOYEE as E', 'A.AccEmpCode', '=', 'E.EmpCode')
+        ->leftJoin('BRANCH as B', 'E.EmpBrchCode', '=', 'B.BrchCode')
+        ->select('A.AccName' ,'B.BrchCode')
+        ->where('A.AccName', $accName)
+        ->get();
+        return $results->pluck('BrchCode');
+    }
 }
