@@ -11,9 +11,10 @@ class controlPage extends Controller
     private msgInfo $msgInfo;
     private array $statusThai = [
         '2' => 'รับเรื่องแล้ว', 
-        '3' => 'แนบใบเสนอราคา', 
-        '4' => 'ใบกำกับภาษี', 
-        '5' => 'เสร็จสิ้น'
+        '3' => 'แนบใบเสนอราคา',
+        '4' => 'ชำระเงิน', 
+        '5' => 'ใบกำกับภาษี', 
+        '6' => 'เสร็จสิ้น'
     ];
 
     public function __construct(msgInfo $msgInfo)

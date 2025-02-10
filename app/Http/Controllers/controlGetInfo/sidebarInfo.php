@@ -28,7 +28,7 @@ class sidebarInfo extends Controller
                 PARTITION BY T.TasksLineID 
                 ORDER BY 
                     CASE 
-                        WHEN T.TasksStatusCode = 5 THEN 2
+                        WHEN T.TasksStatusCode = 6 THEN 2
                         WHEN TH.TaskHisEmpCusCode IS NULL THEN 0
                         ELSE 1 
                     END, 

@@ -64,8 +64,10 @@ window.onload = function () {
   };
 
 
-  removeQuoteButton.addEventListener('click', function() {
-    quoteBox.classList.add('hidden');
-    quoteTokenInput.value = '';
-  });
+  if (removeQuoteButton) {
+    removeQuoteButton.addEventListener('click', function() {
+      quoteBox.classList.add('hidden');
+      quoteTokenInput.value = '';
+    });
+ }
 };

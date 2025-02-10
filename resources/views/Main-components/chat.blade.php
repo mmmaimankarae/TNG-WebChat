@@ -98,7 +98,6 @@
       <input type="hidden" name="replyName" value="{{ old('replyName', $cusName) }}">
       <input type="hidden" name="cusCode" value="{{ old('cusCode', $cusCode) }}">
       <input type="hidden" name="taskCode" value="{{ old('taskCode', $taskCode) }}">
-      <input type="hidden" name="messageType" value="text">
       <input type="hidden" name="userId" value="{{ old('userId', $accCode) }}">
       <input type="hidden" name="userName" value="{{ old('userName', $accName->AccName) }}">
       <input type="hidden" name="select" value="true">

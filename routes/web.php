@@ -6,6 +6,7 @@ use App\Http\Controllers\controlDupView\dupFormAuthen;
 use App\Http\Controllers\controlGetInfo\msgInfo;
 use App\Models\Tasks;
 use App\Http\Controllers\sendMsg;
+use App\Http\Controllers\controlStatus;
 
 require __DIR__.'/sale-admin.php';
 require __DIR__.'/internal-sale.php';
@@ -30,9 +31,12 @@ Route::middleware(['access.jwt'])->group(function () {
     Route::post('/view', [msgInfo::class, 'viewImage'])->name('view.image');
 });
 
+/* กระบวนการส่ง Mag */
 Route::get('/update-taskStatus', [Tasks::class, 'updateStatus']);
 Route::post('/send-message', [sendMsg::class, 'sendMessage'])->name('send-message');
 Route::post('/unsend', [sendMsg::class, 'unsendMsg'])->name('unsend');
+  /* on status track */
+Route::post('/quota', [controlStatus::class, 'quota'])->name('status.quota');
 
 /* ออกจากระบบ */
 Route::get('/signout', [authen::class, 'authenSignout']);

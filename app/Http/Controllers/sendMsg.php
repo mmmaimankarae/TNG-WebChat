@@ -22,7 +22,7 @@ class sendMsg extends Controller
         $this->nosql = $nosql;
     }
     
-    public function sendMessage(Request $request)
+    public static function sendMessage(Request $request)
     {
         $replyId = $request->input('replyId');
         $message = $request->input('message');
@@ -66,6 +66,7 @@ class sendMsg extends Controller
             $response = $this->lineService->sendMessage($replyId, $message);
 
             if ($response && $response->getStatusCode() === 200) {
+                $request->merge(['messageType' => 'text']);
                 $this->saveMessage($request);
                 Tasks::setUpdateTime($taskCode);
                 $request->session()->flash('TasksLineID', $replyId);

@@ -1,5 +1,5 @@
 <div class="sticky top-12 z-10 p-4 tracking-wider bg-white shadow-md">
-  <div class="grid grid-cols-4 ml-24 text-sm">
+  <div class="grid grid-cols-5 ml-24 text-sm">
     @foreach ($statusThai as $key => $status)
       <div class="pl-5">
         @if ($taskStatus == $key)
@@ -20,7 +20,7 @@
               <button id="showQuotationPopup" type="button" class="inline-flex justify-center w-full px-3 py-1.5 bg-white shadow-sm rounded-md ring-1 ring-inset ring-gray-300 hover:bg-gray-50 hover:ring-[#FF4343]">
                 {{ $status }}
               </button>
-            @elseif($key == '4')
+            @elseif($key == '5')
               <button id="showInvoicePopup" type="button" class="inline-flex justify-center w-full px-3 py-1.5 bg-white shadow-sm rounded-md ring-1 ring-inset ring-gray-300 hover:bg-gray-50 hover:ring-[#FF4343]">
                 {{ $status }}
               </button>
@@ -32,7 +32,7 @@
           </form>
         @endif
         {{-- ปุ่มส่งต่อให้สาขา --}}
-        @if ($roleCode == '2' && $key == '5' && $taskStatus != '5')
+        @if ($roleCode == '2' && $key == '6' && $taskStatus != '6')
           <div class="mt-5 flex justify-end">
             <form method="POST" action="{{ route('sale-admin.assign-task') }}">
               @csrf
