@@ -1,7 +1,7 @@
 <div class="sticky top-12 z-10 p-4 tracking-wider bg-white shadow-md">
-  <div class="grid grid-cols-5 ml-24 text-sm">
+  <div class="grid grid-cols-5 text-sm">
     @foreach ($statusThai as $key => $status)
-      <div class="pl-5">
+      <div class="px-3">
         @if ($taskStatus == $key)
           <span class="inline-flex justify-center w-full px-3 py-1.5 bg-[#FF4343] shadow-sm rounded-md text-white">
             {{ $status }}

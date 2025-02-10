@@ -1,9 +1,6 @@
 
 /* จะถูกทำทุกครั้งที่โหลดหน้าใหม่ */
 document.addEventListener('DOMContentLoaded', function () {
-  /* ตรวจสอบ สถานะของ sidebar */
-  sideAction();
-
   /* เมื่อมีการปรับขนาดหน้าจอ */
   window.addEventListener('resize', handleResize);
 
@@ -37,16 +34,6 @@ document.addEventListener('DOMContentLoaded', function () {
   /* เปิด-ปิด menu user dropdown */
   document.getElementById('head-user').addEventListener('click', toggleUserMenu);
 
-  /* เปิด sidebar */  
-  const openSide = document.getElementById('open-side');
-  if (openSide) {
-    openSide.addEventListener('click', toggleSidebar);
-  }
-  /* ปิด sidebar */
-  const closeSide = document.getElementById('close-side');
-  if (closeSide) {
-    closeSide.addEventListener('click', toggleSidebar);
-  }
 });
 
 function toggleMenu() {
@@ -57,28 +44,6 @@ function toggleMenu() {
 function toggleUserMenu() {
   const menu = document.getElementById('menu-user');
   menu.classList.toggle('hidden');
-}
-
-function toggleSidebar() {
-  const sidebar = document.getElementById('sidebar');
-  const sideTab = document.getElementById('side-tab');
-  if (sidebar && sideTab) {
-    sidebar.classList.toggle('hidden');
-    sideTab.classList.toggle('hidden');
-  }
-  sideAction();
-}
-
-function sideAction() {
-  const sidebar = document.getElementById('sidebar');
-  const content = document.getElementById('content');
-  if (sidebar) {
-    if (sidebar.classList.contains('hidden')) {
-      content.classList.remove('shifted');
-    } else {
-      content.classList.add('shifted');
-    }
-  }
 }
 
 function handleResize() {
@@ -95,13 +60,4 @@ function handleResize() {
   if (userDropdown && !userDropdown.classList.contains('hidden')) {
     userDropdown.classList.add('hidden');
   }
-
-  const sidebar = document.getElementById('sidebar');
-  const sideTab = document.getElementById('side-tab');
-  /* ปิด sidebar ถ้าหน้าจอมีขนาดเล็ก */
-  if (!isDesktop && sideTab && sideTab.classList.contains('hidden')) {
-    sidebar.classList.add('hidden');
-    sideTab.classList.remove('hidden');
-  }
-  sideAction();
 }

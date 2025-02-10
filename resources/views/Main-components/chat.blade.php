@@ -1,5 +1,5 @@
 {{-- ประวัติแชท --}}
-<div id="chat-history" class="ml-28 pb-5 flex-1 overflow-y-auto">
+<div id="chat-history" class="flex-1 pb-5 overflow-y-auto">
   @foreach ($messages as $msg)
   {{-- ส่วนของ พนง. --}}
 
@@ -12,7 +12,7 @@
         <div class="flex flex-col w-full max-w-[320px] leading-1.5 p-4 bg-green-100 rounded-xl">
     {{-- ส่วนของ ลค. --}}
     @else
-      <div class="flex items-start justify-start gap-2.5 mt-5">
+      <div class="flex items-start justify-start gap-2.5 mt-5 ml-3">
         <div class="flex flex-col w-full max-w-[320px] leading-1.5 px-4 py-2 bg-blue-100 rounded-xl">
     @endif
           {{-- detail --}}
@@ -77,12 +77,12 @@
   {{-- ข้อความที่ Quote ถึง --}}
   <div id="quoteBox" class="hidden p-2 mb-2 bg-blue-200 bg-opacity-60 rounded-lg">
     <div class="flex justify-between items-center">
-      <span id="quoteUser" class="ml-28 font-semibold w-8/12 truncate"></span>
+      <span id="quoteUser" class="ml-10 font-semibold w-8/12 truncate"></span>
       <button id="removeQuote" class="text-lg">&times;</button>
     </div>
-    <div id="quoteContent" class="text-sm ml-28 w-8/12 truncate"></div>
+    <div id="quoteContent" class="text-sm ml-10 w-3/4 truncate"></div>
   </div>
-  <div class="flex items-center py-4 pr-2 ml-28 space-x-2">
+  <div class="flex items-center py-4 mx-5 space-x-2">
     <form id="lineMessageForm" method="POST" action="{{ route('send-message') }}" enctype="multipart/form-data" class="flex w-full">
       @csrf
       {{-- ปุ่มอัพโหลดไฟล์ --}}
@@ -103,8 +103,8 @@
       <input type="hidden" name="select" value="true">
       <input type="hidden" name="taskStatus" value="{{ old('taskStatus', $taskStatus) }}">
       <input type="hidden" name="empCode" value="{{ old('empCode', $empCode) }}">
-      <input type="text" name="message" autocomplete="off" class="flex-1 px-3 py-2 border border-gray-500 rounded-full focus:outline-none focus:border-blue-500 text-sm" placeholder="พิมพ์ข้อความ..." required/>
-      <button type="submit" class="ml-2 mr-2 text-blue-500 rounded-full hover:bg-blue-100">
+      <input type="text" name="message" autocomplete="off" class="flex-1 px-3 py-2 border ml-2 border-gray-500 rounded-full focus:outline-none focus:border-blue-500 text-sm" placeholder="พิมพ์ข้อความ..." required/>
+      <button type="submit" class="ml-2 text-blue-500 rounded-full hover:bg-blue-100">
         <svg class="w-7 h-7 text-sky-600 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24" transform="rotate(90)">
           <path fill-rule="evenodd" d="M12 2a1 1 0 0 1 .932.638l7 18a1 1 0 0 1-1.326 1.281L13 19.517V13a1 1 0 1 0-2 0v6.517l-5.606 2.402a1 1 0 0 1-1.326-1.281l7-18A1 1 0 0 1 12 2Z" clip-rule="evenodd"/>
         </svg>

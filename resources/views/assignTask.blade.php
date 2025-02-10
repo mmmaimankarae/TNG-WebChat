@@ -4,7 +4,7 @@
   มอบหมายงานให้สาขา
 @endsection
 @section('content')
-  <div class="pl-36 pr-20 py-8 overflow-x-auto">
+  <div class="ml-96 pr-20 py-8 overflow-x-auto">
     <p class="text-center font-medium tracking-wider mb-3 break-words whitespace-pre-wrap"> หมอบหมายงานคุณ ' {{ $cusName}} ' ให้สาขา </p>
     <p class="font-medium tracking-wider mb-3"> เลือกภูมิภาคของสาขา </p>
     <form id="regionForm" method="POST" action="{{ route('sale-admin.assign-task') }}">

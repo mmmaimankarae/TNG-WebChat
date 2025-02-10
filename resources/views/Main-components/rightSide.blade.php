@@ -1,4 +1,4 @@
-<div class="flex flex-col right-0 w-80 h-screen bg-white border-l border-gray-200">
+<div class="fixed right-0 w-80 h-screen bg-white border-l border-gray-200">
     {{-- ส่วนข้อมูลลูกค้า --}}
     <div class="flex-none p-3 mr-3 text-sm  bg-white border-b border-gray-200">
       <div class="relative my-3">

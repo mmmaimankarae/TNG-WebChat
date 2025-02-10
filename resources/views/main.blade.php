@@ -13,7 +13,7 @@
 
 @section('content')
   @if ($select)
-  <div class="flex flex-1 h-screen">
+  <div class="flex flex-1 h-screen ml-72 mr-80">
     <div class="flex-1 flex flex-col">
       {{-- ส่วนของสถานะ --}}
       @include('Main-Components.status')

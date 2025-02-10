@@ -5,10 +5,8 @@
 
 {{-- SIDEBAR --}}
 <div id="sidebar" class="fixed left-0 z-20 w-72 h-screen overflow-y-auto bg-white shadow-md">
-  {{-- Close Button --}}
-  <button id="close-side" class="flex ml-auto mx-4 my-2 text-xl text-black hover:text-[#FF0000]">&times;</button>
   {{-- Search --}}
-  <form class="px-4 mb-5" action="{{ route('sale-admin.new-tasks') }}" method="POST">
+  <form class="px-4 mb-5 mt-8" action="{{ route('sale-admin.new-tasks') }}" method="POST">
     <div class="relative">
       <input type="text" name="search" placeholder="ค้นหาชื่อ, เบอร์โทรศัพท์" required 
         class="w-full py-2.5 px-2.5 text-xs font-medium rounded-md outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-[#FF0000]"/>
@@ -71,14 +69,4 @@
       @endif
     </div>
   </div>
-</div>
-
-{{-- SIDEBAR TOGGLE TO TAB --}}
-<div id="side-tab" class="hidden fixed left-0 z-10 w-8 h-screen flex items-center justify-center bg-white shadow-md">
-{{-- Hamburger Icon for Sidebar --}}
-  <button id="open-side" class="p-2 bg-white rounded-md translate-x-1 -translate-y-8" style="box-shadow: 1px 0 1px rgba(0, 0, 0, 0.2);">
-    <svg class="h-7 w-6" fill="none" stroke-width="2" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" d="M13 4.5v20 M18 4.5v20 M23 4.5v20" />
-    </svg>
-  </button>
 </div>
