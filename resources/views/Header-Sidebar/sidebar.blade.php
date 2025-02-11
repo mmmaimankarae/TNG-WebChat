@@ -56,7 +56,7 @@
                   <p class="text-sm font-medium w-8/12 truncate">{{ $chat->CusName }}</p>
                 @endif
 
-                @if ($chat->TasksStatusCode == '5')
+                @if ($chat->TasksStatusCode == '6')
                   <p class="inline-block px-2 text-xs border border-red-700 rounded-2xl">เสร็จสิ้น</p>
                 @elseif ($prevEmpAccName != null)
                   <p class="inline-block px-2 text-xs border border-green-700 rounded-2xl">{{ $prevEmpAccName }}</p>

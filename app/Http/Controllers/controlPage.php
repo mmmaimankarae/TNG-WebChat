@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Tasks;
+use App\Http\Controllers\sendMsg;
 use App\Http\Controllers\controlGetInfo\{empInfo, sidebarInfo, msgInfo};
 
 class controlPage extends Controller
@@ -17,15 +18,17 @@ class controlPage extends Controller
         '6' => 'เสร็จสิ้น'
     ];
 
-    public function __construct(msgInfo $msgInfo)
+    public function __construct(msgInfo $msgInfo, sendMsg $sendMsg)
     {
         $this->msgInfo = $msgInfo;
+        $this->sendMsg = $sendMsg;
     }
 
     public function default(Request $req)
     {
         $empInfo = new empInfo();
         $sidebarInfo = new sidebarInfo();
+        $select = false;
         
         $branchCode = $req->input('branchCode', $empInfo->getBranchCode());
         $accCode = $req->input('accCode', $empInfo->getAccCode());
@@ -61,7 +64,18 @@ class controlPage extends Controller
             ];
 
             if ($update) {
-                Tasks::updateStatus($req->input('TasksCode'), $taskStatus, $empCode);
+                $taskCode = $req->input('TasksCode');
+                if ($taskStatus === '6') {
+                    $req->merge(['file' => null]);
+                    $req->merge(['message' => 'ขอบคุญสำหรับการสั่งซื้อ ทางเรากำลังจัดส่งสินค้าให้ คุณลูกค้ารอรับได้เลย🙏']);
+                    $req->merge(['replyId' => $taskLineID]);
+                    
+                    $this->sendMsg->sendMessage($req);
+                    Tasks::updateStatus($taskCode, $taskStatus, $empCode);
+                    $select = false;
+                    return view('main', compact('sidebarChat', 'select'));
+                }
+                Tasks::updateStatus($taskCode, $taskStatus, $empCode);
             }
 
             return view('main', $viewData);

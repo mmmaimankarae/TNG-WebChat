@@ -14,15 +14,14 @@ class sendMsg extends Controller
 {
     private $lineService;
     private $nosql;
-    private $empInfo;
 
     public function __construct(LineService $lineService, Nosql $nosql)
     {
         $this->lineService = $lineService;
         $this->nosql = $nosql;
     }
-    
-    public static function sendMessage(Request $request)
+
+    public function sendMessage(Request $request)
     {
         $replyId = $request->input('replyId');
         $message = $request->input('message');
@@ -32,32 +31,27 @@ class sendMsg extends Controller
         $empCode = $request->input('empCode');
         $taskCode = $request->input('taskCode');
 
-        if($empCode != tasksInfo::getLastEmp($taskCode)) {
+        if ($empCode != tasksInfo::getLastEmp($taskCode)) {
             Tasks::updateStatus($taskCode, $request->input('taskStatus'), $empCode);
         }
 
         if ($file) {
+            // Handle file upload and sending image message
             // $path = $file->store('uploads', 'public');
             // $url = url(Storage::url($path));
             // \Log::info('Image URL: ' . $url);
-            
-            // // dd($url);
-
             // $response = $this->lineService->sendImageMessage($replyId, $url, $url);
-
             // if ($response && $response->getStatusCode() === 200) {
-            //     //$this->saveMessage($request, $url);
+            //     $this->saveMessage($request, $url);
             //     return redirect()->back()->withInput()->with('select', true);
             // } else {
             //     return response()->json(['status' => 'error', 'message' => $response ? $response->getBody()->getContents() : 'Error occurred'], 500);
-            // } 
-        } else if ($quote) {
+            // }
+        } elseif ($quote) {
             $response = $this->lineService->quoteMessage($replyId, $message, $quote);
 
             if ($response && $response->getStatusCode() === 200) {
-                $request->merge(['quoteType' => 'text']);
-                $this->saveMessage($request);
-                Tasks::setUpdateTime($taskCode);
+                $this->handleQuoteMessage($request, $taskCode, $replyId);
                 return redirect()->back()->withInput()->with('select', true);
             } else {
                 return response()->json(['status' => 'error', 'message' => $response ? $response->getBody()->getContents() : 'Error occurred'], 500);
@@ -71,11 +65,24 @@ class sendMsg extends Controller
                 Tasks::setUpdateTime($taskCode);
                 $request->session()->flash('TasksLineID', $replyId);
                 return redirect()->back()->withInput()->with('select', true);
-
             } else {
                 return response()->json(['status' => 'error', 'message' => $response ? $response->getBody()->getContents() : 'Error occurred'], 500);
             }
         }
+    }
+
+    private function handleQuoteMessage(Request $request, $taskCode, $replyId)
+    {
+        if ($request->input('quoteTypeInput') === 'image') {
+            $request->merge(['quoteContentInput' => 'รูปภาพ']);
+        } elseif ($request->input('quoteTypeInput') === 'sticker') {
+            $request->merge(['quoteContentInput' => 'สติกเกอร์']);
+        }
+        $request->merge(['quoteType' => 'text']);
+        $request->merge(['messageType' => 'text']);
+        $this->saveMessage($request);
+        Tasks::setUpdateTime($taskCode);
+        $request->session()->flash('TasksLineID', $replyId);
     }
 
     private function saveMessage(Request $request)
@@ -89,7 +96,7 @@ class sendMsg extends Controller
         return [
             'messageDate' => Carbon::now()->toDateString(),
             'messagetime' => Carbon::now()->toTimeString(),
-            'taskId' => $request->input('taskCode'),
+            'taskId' => $request->input('taskCode') ?? $request->input('TaskCode'),
             'messageContent' => $request->input('message'),
             'messageType' => $request->input('messageType'),
             'replyToId' => $request->input('replyId'),

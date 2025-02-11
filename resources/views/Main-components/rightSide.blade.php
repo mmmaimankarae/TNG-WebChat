@@ -3,7 +3,7 @@
     <div class="flex-none p-3 mr-3 text-sm  bg-white border-b border-gray-200">
       <div class="relative my-3">
         <span class="font-semibold">ชื่อลูกค้า:</span>
-        <input id="cusName" type="text" value="{{ $cusName }}" class="w-8/12 truncate" disabled readonly>
+        <input id="cusName" type="text" value="{{ old('replyName', $cusName) }}" class="w-8/12 truncate" disabled readonly>
         <button data-copy="cusName" id="cusNameCopy" class="absolute inline-flex items-center justify-center py-1.5 px-2 text-blue-600 border border-gray-300 rounded-md hover:bg-gray-100">
           <span id="icon-cusNamecopy" class="inline-flex items-center">
             <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 20">
@@ -20,7 +20,7 @@
 
       <div class="relative mt-2.5">
         <span class="font-semibold">รหัสลูกค้า:</span>
-        <input id="cusCode" type="text" value="{{ $cusCode }}" disabled readonly>
+        <input id="cusCode" type="text" value="{{ old('cusCode', $cusCode) }}" disabled readonly>
         <button data-copy="cusCode" id="cusCodeCopy" class="absolute inline-flex items-center justify-center py-1.5 px-2 text-red-600 border border-gray-300 rounded-md hover:bg-gray-100">
           <span id="icon-cusCodecopy" class="inline-flex items-center">
             <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 20">

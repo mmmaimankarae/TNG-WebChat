@@ -2,17 +2,17 @@
   <div class="grid grid-cols-5 text-sm">
     @foreach ($statusThai as $key => $status)
       <div class="px-3">
-        @if ($taskStatus == $key)
+        @if (old('taskStatus', $taskStatus) == $key)
           <span class="inline-flex justify-center w-full px-3 py-1.5 bg-[#FF4343] shadow-sm rounded-md text-white">
             {{ $status }}
           </span>
         @else
           <form method="POST" action="">
             @csrf
-            <input type="hidden" name="TasksLineID" value="{{ $taskLineID }}">
-            <input type="hidden" name="TasksCode" value="{{ $taskCode }}">
-            <input type="hidden" name="cusCode" value="{{ $cusCode }}">
-            <input type="hidden" name="cusName" value="{{ $cusName }}">
+            <input type="hidden" name="TasksLineID" value="{{ old('replyId', $taskLineID) }}">
+            <input type="hidden" name="TasksCode" value="{{ old('taskCode', $taskCode) }}">
+            <input type="hidden" name="cusCode" value="{{ old('cusCode', $cusCode) }}">
+            <input type="hidden" name="cusName" value="{{ old('replyName', $cusName) }}">
             <input type="hidden" name="select" value="true">
             <input type="hidden" name="update" value="true">
             <input type="hidden" name="taskStatus" value="{{ $key }}">
@@ -29,6 +29,8 @@
                 {{ $status }}
               </button>
             @else
+              <input type="hidden" name="userId" value="bot">
+              <input type="hidden" name="userName" value="tangbot">
               <button type="submit" class="inline-flex justify-center w-full px-3 py-1.5 bg-white shadow-sm rounded-md ring-1 ring-inset ring-gray-300 hover:bg-gray-50 hover:ring-[#FF4343]">
                 {{ $status }}
               </button>

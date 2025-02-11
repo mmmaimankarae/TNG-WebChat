@@ -42,12 +42,14 @@ window.onload = function () {
   const quoteContent = document.getElementById('quoteContent');
   const quoteTokenInput = document.getElementById('quoteToken');
   const quoteContentInput = document.getElementById('quoteContentInput');
+  const quoteTypeInput = document.getElementById('quoteTypeInput');
   const removeQuoteButton = document.getElementById('removeQuote');
 
   window.quoteMsg = function(button) {
     quoteUser.innerText = userName;
     quoteTokenInput.value = quoteToken;
     quoteContentInput.value = msgContent;
+    quoteTypeInput.value = msgType;
     if (msgType == "image") {
       quoteContent.innerText = "รูปภาพ";
     } else if (msgType == "sticker") {
@@ -68,6 +70,8 @@ window.onload = function () {
     removeQuoteButton.addEventListener('click', function() {
       quoteBox.classList.add('hidden');
       quoteTokenInput.value = '';
+      quoteContentInput.value = '';
+      quoteTypeInput.value = '';
     });
  }
 };

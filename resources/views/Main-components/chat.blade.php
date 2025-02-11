@@ -1,15 +1,14 @@
 {{-- ประวัติแชท --}}
 <div id="chat-history" class="flex-1 pb-5 overflow-y-auto">
   @foreach ($messages as $msg)
-  {{-- ส่วนของ พนง. --}}
-
-    @if (strpos($msg['userId'], 'TNG') === 0)
-      <div class="flex items-start justify-end gap-2.5 mt-5 mr-2">
-        <div class="flex flex-col w-full max-w-[320px] leading-1.5 p-3 bg-red-100 rounded-xl">
     {{-- ส่วนของ bot --}}
-    @elseif ($msg['userId'] === 'bot')
+    @if ($msg['userId'] === 'TNG-bot')
+    <div class="flex items-start justify-end gap-2.5 mt-5 mr-2">
+      <div class="flex flex-col w-full max-w-[320px] leading-1.5 p-4 bg-green-100 rounded-xl">
+    {{-- ส่วนของ พนง. --}}
+    @elseif (strpos($msg['userId'], 'TNG') === 0)
       <div class="flex items-start justify-end gap-2.5 mt-5 mr-2">
-        <div class="flex flex-col w-full max-w-[320px] leading-1.5 p-4 bg-green-100 rounded-xl">
+        <div class="flex flex-col w-full max-w-[320px] leading-1.5 p-3 bg-gray-200 rounded-xl">
     {{-- ส่วนของ ลค. --}}
     @else
       <div class="flex items-start justify-start gap-2.5 mt-5 ml-3">
@@ -18,7 +17,7 @@
           {{-- detail --}}
           @if (isset($msg['quoteType']) && $msg['quoteType'] === 'text')
             <div class="flex items-center space-x-2 rtl:space-x-reverse text-sm">
-              <span class="font-semibold w-2/5 truncate">{{ $msg['quoteContent'] }}</span>
+              <span class="w-2/5 truncate">{{ $msg['quoteContent'] }}</span>
             </div>
           <hr class="my-2">
           @endif
@@ -94,6 +93,7 @@
       {{-- ช่องกรอกข้อความ --}}
       <input type="hidden" name="quoteToken" id="quoteToken">
       <input type="hidden" name="quoteContentInput" id="quoteContentInput">
+      <input type="hidden" name="quoteTypeInput" id="quoteTypeInput">
       <input type="hidden" name="replyId" value="{{ old('replyId', $taskLineID) }}">
       <input type="hidden" name="replyName" value="{{ old('replyName', $cusName) }}">
       <input type="hidden" name="cusCode" value="{{ old('cusCode', $cusCode) }}">
