@@ -14,11 +14,13 @@ class sendMsg extends Controller
 {
     private $lineService;
     private $nosql;
+    private $tasksModel;
 
-    public function __construct(LineService $lineService, Nosql $nosql)
+    public function __construct(LineService $lineService, Nosql $nosql, Tasks $tasksModel)
     {
         $this->lineService = $lineService;
         $this->nosql = $nosql;
+        $this->tasksModel = $tasksModel;
     }
 
     public function sendMessage(Request $request)
@@ -32,7 +34,7 @@ class sendMsg extends Controller
         $taskCode = $request->input('taskCode');
 
         if ($empCode != tasksInfo::getLastEmp($taskCode)) {
-            Tasks::updateStatus($taskCode, $request->input('taskStatus'), $empCode);
+            $this->tasksModel->updateStatus($taskCode, $request->input('taskStatus'), $empCode);
         }
 
         if ($file) {
@@ -62,7 +64,7 @@ class sendMsg extends Controller
             if ($response && $response->getStatusCode() === 200) {
                 $request->merge(['messageType' => 'text']);
                 $this->saveMessage($request);
-                Tasks::setUpdateTime($taskCode);
+                $this->tasksModel->setUpdateTime($taskCode);
                 $request->session()->flash('TasksLineID', $replyId);
                 return redirect()->back()->withInput()->with('select', true);
             } else {
@@ -81,7 +83,7 @@ class sendMsg extends Controller
         $request->merge(['quoteType' => 'text']);
         $request->merge(['messageType' => 'text']);
         $this->saveMessage($request);
-        Tasks::setUpdateTime($taskCode);
+        $this->tasksModel->setUpdateTime($taskCode);
         $request->session()->flash('TasksLineID', $replyId);
     }
 

@@ -42,8 +42,8 @@
           <div class="mt-5 flex justify-end">
             <form method="POST" action="{{ route('sale-admin.assign-task') }}">
               @csrf
-              <input type="hidden" name="taskCode" value="{{ $taskCode }}">
-              <input type="hidden" name="cusName" value="{{ $cusName }}">
+              <input type="hidden" name="taskCode" value="{{ old('taskCode', $taskCode) }}">
+              <input type="hidden" name="cusName" value="{{ old('replyName', $cusName) }}">
               <button type="submit" class="text-xs py-1 px-3 border border-gray-500 rounded-2xl hover:bg-gray-300">มอบหมายให้สาขา</button>
             </form>
           </div>

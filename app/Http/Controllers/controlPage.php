@@ -10,6 +10,8 @@ use App\Http\Controllers\controlGetInfo\{empInfo, sidebarInfo, msgInfo};
 class controlPage extends Controller
 {
     private msgInfo $msgInfo;
+    private sendMsg $sendMsg;
+    private Tasks $tasksModel;
     private array $statusThai = [
         '2' => 'รับเรื่องแล้ว', 
         '3' => 'แนบใบเสนอราคา',
@@ -18,16 +20,18 @@ class controlPage extends Controller
         '6' => 'เสร็จสิ้น'
     ];
 
-    public function __construct(msgInfo $msgInfo, sendMsg $sendMsg)
+    public function __construct(msgInfo $msgInfo, sendMsg $sendMsg, Tasks $tasksModel)
     {
         $this->msgInfo = $msgInfo;
         $this->sendMsg = $sendMsg;
+        $this->tasksModel = $tasksModel;
     }
 
     public function default(Request $req)
     {
         $empInfo = new empInfo();
         $sidebarInfo = new sidebarInfo();
+        $tasksModel = new Tasks();
         $select = false;
         
         $branchCode = $req->input('branchCode', $empInfo->getBranchCode());
@@ -71,11 +75,11 @@ class controlPage extends Controller
                     $req->merge(['replyId' => $taskLineID]);
                     
                     $this->sendMsg->sendMessage($req);
-                    Tasks::updateStatus($taskCode, $taskStatus, $empCode);
+                    $this->tasksModel->updateStatus($taskCode, $taskStatus, $empCode);
                     $select = false;
                     return view('main', compact('sidebarChat', 'select'));
                 }
-                Tasks::updateStatus($taskCode, $taskStatus, $empCode);
+                $this->tasksModel->updateStatus($taskCode, $taskStatus, $empCode);
             }
 
             return view('main', $viewData);

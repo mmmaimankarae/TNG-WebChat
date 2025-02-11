@@ -11,7 +11,8 @@ use Carbon\Carbon;
 
 class Tasks extends Model
 {   
-    public static function assign($taskCode, $branchCode)
+
+    public function assign($taskCode, $branchCode)
     {
         $newTask = self::getNewTask($branchCode);
         $updated = DB::table('TASKS')
@@ -21,12 +22,19 @@ class Tasks extends Model
             'TasksBrchCode' => $branchCode, 
             'TasksStatusCode' => '1', 
             'TasksUpdate' => Carbon::now()
-        ]);   
-        self::setTaskHis($taskCode, NULL, '1');
+        ]);
+        self::setTaskHis($newTask, NULL, '1');
+        $this->updateNosql($taskCode, $newTask);
         return $updated;
     }
 
-    private static function getNewTask($branchCode) {
+    private function updateNosql($oldTaskId, $newTaskId)
+    {
+        $noql = new Nosql();
+        $noql->updateTaskId($oldTaskId, $newTaskId);
+    }
+
+    private function getNewTask($branchCode) {
         $lastTask = DB::table('TASKS')
                     ->where('TasksBrchCode', $branchCode)
                     ->orderBy('TasksCode', 'desc')
@@ -43,7 +51,7 @@ class Tasks extends Model
         return $newTask;
     }
 
-    public static function updateStatus($taskCode, $statusCode, $empCode)
+    public function updateStatus($taskCode, $statusCode, $empCode)
     {
         $updated = DB::table('TASKS')
                     ->where('TasksCode', $taskCode)
@@ -55,7 +63,7 @@ class Tasks extends Model
         return $updated;
     }
 
-    private static function setTaskHis($taskCode, $empCode, $taskHisStatus)
+    private function setTaskHis($taskCode, $empCode, $taskHisStatus)
     {
         // ดึงค่า TaskHisSeq สูงสุดจาก TASKSTATUS_HISTORICAL
         $maxSeq = DB::table('TASKSTATUS_HISTORICAL')
@@ -76,13 +84,13 @@ class Tasks extends Model
         // เพิ่ม TaskHisEmpCusCode ถ้า $empCode ไม่เป็น NULL
         if ($empCode !== NULL) {
             $data['TaskHisEmpCusCode'] = $empCode;
-        }
+        } 
 
         // แทรกข้อมูลใหม่ลงใน TASKSTATUS_HISTORICAL
         DB::table('TASKSTATUS_HISTORICAL')->insert($data);
     }
 
-    public static function setUpdateTime($taskCode)
+    public function setUpdateTime($taskCode)
     {
         $update = DB::table('TASKS')
                 ->where('TasksCode', $taskCode)

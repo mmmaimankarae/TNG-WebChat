@@ -33,4 +33,12 @@ class Nosql
         $result = $this->collection->updateOne($filter, ['$set' => $update]);
         return $result->getModifiedCount();
     }
+
+    public function updateTaskId($oldTaskId, $newTaskId)
+    {
+        $this->collection->updateMany(
+            ['taskId' => $oldTaskId],
+            ['$set' => ['taskId' => $newTaskId]]
+        );
+    }
 }

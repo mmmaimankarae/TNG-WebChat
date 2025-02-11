@@ -30,7 +30,8 @@ class controlAssignTask extends Controller
     }
 
     public function assignTask(Request $req) {
-        Tasks::assign($req->input('taskCode'), $req->input('branchCode'));
+        $tasksModel = new Tasks();
+        $tasksModel->assign($req->input('taskCode'), $req->input('branchCode'));
         return redirect()->route('sale-admin.new-tasks');
     }
 }
