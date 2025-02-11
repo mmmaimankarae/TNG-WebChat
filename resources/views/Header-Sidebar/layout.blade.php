@@ -22,13 +22,15 @@
   @elseif (in_array(request()->attributes->get('decoded')->roleCode, ['3', '4']))
     @include('Header-Sidebar.managerAndCheif')
     @include('Header-Sidebar.sidebar')
+  @elseif(request()->attributes->get('decoded')->roleCode == '5')
+    @include('Header-Sidebar.itSupport')
   @endif
 
   {{-- แสดงเนื้อหาในแต่ละหน้า --}}
   <div id="content" class="content">
     @yield('content')
   </div>
-  @if ($select)
+  @if (isset($select) && $select)
     @include('Popup.quotation')
     @include('Popup.invoice')
     @include('Popup.payment')

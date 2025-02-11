@@ -11,6 +11,7 @@ use App\Http\Controllers\controlStatus;
 require __DIR__.'/sale-admin.php';
 require __DIR__.'/internal-sale.php';
 require __DIR__.'/manager-chief.php';
+require __DIR__.'/it-support.php';
 
 /* authentication เมื่อยังไม่ได้ signin */
 Route::get('/', [dupFormAuthen::class, 'signin']);

@@ -11,7 +11,8 @@ class authorizePages
         '1' => 'internal-sale',
         '2' => 'sale-admin',
         '3' => 'branch-manager',
-        '4' => 'office-chief'
+        '4' => 'office-chief',
+        '5' => 'it-support',
     ];
 
     public function handle(Request $request, Closure $next)
@@ -37,6 +38,9 @@ class authorizePages
                 break;
             case '4':
                 return redirect()->route('office-chief.new-tasks');
+                break;
+            case '5':
+                return redirect()->route('it-support.employee');
                 break;
             default:
                 return redirect('/');
