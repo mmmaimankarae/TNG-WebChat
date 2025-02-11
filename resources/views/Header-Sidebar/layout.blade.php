@@ -31,6 +31,7 @@
   @if ($select)
     @include('Popup.quotation')
     @include('Popup.invoice')
+    @include('Popup.payment')
   @endif
 </body>
 </html>

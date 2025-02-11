@@ -25,5 +25,18 @@ document.addEventListener("DOMContentLoaded", () => {
             invoicePopup.classList.add('hidden');
         });
     }
+
+    const showPaymentPopup = document.getElementById('showPaymentPopup');
+    const paymentPopup = document.getElementById('paymentPopup');
+    const cancelPaymentPopup = document.getElementById('cancelPaymentPopup');
+    if (showPaymentPopup) {
+        showPaymentPopup.addEventListener('click', () => {
+            paymentPopup.classList.remove('hidden');
+        });
+
+        cancelPaymentPopup.addEventListener('click', () => {
+            paymentPopup.classList.add('hidden');
+        });
+    }
 });
   

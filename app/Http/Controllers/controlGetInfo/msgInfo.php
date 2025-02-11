@@ -24,43 +24,6 @@ class msgInfo extends Controller
         return  $this->mongoClient->selectDatabase(env('MONGO_DATABASE'))->selectCollection(env('MONGO_COLLECTION'));
     }
 
-    public function getMsg($taskCode)
-    {
-        $collection = $this->getCollections();
-        $messages = $collection->find(['taskId' => $taskCode])->toArray();
-    
-        /* หา Msg จาก รหัส Task เก่า */
-        $allMessages = $this->getOldMsg($messages);
-    
-        /* เรียงข้อมูลตาม messageDate และ messagetime */
-        usort($allMessages, function($a, $b) {
-            $dateA = strtotime($a['messageDate'] . ' ' . $a['messagetime']);
-            $dateB = strtotime($b['messageDate'] . ' ' . $b['messagetime']);
-            return $dateA - $dateB;
-        });
-        return $allMessages;
-    }
-    
-    private function getOldMsg($messages)
-    {
-        $collection = $this->getCollections();
-        $allMessages = $messages;
-        $oldTasksFound = [];
-
-        foreach ($messages as $message) {
-            if (isset($message['oldTasks']) && $message['oldTasks'] != '') {
-                $oldTasks = strpos($message['oldTasks'], ',') !== false ? explode(',', $message['oldTasks']) : [$message['oldTasks']];
-                $oldTasksFound = array_merge($oldTasksFound, $oldTasks);
-                /* กรอง รหัส Tasks ที่ซ้ำออก */
-                $oldTasksFound = array_unique($oldTasksFound);
-                foreach ($oldTasksFound as $oldTaskCode) {
-                    $oldMessages = $collection->find(['taskId' => $oldTaskCode])->toArray();
-                    $allMessages = array_merge($allMessages, $oldMessages);
-                }
-            }
-        }
-        return $allMessages;
-    }
     
     public function previewImage($messageId)
     {

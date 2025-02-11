@@ -1,9 +1,33 @@
+<script src="{{ asset('/js/previewImage.js') }}"></script>
 <div id="invoicePopup" tabindex="-1" class="hidden fixed z-50 inset-0 flex justify-center items-center w-full h-full bg-gray-500/60">
   <div class="relative w-4xl p-4">
     <div class="relative bg-white rounded-lg shadow">
       <div class="p-4 md:p-5 text-center">
         <p class="text-lg font-semibold">แนบใบกำกับภาษี และกรอกข้อมูลของลูกค้า</p>
-        <div class="my-4 grid grid-cols-2 gap-4">
+        <div class="mt-4">
+          <label class="inline-flex items-center">
+            <input type="radio" name="deliOption" value="1" class="form-radio" required>
+            <span class="ml-2">มารับที่สาขา</span>
+          </label>
+          <label class="inline-flex items-center ml-4">
+            <input type="radio" name="deliOption" value="2" class="form-radio" required>
+            <span class="ml-2">จัดส่งรอบเช้า</span>
+          </label>
+          <label class="inline-flex items-center ml-4">
+            <input type="radio" name="deliOption" value="3" class="form-radio" required>
+            <span class="ml-2">จัดส่งรอบบ่าย</span>
+          </label>
+        </div>
+
+        <div class="my-4 grid grid-cols-3 gap-4">
+          <div>
+            <label for="quotaNo" class="block text-left text-sm font-medium">เลขที่ใบเสนอราคา</label>
+            <div class="mt-2">
+              <input type="text" name="quotaNo" id="quotaeNo"
+                class="block w-full px-3 py-2 bg-white rounded-md outline-1 -outline-offset-1 outline-gray-300
+                placeholder:text-sm placeholder:text-gray-400" placeholder=" โปรดกรอกเลขที่ใบเสนอราคา">
+            </div>
+          </div>
           <div>
             <label for="invoiceNo" class="block text-left text-sm font-medium">เลขที่ใบกำกับภาษี</label>
             <div class="mt-2">
@@ -13,11 +37,11 @@
             </div>
           </div>
           <div>
-            <label for="cusName" class="block text-left text-sm font-medium">ชื่อลูกค้า</label>
+            <label for="deliWeight" class="block text-left text-sm font-medium">น้ำหนักสินค้า</label>
             <div class="mt-2">
-              <input type="text" name="cusName" id="cusName"
+              <input type="text" name="deliWeight" id="deliWeight"
                 class="block w-full px-3 py-2 bg-white rounded-md outline-1 -outline-offset-1 outline-gray-300
-                placeholder:text-sm placeholder:text-gray-400" placeholder=" โปรดกรอกชื่อลูกค้าที่ระบุในใบกำกับภาษี">
+                placeholder:text-sm placeholder:text-gray-400" placeholder=" โปรดกรอกน้ำหนักสินค้าที่จะขนส่ง">
             </div>
           </div>
         </div>
@@ -50,26 +74,7 @@
           </div>
         </div>
 
-        <div class="my-4 grid grid-cols-2 gap-4">
-          <div>
-            <label for="deliDate" class="block text-left text-sm font-medium">วันที่ส่งของ</label>
-            <div class="mt-2">
-              <input type="text" name="deliDate" id="deliDate"
-                class="block w-full px-3 py-2 bg-white rounded-md outline-1 -outline-offset-1 outline-gray-300
-                placeholder:text-sm placeholder:text-gray-400" placeholder=" โปรดกรอกวันที่ส่งของ">
-            </div>
-          </div>
-          <div>
-            <label for="deliWeight" class="block text-left text-sm font-medium">น้ำหนักสินค้า</label>
-            <div class="mt-2">
-              <input type="text" name="deliWeight" id="deliWeight"
-                class="block w-full px-3 py-2 bg-white rounded-md outline-1 -outline-offset-1 outline-gray-300
-                placeholder:text-sm placeholder:text-gray-400" placeholder=" โปรดกรอกน้ำหนักสินค้าที่จะขนส่ง">
-            </div>
-          </div>
-        </div>
-
-        <label class="block text-sm font-medium" for="file_input">อัปโหลดใบเสนอราคาที่ลูกค้าตกลงสั่งซื้อ</label>
+        <label class="block text-sm font-medium" for="file_input">อัปโหลดใบกำกับภาษี</label>
         <div class="relative text-sm">
           <input class="block absolute top-0 left-0 z-10 w-full px-3 py-2 mt-2 bg-white rounded-md outline-1 -outline-offset-1 outline-gray-300 opacity-0" id="file_input" type="file" accept=".JPEG, .PNG">
           <div class="block w-full px-3 py-2 mt-2 text-gray-400 bg-white rounded-md outline-1 -outline-offset-1 outline-gray-300" id="file_input_label">
