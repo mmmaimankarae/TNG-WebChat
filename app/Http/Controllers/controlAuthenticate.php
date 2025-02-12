@@ -79,12 +79,11 @@ class controlAuthenticate extends Controller
             }
             /* เช็ค Password เพื่อเข้าสู่ระบบ */
             else if (Hash::check($password, $account->AccPass)) {
-                $branchCode = $this->getBranchCode($accName);
                 $payload = [
                     'accCode' => trim($account->AccCode),
                     'empCode' => trim($account->AccEmpCode),
                     'roleCode' => trim($account->AccRoleCode),
-                    'branchCode' => trim($branchCode->EmpBrchCode),
+                    'branchCode' => trim($account->EmpBrchCode),
                     'iat' => time(),
                     'exp' => time() + (8 * 3600)
                 ];
@@ -124,21 +123,16 @@ class controlAuthenticate extends Controller
     /* ตรวจสอบว่ามี Account หรือไม่ */
     private function haveAccount($accName)
     {
-        $account = DB::table('ACCOUNT')
-                    ->where('AccName', $accName)
+        $account = DB::table('ACCOUNT as A')
+                    ->leftJoin('EMPLOYEE as E', 'A.AccEmpCode', '=', 'E.EmpCode')
+                    ->where('A.AccName', $accName)
+                    ->where(function ($query) {
+                        $query->where('E.EmpResign', '!=', 'Y')
+                              ->orWhereNull('E.EmpResign');
+                    })
+                    ->select('A.*', 'E.*')
                     ->first();
         return $account;
-    }
-
-    /* ดึง BranchCode จากฐานข้อมูล */
-    private function getBranchCode($accName)
-    {
-        $branchCode = DB::table('EMPLOYEE')
-                    ->join('ACCOUNT', 'EMPLOYEE.EmpCode', '=', 'ACCOUNT.AccEmpCode')
-                    ->where('ACCOUNT.AccName', $accName)
-                    ->select('EMPLOYEE.EmpBrchCode')
-                    ->first();
-        return $branchCode;
     }
 
     /* ออกจากระบบ */

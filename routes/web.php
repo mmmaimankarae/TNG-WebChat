@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\controlAuthenticate as authen;
 use App\Http\Controllers\controlDupView\dupFormAuthen;
+use App\Http\Controllers\controlDupView\dupInsertCSV as csv;
 use App\Http\Controllers\controlGetInfo\msgInfo;
 use App\Models\Tasks;
 use App\Http\Controllers\sendMsg;
@@ -38,6 +39,10 @@ Route::post('/send-message', [sendMsg::class, 'sendMessage'])->name('send-messag
 Route::post('/unsend', [sendMsg::class, 'unsendMsg'])->name('unsend');
   /* on status track */
 Route::post('/quota', [controlStatus::class, 'quota'])->name('status.quota');
+
+/* เพิ่มข้อมูล */
+Route::post('/add-data', [csv::class, 'uploadCSV'])->name('add-data');
+Route::post('/add-data-type', [csv::class, 'addProdType'])->name('add-data-type');
 
 /* ออกจากระบบ */
 Route::get('/signout', [authen::class, 'authenSignout']);

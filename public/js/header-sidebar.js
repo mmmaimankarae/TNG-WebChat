@@ -18,7 +18,9 @@ document.addEventListener('DOMContentLoaded', function () {
         || (linkPath.includes('current-tasks') && currentPage.includes('assign-task'))
         || (linkPath.includes('credit-debit') && currentPage.includes('detail-credit-debit'))) {
         link.setAttribute('aria-current', 'page');
-        link.querySelector('.notiHead-style').setAttribute('noti', 'hover');
+        if (link.querySelector('.notiHead-style')) {
+          link.querySelector('.notiHead-style').setAttribute('noti', 'hover');
+        }
       } else {
         link.setAttribute('aria-current', 'false');
       }

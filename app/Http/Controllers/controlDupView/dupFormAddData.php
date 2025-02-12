@@ -18,29 +18,30 @@ class dupFormAddData extends Controller
     }
 
     public function default() {
-        if ($this->currentRoute === 'add-employee') {
+        if ($this->currentRoute === 'employee') {
             return $this->sampleEmp();
-        } else if ($this->currentRoute === 'add-branch') {
+        } else if ($this->currentRoute === 'branch') {
             return $this->sampleBranch();
-        } else if ($this->currentRoute === 'add-product') {
+        } else if ($this->currentRoute === 'product') {
             return $this->sampleProd();
         }
     }
 
     private function sampleEmp() {
-        $title = 'เพิ่มข้อมูลพนักงาน';
+        $title = 'ข้อมูลพนักงาน';
         $table = [
-            '1' => 'ชื่อ',
-            '2' => 'นามสกุล',
-            '3' => 'สาขา',
-            '4' => 'รหัสตำแหน่ง',
+            '1' => 'รหัสพนักงาน',
+            '2' => 'ชื่อ',
+            '3' => 'นามสกุล',
+            '4' => 'สาขา',
+            '5' => 'รหัสตำแหน่ง',
         ];
         $data = $this->tableInfo->roleInfo();
         return view('support-data', compact('title', 'table', 'data'));
     }
 
     private function sampleBranch() {
-        $title = 'เพิ่มข้อมูลสาขา';
+        $title = 'ข้อมูลสาขา';
         $table = [
             '1' => 'ชื่อย่อสาขา',
             '2' => 'ชื่อสาขา',
@@ -54,11 +55,12 @@ class dupFormAddData extends Controller
             '10' => 'เบอร์โทร',
             '11' => 'รหัสภูมิภาค',
         ];
-        return view('support-data', compact('title', 'table'));
+        $data = $this->tableInfo->regionInfo();
+        return view('support-data', compact('title', 'table', 'data'));
     }
 
     private function sampleProd() {
-        $title = 'เพิ่มข้อมูลสินค้า';
+        $title = 'ข้อมูลสินค้า';
         $table = [
             '1' => 'รหัสสินค้า',
             '2' => 'ชื่อสินค้า',

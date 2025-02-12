@@ -17,4 +17,9 @@ class TableInfo extends Controller
         $prodType = DB::table('PRODUCTTYPE')->get();
         return $prodType;
     }
+
+    public function regionInfo() {
+        $region = DB::table('REGION')->get();
+        return $region;
+    }
 }
