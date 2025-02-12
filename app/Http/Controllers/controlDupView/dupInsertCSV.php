@@ -16,11 +16,10 @@ class dupInsertCSV extends Controller
         $header = fgetcsv($file);
         $count = count($header);
         $data = [];
-
+        while ($row = fgetcsv($file)) {
+            $data = array_merge($data, [$row]);
+        }
         if ($count === 5) {
-            while ($row = fgetcsv($file)) {
-                $data = array_merge($data, [$row]);
-            }
             $inserted = (new InsertBasedData)->insertEmp($data);
             if ($inserted) {
                 session()->flash('messageInsert', 'ข้อมูลถูกเพิ่มเรียบร้อยแล้ว');
@@ -30,9 +29,6 @@ class dupInsertCSV extends Controller
                 return redirect()->back();
             }
         } else if ($count === 11) {
-            while ($row = fgetcsv($file)) {
-                $data = array_merge($data, [$row]);
-            }
             $inserted = (new InsertBasedData)->insertBranch($data);
             if ($inserted) {
                 session()->flash('messageInsert', 'ข้อมูลถูกเพิ่มเรียบร้อยแล้ว');
@@ -42,7 +38,14 @@ class dupInsertCSV extends Controller
                 return redirect()->back();
             }
         } else if ($count === 4) {
-            return $this->sampleProd();
+            $inserted = (new InsertBasedData)->insertProd($data);
+            if ($inserted) {
+                session()->flash('messageInsert', 'ข้อมูลถูกเพิ่มเรียบร้อยแล้ว');
+                return redirect()->back();
+            } else {
+                session()->flash('messageInsert', 'ข้อมูลไม่ถูกเพิ่ม กรุณาสอบข้อมูลอีกครั้ง');
+                return redirect()->back();
+            }
         }
     }
 

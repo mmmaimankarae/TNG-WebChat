@@ -79,6 +79,14 @@ class InsertBasedData extends Model
 
     public function insertProd($data)
     {
+        $data = array_map(function($item) {
+            return [
+                'ProdCode' => $item[0],
+                'ProdDesc' => $item[1],
+                'ProdMeasure' => $item[2],
+                'ProdGroupCode' => $item[3],
+            ];
+        }, $data);
         $inserted = DB::table('PRODUCT')->insert($data);
         return $inserted;
     }
