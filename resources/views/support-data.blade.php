@@ -92,7 +92,7 @@
           <option value="{{ $brch->BrchCode }}">{{ $brch->BrchName }}</option>
         @endforeach
       </select>
-      <button type="submit" class="ml-5 mt-2 px-4 py-2 text-white bg-amber-500 rounded-md">เพิ่มประเภท</button>
+      <button type="submit" class="ml-5 mt-2 px-4 py-2 text-white bg-amber-500 rounded-md">ยืนยัน</button>
     </form>
   </div>
 
