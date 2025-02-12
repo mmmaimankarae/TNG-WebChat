@@ -37,7 +37,8 @@ class dupFormAddData extends Controller
             '5' => 'รหัสตำแหน่ง',
         ];
         $data = $this->tableInfo->roleInfo();
-        return view('support-data', compact('title', 'table', 'data'));
+        $branch = $this->tableInfo->branchInfo();
+        return view('support-data', compact('title', 'table', 'data', 'branch'));
     }
 
     private function sampleBranch() {

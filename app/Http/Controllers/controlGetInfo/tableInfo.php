@@ -22,4 +22,9 @@ class TableInfo extends Controller
         $region = DB::table('REGION')->get();
         return $region;
     }
+
+    public function branchInfo() {
+        $branch = DB::table('BRANCH')->get();
+        return $branch;
+    }
 }

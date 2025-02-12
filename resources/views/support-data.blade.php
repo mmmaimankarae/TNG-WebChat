@@ -72,5 +72,42 @@
         <input type='text' name='typeName' class="w-1/3 px-3 py-2 mt-2 ml-5 text-gray-500 border rounded-md" placeholder="กรุณาระบุประเภทสินค้า" required>
         <button type="submit" class="ml-5 mt-2 px-4 py-2 text-white bg-amber-500 rounded-md">เพิ่มประเภท</button>
       </form>
+    </div>
+  @endif
+
+  @if ($title == 'ข้อมูลพนักงาน')
+  <div class="container mx-auto p-4 mb-12">
+    <h2 class="text-xl font-semibold mb-4">ย้ายสาขาให้พนักงาน</h2>
+    <h5 class="text-sm text-red-500 mb-4">
+      @if (session('messageUpBrchEmp')) 
+        {{ session('messageUpBrchEmp') }} 
+      @endif
+    </h5>
+    <form action="{{ route('change-data') }}" method="POST">
+      @csrf
+      <input type='text' name='empCode' class="w-1/3 px-3 py-2 mt-2 text-gray-500 border rounded-md" placeholder="กรุณาระบุรหัสประเภทสินค้า" required>
+      <select name="brchCode" class="w-1/3 px-3 py-2 mt-2 text-gray-500 border rounded-md" required>
+        <option value="">เลือกสาขา</option>
+        @foreach ($branch as $brch)
+          <option value="{{ $brch->BrchCode }}">{{ $brch->BrchName }}</option>
+        @endforeach
+      </select>
+      <button type="submit" class="ml-5 mt-2 px-4 py-2 text-white bg-amber-500 rounded-md">เพิ่มประเภท</button>
+    </form>
+  </div>
+
+  <div class="container mx-auto p-4 mb-12">
+    <h2 class="text-xl font-semibold mb-4">พนักงานลาออก</h2>
+    <h5 class="text-sm text-red-500 mb-4">
+      @if (session('messageReEmp')) 
+        {{ session('messageReEmp') }} 
+      @endif
+    </h5>
+    <form action="{{ route('change-data') }}" method="POST">
+      @csrf
+      <input type='text' name='empCode' class="w-1/3 px-3 py-2 mt-2 text-gray-500 border rounded-md" placeholder="กรุณาระบุรหัสพนักงาาน" required>
+      <button type="submit" class="ml-5 mt-2 px-4 py-2 text-white bg-amber-500 rounded-md">ยืนยัน</button>
+    </form>
+  </div>
   @endif
 @endsection

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\controlDupView;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\InsertBasedData;
+use App\Models\Employee;
 
 class dupInsertCSV extends Controller
 {
@@ -53,6 +54,28 @@ class dupInsertCSV extends Controller
         } else {
             session()->flash('messageInsertPd', 'ข้อมูลไม่ถูกเพิ่ม กรุณาสอบข้อมูลอีกครั้ง');
             return redirect()->back();
+        }
+    }
+
+    public function setEmpData(Request $request) {
+        if($request->input('brchCode')) {
+            $inserted = (new Employee)->setNewBranch($request->input('empCode'), $request->input('brchCode'));
+            if ($inserted) {
+                session()->flash('messageUpBrchEmp', 'ข้อมูลถูกอัปเดทเรียบร้อยแล้ว');
+                return redirect()->back();
+            } else {
+                session()->flash('messageUpBrchEmp', 'ข้อมูลไม่ถูกอัปเดท กรุณาสอบข้อมูลอีกครั้ง');
+                return redirect()->back();
+            }
+        } else {
+            $inserted = (new Employee)->setResign($request->input('empCode'));
+            if ($inserted) {
+                session()->flash('messageReEmp', 'ข้อมูลถูกอัปเดทเรียบร้อยแล้ว');
+                return redirect()->back();
+            } else {
+                session()->flash('messageReEmp', 'ข้อมูลไม่ถูกอัปเดท กรุณาสอบข้อมูลอีกครั้ง');
+                return redirect()->back();
+            }
         }
     }
 }
