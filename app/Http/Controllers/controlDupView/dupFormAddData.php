@@ -66,15 +66,22 @@ class dupFormAddData extends Controller
         return view('support-data', compact('title', 'table', 'data', 'accCode'));
     }
 
-    private function sampleProd() {
+    private function sampleProd($accCode) {
         $title = 'ข้อมูลสินค้า';
         $table = [
             '1' => 'รหัสสินค้า',
             '2' => 'ชื่อสินค้า',
             '3' => 'หน่วยนับ',
-            '4' => 'รหัสประเภทสินค้า',
+            '4' => 'สถานะการขารย (Y = ไม่ขาย)',
+            '5' => 'รหัสประเภทสินค้า',
+        ];
+
+        $tableType = [
+            '1' => 'รหัสประเภทสินค้า',
+            '2' => 'ชื่อประเภทสินค้า',
+            '3' => 'สถานะประเภท (Y = ยกเลิกประเภท)',
         ];
         $data = $this->tableInfo->prodTypeInfo();
-        return view('support-data', compact('title', 'table', 'data'));
+        return view('support-data', compact('title', 'table', 'data', 'accCode', 'tableType'));
     }
 }

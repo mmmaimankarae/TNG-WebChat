@@ -147,30 +147,141 @@ class InsertBasedData extends Model
                 }
             }
         }
+
+        try {
+            DB::table('LOG_DATA')->insert([
+                'LogAccCode' => $accCode,
+                'LogDate' => date('Y-m-d H:i:s'),
+                'LogTable' => 'BRANCH',
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Model InsertBasedData, Database error: ' . $e->getMessage());
+            return false;
+        }
         return true;
     }
 
-    public function insertProd($data)
+    public function insertProd($data, $accCode)
     {
         $data = array_map(function($item) {
             return [
                 'ProdCode' => $item[0],
                 'ProdDesc' => $item[1],
                 'ProdMeasure' => $item[2],
-                'ProdGroupCode' => $item[3],
+                'ProdGroupCode' => $item[4],
+                'ProdCancle' => $item[3],
             ];
         }, $data);
-        $inserted = DB::table('PRODUCT')->insert($data);
-        return $inserted;
+
+        foreach ($data as $item) {
+            if($item['ProdCancle'] == '') {
+                $item['ProdCancle'] = 'N';
+            }
+
+            /* ตรวจสอบว่าเคยมีข้อมูลนั่นๆ อยู่ไหม */
+            $existingProduct = DB::table('PRODUCT')->where('ProdCode', $item['ProdCode'])->first();
+
+            if ($existingProduct) {
+                /* ตรวจสอบว่าข้อมูลมีการเปลี่ยนแปลงหรือไม่ */
+                $updateData = [];
+                foreach ($item as $key => $value) {
+                    if ($existingProduct->$key != $value) {
+                        $updateData[$key] = $value;
+                    }
+                }
+
+                if (!empty($updateData)) {
+                    $updateData['ProdUpdateDate'] = date('Y-m-d H:i:s');
+
+                    try {
+                        DB::table('PRODUCT')->where('ProdCode', $item['ProdCode'])->update($updateData);
+                    } catch (\Exception $e) {
+                        \Log::error('Update Error (m.InsertBasedData): ' . $e->getMessage());
+                        return false;
+                    }
+                }
+            } else {
+                try {
+                    $item['ProdUpdateDate'] = date('Y-m-d H:i:s');
+                    DB::table('PRODUCT')->insert($item);
+                } catch (\Exception $e) {
+                    \Log::error('Insert Error (m.InsertBasedData): ' . $e->getMessage());
+                    return false;
+                }
+            }
+        }
+
+        try {
+            DB::table('LOG_DATA')->insert([
+                'LogAccCode' => $accCode,
+                'LogDate' => date('Y-m-d H:i:s'),
+                'LogTable' => 'PRODUCT',
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Model InsertBasedData, Database error: ' . $e->getMessage());
+            return false;
+        }
+        return true;
     }
 
-    public function insertProdType($code, $name)
+    public function insertProdType($data, $accCode)
     {
-        $data = [
-            'ProdTypeCode' => $code,
-            'ProdTypeName' => $name,
-        ];
-        $inserted = DB::table('PRODUCTTYPE')->insert($data);
-        return $inserted;
+        $data = array_map(function($item) {
+            return [
+                'ProdTypeCode' => $item[0],
+                'ProdTypeName' => $item[1],
+                'ProdTypeCancle' => $item[2],
+            ];
+        }, $data);
+
+        foreach ($data as $item) {
+            if($item['ProdTypeCancle'] == '') {
+                $item['ProdTypeCancle'] = 'N';
+            }
+
+            /* ตรวจสอบว่าเคยมีข้อมูลนั่นๆ อยู่ไหม */
+            $existingProductType = DB::table('PRODUCT_TYPE')->where('ProdTypeCode', $item['ProdTypeCode'])->first();
+
+            if ($existingProductType) {
+                /* ตรวจสอบว่าข้อมูลมีการเปลี่ยนแปลงหรือไม่ */
+                $updateData = [];
+                foreach ($item as $key => $value) {
+                    if ($existingProductType->$key != $value) {
+                        $updateData[$key] = $value;
+                    }
+                }
+
+                if (!empty($updateData)) {
+                    $updateData['ProdTypeUpdateDate'] = date('Y-m-d H:i:s');
+
+                    try {
+                        DB::table('PRODUCT_TYPE')->where('ProdTypeCode', $item['ProdTypeCode'])->update($updateData);
+                    } catch (\Exception $e) {
+                        \Log::error('Update Error (m.InsertBasedData): ' . $e->getMessage());
+                        return false;
+                    }
+                }
+            } else {
+                try {
+                    $item['ProdTypeUpdateDate'] = date('Y-m-d H:i:s');
+                    DB::table('PRODUCT_TYPE')->insert($item);
+                } catch (\Exception $e) {
+                    \Log::error('Insert Error (m.InsertBasedData): ' . $e->getMessage());
+                    return false;
+                }
+            }
+        }
+
+        try {
+            DB::table('LOG_DATA')->insert([
+                'LogAccCode' => $accCode,
+                'LogDate' => date('Y-m-d H:i:s'),
+                'LogTable' => 'PRODUCT_TYPE',
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Model InsertBasedData, Database error: ' . $e->getMessage());
+            return false;
+        }
+        return true;
     }
 }

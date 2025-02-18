@@ -14,7 +14,7 @@ class TableInfo extends Controller
     }
 
     public function prodTypeInfo() {
-        $prodType = DB::table('PRODUCTTYPE')->get();
+        $prodType = DB::table('PRODUCT_TYPE')->get();
         return $prodType;
     }
 

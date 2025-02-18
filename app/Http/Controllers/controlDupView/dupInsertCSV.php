@@ -37,8 +37,8 @@ class dupInsertCSV extends Controller
                 session()->flash('messageInsert', 'ข้อมูลไม่ถูกเพิ่ม กรุณาสอบข้อมูลอีกครั้ง');
                 return redirect()->back();
             }
-        } else if ($count === 4) {
-            $inserted = (new InsertBasedData)->insertProd($data);
+        } else if ($count === 5) {
+            $inserted = (new InsertBasedData)->insertProd($data, $accCode);
             if ($inserted) {
                 session()->flash('messageInsert', 'ข้อมูลถูกเพิ่มเรียบร้อยแล้ว');
                 return redirect()->back();
@@ -46,18 +46,16 @@ class dupInsertCSV extends Controller
                 session()->flash('messageInsert', 'ข้อมูลไม่ถูกเพิ่ม กรุณาสอบข้อมูลอีกครั้ง');
                 return redirect()->back();
             }
+        } else if ($count === 3) {
+            $inserted = (new InsertBasedData)->insertProdType($data, $accCode);
+            if ($inserted) {
+                session()->flash('messageInsertPd', 'ข้อมูลถูกเพิ่มเรียบร้อยแล้ว');
+                return redirect()->back();
+            } else {
+                session()->flash('messageInsertPd', 'ข้อมูลไม่ถูกเพิ่ม กรุณาสอบข้อมูลอีกครั้ง');
+                return redirect()->back();
+            }
         }
         return redirect()->back();
-    }
-
-    public function addProdType(Request $request) {
-        $inserted = (new InsertBasedData)->insertProdType($request->input('typeCode'), $request->input('typeName'));
-        if ($inserted) {
-            session()->flash('messageInsertPd', 'ข้อมูลถูกเพิ่มเรียบร้อยแล้ว');
-            return redirect()->back();
-        } else {
-            session()->flash('messageInsertPd', 'ข้อมูลไม่ถูกเพิ่ม กรุณาสอบข้อมูลอีกครั้ง');
-            return redirect()->back();
-        }
     }
 }
