@@ -17,8 +17,8 @@
         @csrf
         <div class="flex justify-between items-center mb-4 w-full">
           <input type='text' name='accCode' value='{{ $accCode }}' class="hidden">
-          <input type="file" name="data_csv" id="data_csv" accept=".csv" class="hidden" required>
-          <label for="data_csv" class="block w-full px-3 py-2 mt-2 text-gray-400 bg-white rounded-md outline-1 -outline-offset-1 outline-gray-500 cursor-pointer" id="file_input_label">
+          <input type="file" name="data_csv" id="data_csv2" accept=".csv" class="hidden" required>
+          <label for="data_csv2" class="block w-full px-3 py-2 mt-2 text-gray-400 bg-white rounded-md outline-1 -outline-offset-1 outline-gray-500 cursor-pointer" id="file_input_label2">
             เลือกไฟล์ที่มีนามสกุล .CSV
           </label>
           <button type="submit" class="ml-5 mt-2 px-4 py-2 text-white bg-amber-500 rounded-md">ยืนยัน</button>

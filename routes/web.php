@@ -42,8 +42,6 @@ Route::post('/quota', [controlStatus::class, 'quota'])->name('status.quota');
 
 /* เพิ่มข้อมูล */
 Route::post('/add-data', [csv::class, 'uploadCSV'])->name('add-data');
-Route::post('/add-data-type', [csv::class, 'addProdType'])->name('add-data-type');
-Route::post('/change-data', [csv::class, 'setEmpData'])->name('change-data');
 
 /* ออกจากระบบ */
 Route::get('/signout', [authen::class, 'authenSignout']);
