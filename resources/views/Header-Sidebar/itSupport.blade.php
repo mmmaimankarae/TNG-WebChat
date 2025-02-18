@@ -5,9 +5,9 @@
     <a href="" class="flex-shrink-0"><img class="w-auto h-10" src="{{ asset('images/logo.png') }}" alt="logo"></a>
     {{-- Navigation Menu --}}
     <div class="hidden sm:flex sm:ml-6 space-x-6 lg:space-x-10"> 
+      <a href="{{ route('it-support.branch') }}" class="nav-style" aria-current="false"> ข้อมูลสาขา </a>
       <a href="{{ route('it-support.employee') }}" class="nav-style" aria-current="false"> ข้อมูลพนักงาน </a>
       <a href="{{ route('it-support.product') }}" class="nav-style" aria-current="false"> ข้อมูลสินค้า </a>
-      <a href="{{ route('it-support.branch') }}" class="nav-style" aria-current="false"> ข้อมูลสาขา </a>
     </div>
     
     {{-- Right Icons --}}
@@ -50,9 +50,9 @@
     
     {{-- MENU IN HAMBURGER --}}
     <div id="menu-buger" class="hidden sm:hidden fixed top-12 left-0 right-0 px-2 pt-2 pb-3 space-y-1 bg-white shadow-md">
+      <a href="{{ route('it-support.branch') }}" class="nav-style block" aria-current="false"> ข้อมูลสาขา </a>
       <a href="{{ route('it-support.employee') }}" class="nav-style block" aria-current="false"> ข้อมูลพนักงาน </a>
       <a href="{{ route('it-support.product') }}" class="nav-style block" aria-current="false"> ข้อมูลสินค้า </a>
-      <a href="{{ route('it-support.branch') }}" class="nav-style block" aria-current="false"> ข้อมูลสาขา </a>
       <a href="/authen/reset" class="nav-style block" aria-current="false">เปลี่ยนรหัสผ่าน</a>
       <a href="/signout" class="nav-style block" aria-current="false">ออกจากระบบ</a>
     </div>

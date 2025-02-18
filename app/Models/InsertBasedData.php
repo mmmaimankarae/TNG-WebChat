@@ -16,8 +16,8 @@ class InsertBasedData extends Model
                 'EmpFirstName' => $item[1],
                 'EmpSureName' => $item[2],
                 'EmpBrchCode' => $item[3],
-                'EmpRoleCode' => $item[4],
-                'EmpResign' => $item[5],
+                'EmpRoleCode' => $item[5],
+                'EmpResign' => $item[4],
             ];
         }, $data);
 
@@ -91,7 +91,7 @@ class InsertBasedData extends Model
         }
     }
 
-    public function insertBranch($data)
+    public function insertBranch($data, $accCode)
     {
         $data = array_map(function($item) {
             return [
@@ -105,16 +105,49 @@ class InsertBasedData extends Model
                 'BrchCountry' => $item[7],
                 'BrchZipCode' => $item[8],
                 'BrchPhone' => $item[9],
-                'BrchRegionCode' => $item[10],
+                'BrchRegionCode' => $item[11],
+                'BrchClosed' => $item[10],
             ];
         }, $data);
-        $inserted = DB::table('BRANCH')->insert($data);
 
-        if ($inserted) {
-            return true;
-        } else {
-            return false;
+        foreach ($data as $item) {
+            if($item['BrchClosed'] == '') {
+                $item['BrchClosed'] = 'N';
+            }
+
+            /* ตรวจสอบว่าเคยมีข้อมูลนั่นๆ อยู่ไหม */
+            $existingBranch = DB::table('BRANCH')->where('BrchCode', $item['BrchCode'])->first();
+
+            if ($existingBranch) {
+                /* ตรวจสอบว่าข้อมูลมีการเปลี่ยนแปลงหรือไม่ */
+                $updateData = [];
+                foreach ($item as $key => $value) {
+                    if ($existingBranch->$key != $value) {
+                        $updateData[$key] = $value;
+                    }
+                }
+
+                if (!empty($updateData)) {
+                    $updateData['BrchUpdateDate'] = date('Y-m-d H:i:s');
+
+                    try {
+                        DB::table('BRANCH')->where('BrchCode', $item['BrchCode'])->update($updateData);
+                    } catch (\Exception $e) {
+                        \Log::error('Update Error (m.InsertBasedData): ' . $e->getMessage());
+                        return false;
+                    }
+                }
+            } else {
+                try {
+                    $item['BrchUpdateDate'] = date('Y-m-d H:i:s');
+                    DB::table('BRANCH')->insert($item);
+                } catch (\Exception $e) {
+                    \Log::error('Insert Error (m.InsertBasedData): ' . $e->getMessage());
+                    return false;
+                }
+            }
         }
+        return true;
     }
 
     public function insertProd($data)

@@ -37,15 +37,16 @@ class dupFormAddData extends Controller
             '1' => 'รหัสพนักงาน',
             '2' => 'ชื่อ',
             '3' => 'นามสกุล',
-            '4' => 'สาขา',
-            '5' => 'รหัสตำแหน่ง',
+            '4' => 'ชื่อย่อสาขา',
+            '5' => 'สถานะการทำงาน (Y = ลาออก)',
+            '6' => 'รหัสตำแหน่ง',
         ];
         $data = $this->tableInfo->roleInfo();
         $branch = $this->tableInfo->branchInfo();
         return view('support-data', compact('title', 'table', 'data', 'branch', 'accCode'));
     }
 
-    private function sampleBranch() {
+    private function sampleBranch($accCode) {
         $title = 'ข้อมูลสาขา';
         $table = [
             '1' => 'ชื่อย่อสาขา',
@@ -58,10 +59,11 @@ class dupFormAddData extends Controller
             '8' => 'จังหวัด',
             '9' => 'รหัสไปรษณีย์',
             '10' => 'เบอร์โทร',
-            '11' => 'รหัสภูมิภาค',
+            '11' => 'สถานะสาขา (Y = ปิด)',
+            '12' => 'รหัสภูมิภาค',
         ];
         $data = $this->tableInfo->regionInfo();
-        return view('support-data', compact('title', 'table', 'data'));
+        return view('support-data', compact('title', 'table', 'data', 'accCode'));
     }
 
     private function sampleProd() {

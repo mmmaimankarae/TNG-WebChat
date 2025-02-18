@@ -10,6 +10,7 @@ class dupInsertCSV extends Controller
 {
     public function uploadCSV(Request $request) {
         $file = $request->file('data_csv');
+        $accCode = $request->input('accCode');
         $filePath = $file->getRealPath();
         $file = fopen($filePath, 'r');
         $header = fgetcsv($file);
@@ -19,7 +20,7 @@ class dupInsertCSV extends Controller
             $data = array_merge($data, [$row]);
         }
         if ($count === 6) {
-            $inserted = (new InsertBasedData)->insertEmp($data, $request->input('accCode'));
+            $inserted = (new InsertBasedData)->insertEmp($data, $accCode);
             if ($inserted) {
                 session()->flash('messageInsert', 'ข้อมูลถูกเพิ่มเรียบร้อยแล้ว');
                 return redirect()->back();
@@ -27,8 +28,8 @@ class dupInsertCSV extends Controller
                 session()->flash('messageInsert', 'ข้อมูลไม่ถูกเพิ่ม กรุณาสอบข้อมูลอีกครั้ง');
                 return redirect()->back();
             }
-        } else if ($count === 11) {
-            $inserted = (new InsertBasedData)->insertBranch($data);
+        } else if ($count === 12) {
+            $inserted = (new InsertBasedData)->insertBranch($data, $accCode);
             if ($inserted) {
                 session()->flash('messageInsert', 'ข้อมูลถูกเพิ่มเรียบร้อยแล้ว');
                 return redirect()->back();
@@ -46,6 +47,7 @@ class dupInsertCSV extends Controller
                 return redirect()->back();
             }
         }
+        return redirect()->back();
     }
 
     public function addProdType(Request $request) {

@@ -6,7 +6,7 @@
 
 @section('content')
   <div class="container mx-auto p-4">
-    <h2 class="text-xl font-semibold mb-4">{{ 'เพิ่ม' . $title }}</h2>
+    <h2 class="text-xl font-semibold mb-4">{{ 'เพิ่ม/แก้ไข' . $title }}</h2>
     <h5 class="text-sm text-red-500 mb-4">
       @if (session('messageInsert')) 
         {{ session('messageInsert') }} 
@@ -20,7 +20,7 @@
         <label for="data_csv" class="block w-full px-3 py-2 mt-2 text-gray-400 bg-white rounded-md outline-1 -outline-offset-1 outline-gray-500 cursor-pointer" id="file_input_label">
           เลือกไฟล์ที่มีนามสกุล .CSV
         </label>
-        <button type="submit" class="ml-5 mt-2 px-4 py-2 text-white bg-amber-500 rounded-md">อัพโหลด</button>
+        <button type="submit" class="ml-5 mt-2 px-4 py-2 text-white bg-amber-500 rounded-md">ยืนยัน</button>
       </div>
     </form>
     <table class="w-full text-left">

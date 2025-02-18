@@ -40,7 +40,7 @@ class authorizePages
                 return redirect()->route('office-chief.new-tasks');
                 break;
             case '5':
-                return redirect()->route('it-support.employee');
+                return redirect()->route('it-support.branch');
                 break;
             default:
                 return redirect('/');
