@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Hash;
 
 class InsertBasedData extends Model
 {
-
     public function insertEmp($data, $accCode)
     {
         $data = array_map(function($item) {
@@ -22,39 +21,56 @@ class InsertBasedData extends Model
             ];
         }, $data);
 
-        try {
-            foreach ($data as $item) {
-                $existingEmployee = DB::table('EMPLOYEE')->where('EmpCode', $item['EmpCode'])->first();
+        foreach ($data as $item) {
+            if($item['EmpResign'] == '') {
+                $item['EmpResign'] = 'N';
+            }
 
-                if ($existingEmployee) {
-                    /* ตรวจสอบว่าข้อมูลมีการเปลี่ยนแปลงหรือไม่ */
-                    if (!empty($updateData)) {
-                        $updateData['EmpUpdateDate'] = date('Y-m-d H:i:s');
-                        DB::table('EMPLOYEE')->where('EmpCode', $item['EmpCode'])->update($updateData);
+            /* ตรวจสอบว่าเคยมีกาข้อมูลนั่นๆ อยู่ไหม */
+            $existingEmployee = DB::table('EMPLOYEE')->where('EmpCode', $item['EmpCode'])->first();
+
+            if ($existingEmployee) {
+                /* ตรวจสอบว่าข้อมูลมีการเปลี่ยนแปลงหรือไม่ */
+                $updateData = [];
+                foreach ($item as $key => $value) {
+                    if ($existingEmployee->$key != $value) {
+                        $updateData[$key] = $value;
                     }
-                } else {
+                }
+
+                if (!empty($updateData)) {
+                    $updateData['EmpUpdateDate'] = date('Y-m-d H:i:s');
+
+                    try {
+                        DB::table('EMPLOYEE')->where('EmpCode', $item['EmpCode'])->update($updateData);
+                    } catch (\Exception $e) {
+                        \Log::error('Update Error (m.InsertBasedData): ' . $e->getMessage());
+                        return false;
+                    }
+                }
+            } else {
+                try {
                     $item['EmpUpdateDate'] = date('Y-m-d H:i:s');
                     DB::table('EMPLOYEE')->insert($item);
                     $this->insertAccount($item);
+                } catch (\Exception $e) {
+                    \Log::error('Insert Error (m.InsertBasedData): ' . $e->getMessage());
+                    return false;
                 }
             }
+        }
 
-            try {
-                DB::table('LOG_DATA')->insert([
-                    'LogAccCode' => $accCode,
-                    'LogDate' => date('Y-m-d H:i:s'),
-                    'LogTable' => 'EMPLOYEE',
-                ]);
-            } catch (\Exception $e) {
-                \Log::error('Model InsertBasedData, Database error: ' . $e->getMessage());
-                return false;
-            }
-
-            return true;
+        try {
+            DB::table('LOG_DATA')->insert([
+                'LogAccCode' => $accCode,
+                'LogDate' => date('Y-m-d H:i:s'),
+                'LogTable' => 'EMPLOYEE',
+            ]);
         } catch (\Exception $e) {
             \Log::error('Model InsertBasedData, Database error: ' . $e->getMessage());
             return false;
         }
+        return true;
     }
 
     private function insertAccount($data)
@@ -67,8 +83,12 @@ class InsertBasedData extends Model
             'AccPass' => $hashedPassword,
         ];
 
-        $inserted = DB::table('ACCOUNT')->insert($newData);
-        return $inserted;
+        try {
+            DB::table('ACCOUNT')->insert($newData);
+        } catch (\Exception $e) {
+            \Log::error('Insert Error (m.InsertBasedData): ' . $e->getMessage());
+            return false;
+        }
     }
 
     public function insertBranch($data)
