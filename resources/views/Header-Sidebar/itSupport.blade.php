@@ -5,7 +5,7 @@
     <a href="" class="flex-shrink-0"><img class="w-auto h-10" src="{{ asset('images/logo.png') }}" alt="logo"></a>
     {{-- Navigation Menu --}}
     <div class="hidden sm:flex sm:ml-6 space-x-6 lg:space-x-10"> 
-      <a href="{{ route('it-support.employee') }}" class="nav-style" aria-current="false"> ข้อมูลพนักงาน</a>
+      <a href="{{ route('it-support.employee') }}" class="nav-style" aria-current="false"> ข้อมูลพนักงาน </a>
       <a href="{{ route('it-support.product') }}" class="nav-style" aria-current="false"> ข้อมูลสินค้า </a>
       <a href="{{ route('it-support.branch') }}" class="nav-style" aria-current="false"> ข้อมูลสาขา </a>
     </div>

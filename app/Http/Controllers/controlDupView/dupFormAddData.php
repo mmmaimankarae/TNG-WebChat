@@ -5,6 +5,7 @@ namespace App\Http\Controllers\controlDupView;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Controllers\controlGetInfo\tableInfo;
+use App\Http\Controllers\controlGetInfo\empInfo;
 
 class dupFormAddData extends Controller
 {
@@ -18,16 +19,19 @@ class dupFormAddData extends Controller
     }
 
     public function default() {
+        $empInfo = new empInfo();
+        $accCode = $empInfo->getAccCode();
+
         if ($this->currentRoute === 'employee') {
-            return $this->sampleEmp();
+            return $this->sampleEmp($accCode);
         } else if ($this->currentRoute === 'branch') {
-            return $this->sampleBranch();
+            return $this->sampleBranch($accCode);
         } else if ($this->currentRoute === 'product') {
-            return $this->sampleProd();
+            return $this->sampleProd($accCode);
         }
     }
 
-    private function sampleEmp() {
+    private function sampleEmp($accCode) {
         $title = 'ข้อมูลพนักงาน';
         $table = [
             '1' => 'รหัสพนักงาน',
@@ -38,7 +42,7 @@ class dupFormAddData extends Controller
         ];
         $data = $this->tableInfo->roleInfo();
         $branch = $this->tableInfo->branchInfo();
-        return view('support-data', compact('title', 'table', 'data', 'branch'));
+        return view('support-data', compact('title', 'table', 'data', 'branch', 'accCode'));
     }
 
     private function sampleBranch() {

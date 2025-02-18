@@ -7,9 +7,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class InsertBasedData extends Model
-{   
-    
-    public function insertEmp($data)
+{
+
+    public function insertEmp($data, $accCode)
     {
         $data = array_map(function($item) {
             return [
@@ -18,35 +18,55 @@ class InsertBasedData extends Model
                 'EmpSureName' => $item[2],
                 'EmpBrchCode' => $item[3],
                 'EmpRoleCode' => $item[4],
+                'EmpResign' => $item[5],
             ];
         }, $data);
-        $inserted = DB::table('EMPLOYEE')->insert($data);
 
-        if ($inserted) {
-            $updated = $this->insertAccount($data);
-            if ($updated) {
-                return true;
-            } else {
+        try {
+            foreach ($data as $item) {
+                $existingEmployee = DB::table('EMPLOYEE')->where('EmpCode', $item['EmpCode'])->first();
+
+                if ($existingEmployee) {
+                    /* ตรวจสอบว่าข้อมูลมีการเปลี่ยนแปลงหรือไม่ */
+                    if (!empty($updateData)) {
+                        $updateData['EmpUpdateDate'] = date('Y-m-d H:i:s');
+                        DB::table('EMPLOYEE')->where('EmpCode', $item['EmpCode'])->update($updateData);
+                    }
+                } else {
+                    $item['EmpUpdateDate'] = date('Y-m-d H:i:s');
+                    DB::table('EMPLOYEE')->insert($item);
+                    $this->insertAccount($item);
+                }
+            }
+
+            try {
+                DB::table('LOG_DATA')->insert([
+                    'LogAccCode' => $accCode,
+                    'LogDate' => date('Y-m-d H:i:s'),
+                    'LogTable' => 'EMPLOYEE',
+                ]);
+            } catch (\Exception $e) {
+                \Log::error('Model InsertBasedData, Database error: ' . $e->getMessage());
                 return false;
             }
-        } else {
+
+            return true;
+        } catch (\Exception $e) {
+            \Log::error('Model InsertBasedData, Database error: ' . $e->getMessage());
             return false;
         }
     }
 
     private function insertAccount($data)
     {
-        $newData = [];
         $password = env('DEFAULT_PASS');
+        $hashedPassword = Hash::make($password, ['rounds' => 12]);
 
-        foreach ($data as $item) {
-            $hashedPassword = Hash::make($password, ['rounds' => 12]);
-            $newData[] = [
-                'AccName' => $item[array_key_first($item)],
-                'AccPass' => $hashedPassword,
-                'AccEmpCode' => $item[array_key_first($item)],
-            ];
-        }
+        $newData = [
+            'AccName' => $data['EmpCode'],
+            'AccPass' => $hashedPassword,
+        ];
+
         $inserted = DB::table('ACCOUNT')->insert($newData);
         return $inserted;
     }

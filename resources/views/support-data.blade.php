@@ -15,6 +15,7 @@
     <form action="{{ route('add-data') }}" method="POST" enctype="multipart/form-data">
       @csrf
       <div class="flex justify-between items-center mb-4 w-full">
+        <input type='text' name='accCode' value='{{ $accCode }}' class="hidden">
         <input type="file" name="data_csv" id="data_csv" accept=".csv" class="hidden" required>
         <label for="data_csv" class="block w-full px-3 py-2 mt-2 text-gray-400 bg-white rounded-md outline-1 -outline-offset-1 outline-gray-500 cursor-pointer" id="file_input_label">
           เลือกไฟล์ที่มีนามสกุล .CSV
@@ -73,41 +74,5 @@
         <button type="submit" class="ml-5 mt-2 px-4 py-2 text-white bg-amber-500 rounded-md">เพิ่มประเภท</button>
       </form>
     </div>
-  @endif
-
-  @if ($title == 'ข้อมูลพนักงาน')
-  <div class="container mx-auto p-4 mb-12">
-    <h2 class="text-xl font-semibold mb-4">ย้ายสาขาให้พนักงาน</h2>
-    <h5 class="text-sm text-red-500 mb-4">
-      @if (session('messageUpBrchEmp')) 
-        {{ session('messageUpBrchEmp') }} 
-      @endif
-    </h5>
-    <form action="{{ route('change-data') }}" method="POST">
-      @csrf
-      <input type='text' name='empCode' class="w-1/3 px-3 py-2 mt-2 text-gray-500 border rounded-md" placeholder="กรุณาระบุรหัสประเภทสินค้า" required>
-      <select name="brchCode" class="w-1/3 px-3 py-2 mt-2 text-gray-500 border rounded-md" required>
-        <option value="">เลือกสาขา</option>
-        @foreach ($branch as $brch)
-          <option value="{{ $brch->BrchCode }}">{{ $brch->BrchName }}</option>
-        @endforeach
-      </select>
-      <button type="submit" class="ml-5 mt-2 px-4 py-2 text-white bg-amber-500 rounded-md">ยืนยัน</button>
-    </form>
-  </div>
-
-  <div class="container mx-auto p-4 mb-12">
-    <h2 class="text-xl font-semibold mb-4">พนักงานลาออก</h2>
-    <h5 class="text-sm text-red-500 mb-4">
-      @if (session('messageReEmp')) 
-        {{ session('messageReEmp') }} 
-      @endif
-    </h5>
-    <form action="{{ route('change-data') }}" method="POST">
-      @csrf
-      <input type='text' name='empCode' class="w-1/3 px-3 py-2 mt-2 text-gray-500 border rounded-md" placeholder="กรุณาระบุรหัสพนักงาาน" required>
-      <button type="submit" class="ml-5 mt-2 px-4 py-2 text-white bg-amber-500 rounded-md">ยืนยัน</button>
-    </form>
-  </div>
   @endif
 @endsection
