@@ -81,7 +81,6 @@ class controlAuthenticate extends Controller
             else if (Hash::check($password, $account->AccPass)) {
                 $payload = [
                     'accCode' => trim($account->AccCode),
-                    'empCode' => trim($account->AccEmpCode),
                     'roleCode' => trim($account->AccRoleCode),
                     'branchCode' => trim($account->EmpBrchCode),
                     'iat' => time(),
@@ -123,16 +122,21 @@ class controlAuthenticate extends Controller
     /* ตรวจสอบว่ามี Account หรือไม่ */
     private function haveAccount($accName)
     {
-        $account = DB::table('ACCOUNT as A')
-                    ->leftJoin('EMPLOYEE as E', 'A.AccEmpCode', '=', 'E.EmpCode')
-                    ->where('A.AccName', $accName)
-                    ->where(function ($query) {
-                        $query->where('E.EmpResign', '!=', 'Y')
-                              ->orWhereNull('E.EmpResign');
-                    })
-                    ->select('A.*', 'E.*')
-                    ->first();
-        return $account;
+        try{
+            $account = DB::table('ACCOUNT as A')
+                ->leftJoin('EMPLOYEE as E', 'A.AccName', '=', 'E.EmpCode')
+                ->where('A.AccName', $accName)
+                ->where(function ($query) {
+                    $query->where('E.EmpResign', '!=', 'Y')
+                        ->orWhereNull('E.EmpResign');
+                })
+                ->select('A.*', 'E.*')
+                ->first();
+            return $account;
+        } catch (\Exception $e) {
+            \Log::error('Database error: ' . $e->getMessage());
+            return false;
+        }
     }
 
     /* ออกจากระบบ */

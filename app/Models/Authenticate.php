@@ -15,13 +15,14 @@ class Authenticate extends Model
         }
 
         $hashedPassword = Hash::make($password, ['rounds' => 12]);
-        $updated = DB::table('ACCOUNT')
+        try {
+            $updated = DB::table('ACCOUNT')
                 ->where('AccName', $accName)
                 ->update(['AccPass' => $hashedPassword]);
 
-        if ($updated) {
-            return true;
-        } else {
+            return $updated;
+        } catch (\Exception $e) {
+            \Log::error('Model Authenticate, Database error: ' . $e->getMessage());
             return false;
         }
     }

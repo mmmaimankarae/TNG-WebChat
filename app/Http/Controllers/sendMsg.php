@@ -38,13 +38,14 @@ class sendMsg extends Controller
         }
 
         if ($file) {
-            // Handle file upload and sending image message
+            // // Handle file upload and sending image message
             // $path = $file->store('uploads', 'public');
             // $url = url(Storage::url($path));
             // \Log::info('Image URL: ' . $url);
             // $response = $this->lineService->sendImageMessage($replyId, $url, $url);
             // if ($response && $response->getStatusCode() === 200) {
-            //     $this->saveMessage($request, $url);
+            //     dd(ok);
+            //     // $this->saveMessage($request, $url);
             //     return redirect()->back()->withInput()->with('select', true);
             // } else {
             //     return response()->json(['status' => 'error', 'message' => $response ? $response->getBody()->getContents() : 'Error occurred'], 500);
