@@ -36,7 +36,7 @@ class controlPage extends Controller
         
         $branchCode = $req->input('branchCode', $empInfo->getBranchCode());
         $accCode = $req->input('accCode', $empInfo->getAccCode());
-        $empCode = $empInfo->getEmpCode();
+        $empCode = $empInfo->getAccName();
         $current = request()->segment(2) === 'current-tasks' ? true : false;
         if ($current) {
             $sidebarChat = $sidebarInfo->getEmpTasks($branchCode, $empCode);

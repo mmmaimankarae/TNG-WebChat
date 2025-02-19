@@ -24,24 +24,24 @@
       @if (count($sidebarChat) > 0)
         @foreach ($sidebarChat as $chat)
           @php
-            $tasksUpdate = Carbon::parse($chat->TasksUpdate);
+            $tasksUpdate = Carbon::parse($chat->TaskUpdate);
             $timeAgo = $tasksUpdate->diffForHumans();
             $prevEmpAccName = $chat->PrevEmpAccName;
             $path = request()->segment(1);
           @endphp
-          <form action="{{ route( $path . '.current-tasks') }}" method="POST" id="chat-form-{{ $chat->TasksLineID }}">
+          <form action="{{ route( $path . '.current-tasks') }}" method="POST" id="chat-form-{{ $chat->TaskLineID }}">
             @csrf
-            <input type="hidden" name="TasksLineID" value="{{ $chat->TasksLineID }}">
-            <input type="hidden" name="TasksCode" value="{{ $chat->TasksCode }}">
+            <input type="hidden" name="TasksLineID" value="{{ $chat->TaskLineID }}">
+            <input type="hidden" name="TasksCode" value="{{ $chat->TaskCode }}">
             <input type="hidden" name="cusCode" value="{{ $chat->CusCode }}">
             <input type="hidden" name="cusName" value="{{ $chat->CusName }}">
-            <input type="hidden" name="taskStatus" value="{{ $chat->TasksStatusCode }}">
-            @if ($chat->TasksStatusCode == '1')
+            <input type="hidden" name="taskStatus" value="{{ $chat->TaskStatusCode }}">
+            @if ($chat->TaskStatusCode == '1')
               <input type="hidden" name="update" value="true">
               <input type="hidden" name="taskStatus" value="2">
             @endif
             <input type="hidden" name="select" value="true">
-            <div class="grid grid-cols-4 items-center p-2 rounded-lg cursor-pointer hover:bg-gray-200" onclick="document.getElementById('chat-form-{{ $chat->TasksLineID }}').submit();">
+            <div class="grid grid-cols-4 items-center p-2 rounded-lg cursor-pointer hover:bg-gray-200" onclick="document.getElementById('chat-form-{{ $chat->TaskLineID }}').submit();">
               <div class="flex justify-center -ml-5">
                 <svg class="w-10 h-10 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                   <path fill-rule="evenodd" d="M12 20a7.966 7.966 0 0 1-5.002-1.756l.002.001v-.683c0-1.794 1.492-3.25 3.333-3.25h3.334c1.84 0 3.333 1.456 3.333 3.25v.683A7.966 
@@ -50,13 +50,13 @@
                 </svg>
               </div>
               <div class="col-span-2 -ml-4">
-                @if ($chat->cusLineType == 'G')
+                @if ($chat->CusLineType == 'G')
                   <p class="text-sm font-medium w-8/12 truncate"><span class="text-gray-500">(กลุ่ม) </span>{{ $chat->CusName }}</p>
                 @else
                   <p class="text-sm font-medium w-8/12 truncate">{{ $chat->CusName }}</p>
                 @endif
 
-                @if ($chat->TasksStatusCode == '6')
+                @if ($chat->TaskStatusCode == '6')
                   <p class="inline-block px-2 text-xs border border-red-700 rounded-2xl">เสร็จสิ้น</p>
                 @elseif ($prevEmpAccName != null)
                   <p class="inline-block px-2 text-xs border border-green-700 rounded-2xl">{{ $prevEmpAccName }}</p>
