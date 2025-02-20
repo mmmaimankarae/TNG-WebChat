@@ -55,6 +55,7 @@ class sendMsg extends Controller
 
             if ($response && $response->getStatusCode() === 200) {
                 $this->handleQuoteMessage($request, $taskCode, $replyId);
+                $this->tasksModel->setUpdateTime($taskCode);
                 return redirect()->back()->withInput()->with('select', true);
             } else {
                 return response()->json(['status' => 'error', 'message' => $response ? $response->getBody()->getContents() : 'Error occurred'], 500);
@@ -84,14 +85,17 @@ class sendMsg extends Controller
         $request->merge(['quoteType' => 'text']);
         $request->merge(['messageType' => 'text']);
         $this->saveMessage($request);
-        $this->tasksModel->setUpdateTime($taskCode);
         $request->session()->flash('TasksLineID', $replyId);
     }
 
     private function saveMessage(Request $request)
     {
         $document = $this->msgPattern($request);
-        $this->nosql->insertDocument($document);
+        try {
+            $this->nosql->insertDocument($document);
+        } catch (\Exception $e) {
+            \Log::error('Nosql Error saving message (c.sendMsg): ' . $e->getMessage());
+        }
     }
 
     private function msgPattern(Request $request)
@@ -99,11 +103,11 @@ class sendMsg extends Controller
         return [
             'messageDate' => Carbon::now()->toDateString(),
             'messagetime' => Carbon::now()->toTimeString(),
-            'taskId' => $request->input('taskCode') ?? $request->input('TaskCode'),
+            'taskId' => $request->input('taskCode') ?? $request->input('TasksCode'),
             'messageContent' => $request->input('message'),
             'messageType' => $request->input('messageType'),
             'replyToId' => $request->input('replyId'),
-            'replyToName' => $request->input('replyName'),
+            'replyToName' => $request->input('replyName') ?? $request->input('cusName'),
             'userId' => "TNG-" . $request->input('userId'),
             'userName' => $request->input('userName'),
             'quoteToken' => $request->input('quoteToken'),

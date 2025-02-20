@@ -28,17 +28,15 @@ class Nosql
         $this->collection->insertOne($document);
     }
 
-    public function updateDocument($filter, $update)
-    {
-        $result = $this->collection->updateOne($filter, ['$set' => $update]);
-        return $result->getModifiedCount();
-    }
-
     public function updateTaskId($oldTaskId, $newTaskId)
     {
-        $this->collection->updateMany(
-            ['taskId' => $oldTaskId],
-            ['$set' => ['taskId' => $newTaskId]]
-        );
+        try {
+            $this->collection->updateMany(
+                ['taskId' => $oldTaskId],
+                ['$set' => ['taskId' => $newTaskId]]
+            );
+        } catch (\Exception $e) {
+            \Log::error('Nosql Error update message (m.Nosql): ' . $e->getMessage());
+        }
     }
 }

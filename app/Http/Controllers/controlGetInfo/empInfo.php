@@ -43,12 +43,17 @@ class empInfo extends Controller
     }
 
     public function checkEmpBranch($accName) {
-        $results = DB::table('ACCOUNT as A')
-        ->leftJoin('EMPLOYEE as E', 'A.AccEmpCode', '=', 'E.EmpCode')
-        ->leftJoin('BRANCH as B', 'E.EmpBrchCode', '=', 'B.BrchCode')
-        ->select('A.AccName' ,'B.BrchCode')
-        ->where('A.AccName', $accName)
-        ->get();
-        return $results->pluck('BrchCode');
+        try {
+            $results = DB::table('ACCOUNT as A')
+            ->leftJoin('EMPLOYEE as E', 'A.AccEmpCode', '=', 'E.EmpCode')
+            ->leftJoin('BRANCH as B', 'E.EmpBrchCode', '=', 'B.BrchCode')
+            ->select('A.AccName' ,'B.BrchCode')
+            ->where('A.AccName', $accName)
+            ->get();
+            return $results->pluck('BrchCode');
+        } catch (\Exception $e) {
+            \Log::error('Find Error (c.controlGetInfo.empInfo): ' . $e->getMessage());
+            return $e->getMessage();
+        }
     }
 }

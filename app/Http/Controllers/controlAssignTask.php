@@ -16,7 +16,7 @@ class controlAssignTask extends Controller
         $empInfo = new empInfo();
         $branchs = new branchInfo();
 
-        $empCode = $empInfo->getEmpCode();
+        $empCode = $empInfo->getAccName()->AccName;
         $branchCode = $empInfo->getBranchCode();
         $select = false;
 

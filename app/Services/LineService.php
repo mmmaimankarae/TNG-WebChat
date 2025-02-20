@@ -30,6 +30,7 @@ class LineService
                 $content = '';
             }
         } catch (\Exception $e) {
+            \Log::error('Get Image Error: ' . $e->getMessage());
             $content = '';
         }
         
@@ -57,6 +58,7 @@ class LineService
 
             return $response;
         } catch (\Exception $e) {
+            \Log::error('Send message Error (service): ' . $e->getMessage());
             return null;
         }
     }
@@ -88,6 +90,7 @@ class LineService
 
             return $response;
         } catch (\Exception $e) {
+            \Log::error('Send Image Error (service): ' . $e->getMessage());
             return null;
         }
     }
@@ -114,7 +117,7 @@ class LineService
             
             return $response;
         } catch (\Exception $e) {
-            \Log::error($e->getMessage());
+            \Log::error('Quote message Error (service): ' . $e->getMessage());
             return null;
         }
     }

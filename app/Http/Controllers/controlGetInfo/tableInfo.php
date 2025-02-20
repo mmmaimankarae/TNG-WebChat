@@ -9,22 +9,42 @@ use Illuminate\Support\Facades\DB;
 class TableInfo extends Controller
 {
     public function roleInfo() {
-        $roles = DB::table('ROLE')->get();
-        return $roles;
+        try {
+            $roles = DB::table('ROLE')->get();
+            return $roles;
+        } catch (\Exception $e) {
+            \Log::error('Find Error (c.controlGetInfo.tableInfo): ' . $e->getMessage());
+            return false;
+        }
     }
 
     public function prodTypeInfo() {
-        $prodType = DB::table('PRODUCT_TYPE')->get();
-        return $prodType;
+        try {
+            $prodType = DB::table('PRODUCT_TYPE')->get();
+            return $prodType;
+        } catch (\Exception $e) {
+            \Log::error('Find Error (c.controlGetInfo.tableInfo): ' . $e->getMessage());
+            return false;
+        }
     }
 
     public function regionInfo() {
-        $region = DB::table('REGION')->get();
-        return $region;
+        try {
+            $region = DB::table('REGION')->get();
+            return $region;
+        } catch (\Exception $e) {
+            \Log::error('Find Error (c.controlGetInfo.tableInfo): ' . $e->getMessage());
+            return false;
+        }
     }
 
     public function branchInfo() {
-        $branch = DB::table('BRANCH')->get();
-        return $branch;
+        try {
+            $branch = DB::table('BRANCH')->get();
+            return $branch;
+        } catch (\Exception $e) {
+            \Log::error('Find Error (c.controlGetInfo.tableInfo): ' . $e->getMessage());
+            return false;
+        }
     }
 }
