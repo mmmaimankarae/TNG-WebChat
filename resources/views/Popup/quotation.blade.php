@@ -1,10 +1,10 @@
-<script src="{{ asset('/js/previewImage.js') }}"></script>
+<script src="{{ asset('/js/pdf.js') }}"></script>
 <div id="quotationPopup" tabindex="-1" class="hidden fixed z-50 inset-0 flex justify-center items-center w-full h-full bg-gray-500/60">
   <div class="relative w-4xl p-4">
     <div class="relative bg-white rounded-lg shadow">
       <div class="p-4 md:p-5 text-center">
         <label class="block text-lg font-semibold" for="file_input">อัปโหลดใบเสนอราคา</label>
-        <form id="quotationForm" method="POST" action="{{ route('status.quota') }}" enctype="multipart/form-data">
+        <form id="quotationForm" method="POST" action="{{ route('upload-pdf') }}" enctype="multipart/form-data">
           @csrf
           <input type="hidden" name="replyId" value="{{ old('replyId', $taskLineID) }}">
           <input type="hidden" name="replyName" value="{{ old('replyName', $cusName) }}">
@@ -26,17 +26,11 @@
           </div>
 
           <div class="relative text-sm">
-            <input type="file" id="file_input" name="file" accept=".JPEG, .PNG" class="block absolute top-0 left-0 z-10 w-full px-3 py-2 mt-2 bg-white rounded-md outline-1 -outline-offset-1 outline-gray-300 opacity-0" required>
+            <input type="file" id="file_input" name="file" accept=".PDF" class="block absolute top-0 left-0 z-10 w-full px-3 py-2 mt-2 bg-white rounded-md outline-1 -outline-offset-1 outline-gray-300 opacity-0" required>
             <div class="block w-full px-3 py-2 mt-2 text-gray-400 bg-white rounded-md outline-1 -outline-offset-1 outline-gray-300" id="file_input_label">
-              เลือกไฟล์ที่มีนามสกุล .JPEG หรือ .PNG
+              เลือกไฟล์ที่มีนามสกุล .PDF
             </div>
           </div>
-          {{-- พื้นที่สำหรับแสดงรูปที่เลือก --}}
-          <div id="preview-container" class="mt-4 hidden">
-            <p class="text-sm font-medium text-gray-900 dark:text-white">รูปภาพตัวอย่าง:</p>
-            <img id="preview-image" class="w-full h-auto rounded-lg" src="" alt="Image Preview">
-          </div>
-
           <button type="submit" id="submitStatus" class="px-10 py-1.5 mt-4 text-white bg-[#FF0000] shadow-sm rounded-lg hover:text-black hover:bg-slate-300">ตกลง</button>
           <button id="cancelQuotaPopup" type="button" class="px-10 py-1.5 mt-4 bg-white border border-gray-300 shadow-sm rounded-lg hover:bg-slate-200">ยกเลิก</button>
         </form>
