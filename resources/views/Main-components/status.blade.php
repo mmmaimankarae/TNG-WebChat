@@ -3,9 +3,23 @@
     @foreach ($statusThai as $key => $status)
       <div class="px-3">
         @if (old('taskStatus', $taskStatus) == $key)
-          <span class="inline-flex justify-center w-full px-3 py-1.5 bg-[#FF4343] shadow-sm rounded-md text-white">
-            {{ $status }}
-          </span>
+          @if ($key == '3')
+            <span id="showQuotationPopup" type="button" class="inline-flex justify-center w-full px-3 py-1.5 bg-[#FF4343] shadow-sm rounded-md text-white hover:text-black hover:bg-red-300">
+              {{ $status }}
+            </span>
+          @elseif ($key == '4')
+            <span id="showPaymentPopup" type="button" class="inline-flex justify-center w-full px-3 py-1.5 bg-[#FF4343] shadow-sm rounded-md text-white hover:text-black hover:bg-red-300">
+              {{ $status }}
+            </span>
+          @elseif ($key == '5')
+            <span id="showInvoicePopup" type="button" class="inline-flex justify-center w-full px-3 py-1.5 bg-[#FF4343] shadow-sm rounded-md text-white hover:text-black hover:bg-red-300">
+              {{ $status }}
+            </span>
+          @else
+            <span class="inline-flex justify-center w-full px-3 py-1.5 bg-[#FF4343] shadow-sm rounded-md text-white">
+              {{ $status }}
+            </span>
+          @endif
         @else
           <form method="POST" action="">
             @csrf

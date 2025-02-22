@@ -5,13 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Tasks;
 use App\Http\Controllers\sendMsg;
-use App\Http\Controllers\controlGetInfo\{empInfo, sidebarInfo, msgInfo};
+use App\Http\Controllers\controlGetInfo\{empInfo, sidebarInfo, msgInfo, tasksInfo};
 
 class controlPage extends Controller
 {
     private msgInfo $msgInfo;
     private sendMsg $sendMsg;
     private Tasks $tasksModel;
+    private tasksInfo $tasksInfo;
     private array $statusThai = [
         '2' => 'รับเรื่องแล้ว', 
         '3' => 'แนบใบเสนอราคา',
@@ -20,11 +21,12 @@ class controlPage extends Controller
         '6' => 'เสร็จสิ้น'
     ];
 
-    public function __construct(msgInfo $msgInfo, sendMsg $sendMsg, Tasks $tasksModel)
+    public function __construct(msgInfo $msgInfo, sendMsg $sendMsg, Tasks $tasksModel, tasksInfo $tasksInfo)
     {
         $this->msgInfo = $msgInfo;
         $this->sendMsg = $sendMsg;
         $this->tasksModel = $tasksModel;
+        $this->tasksInfo = $tasksInfo;
     }
 
     public function default(Request $req)
@@ -32,6 +34,7 @@ class controlPage extends Controller
         $empInfo = new empInfo();
         $sidebarInfo = new sidebarInfo();
         $tasksModel = new Tasks();
+        $tasksInfo = new tasksInfo();
         $select = false;
         
         $branchCode = $req->input('branchCode', $empInfo->getBranchCode());
@@ -48,6 +51,7 @@ class controlPage extends Controller
         $taskStatus = $req->input('taskStatus');
 
         if ($select || $update) {
+            $checkQuota = $tasksInfo->checkQuota($req->input('TasksCode')) ?? 'not found';
             $taskLineID = $req->input('TasksLineID') ?? session('TasksLineID');
             $messages = $this->msgInfo->getMsgByUser($taskLineID);
             
@@ -65,6 +69,8 @@ class controlPage extends Controller
                 'accName' => $empInfo->getAccName(),
                 'accCode' => $accCode,
                 'empCode' => $empCode,
+                'branchCode' => $branchCode,
+                'checkQuota' => $checkQuota,
             ];
 
             if ($update) {

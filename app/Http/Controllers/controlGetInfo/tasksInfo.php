@@ -20,4 +20,18 @@ class tasksInfo extends Controller
             return false;
         }
     }
+
+    public function checkQuota($taskCode)
+    {
+        try {
+            $result = DB::table('TASK_STATUS_HISTORY')
+                        ->where('TaskHisCode', $taskCode)
+                        ->where('TaskHisStatusCode', '2')
+                        ->first();
+            return $result;
+        } catch (\Exception $e) {
+            \Log::error('Check Status for AI Error (c.controlGetInfo.tasksInfo): ' . $e->getMessage());
+            return false;
+        }
+    }
 }

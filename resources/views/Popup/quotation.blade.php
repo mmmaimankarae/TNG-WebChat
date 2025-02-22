@@ -4,25 +4,27 @@
     <div class="relative bg-white rounded-lg shadow">
       <div class="p-4 md:p-5 text-center">
         <label class="block text-lg font-semibold" for="file_input">อัปโหลดใบเสนอราคา</label>
-        <form id="quotationForm" method="POST" action="{{ route('upload-pdf') }}" enctype="multipart/form-data">
+        <form id="quotationForm" method="POST" action="{{ route('upload-quotation') }}" enctype="multipart/form-data">
           @csrf
           <input type="hidden" name="replyId" value="{{ old('replyId', $taskLineID) }}">
           <input type="hidden" name="replyName" value="{{ old('replyName', $cusName) }}">
           <input type="hidden" name="cusCode" value="{{ old('cusCode', $cusCode) }}">
-          <input type="hidden" name="taskCode" value="{{ old('taskCode', $taskCode) }}">
+          <input type="hidden" name="taskCode" id="taskcodeQuota" value="{{ old('taskCode', $taskCode) }}">
           <input type="hidden" name="userId" value="{{ old('userId', $accCode) }}">
           <input type="hidden" name="userName" value="{{ old('userName', $accName->AccName) }}">
           <input type="hidden" name="taskStatus" value="{{ old('taskStatus', $taskStatus) }}">
-          <input type="hidden" name="empCode" value="{{ old('empCode', $empCode) }}">
+          <input type="hidden" name="branchCode" value="{{ old('branchCode', $branchCode) }}">
           <div class="mt-4">
             <label class="inline-flex items-center">
               <input type="radio" name="quotaOption" value="AI" class="form-radio" required>
               <span class="ml-2">อัปเซลล์ด้วย AI</span>
             </label>
-            <label class="inline-flex items-center ml-4">
-              <input type="radio" name="quotaOption" value="image" class="form-radio" required>
-              <span class="ml-2">ส่งภาพใบเสนอราคา</span>
-            </label>
+            @if ($checkQuota != 'not found')
+              <label class="inline-flex items-center ml-4">
+                <input type="radio" name="quotaOption" value="image" class="form-radio" required>
+                <span class="ml-2">ส่งภาพใบเสนอราคา</span>
+              </label>
+            @endif
           </div>
 
           <div class="relative text-sm">
