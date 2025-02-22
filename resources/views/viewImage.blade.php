@@ -15,10 +15,11 @@
 <body>
   <div class="flex justify-center items-center h-screen">
     <button type="button" onclick="window.close()" class="absolute top-5 left-20 px-10 py-1.5 text-sm font-semibold text-white bg-[#FF0000] rounded-full shadow-sm hover:bg-slate-400"> ย้อนกลับ </button>
-    <a href="{{ route('download.image', ['messageId' => request()->input('messageId')]) }}" 
-      class="absolute top-5 right-20 px-10 py-1.5 text-sm font-semibold text-white bg-blue-500 rounded-full shadow-sm hover:bg-slate-400">
-      ดาวน์โหลดรูปภาพ
-    </a>
+    @if ($download)
+      <div class="absolute top-5 right-20 px-10 py-1.5 text-sm font-semibold text-white bg-blue-500 rounded-full shadow-sm hover:bg-slate-400">
+        ดาวน์โหลดรูปภาพ
+      </div>  
+    @endif
     <div class="relative top-5  p-4 bg-white shadow-lg rounded-lg">
       <img src="{{ $imageUrl }}" alt="Image" class="w-auto h-screen rounded-lg">
     </div>

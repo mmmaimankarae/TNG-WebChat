@@ -35,6 +35,12 @@ class msgInfo extends Controller
     public function viewImage(Request $request)
     {
         $messageId = $request->input('messageId');
+
+        if(strpos($messageId, 'storage') !== false) {
+            $imageUrl = $messageId;
+            return view('viewImage', ['imageUrl' => $imageUrl, 'download' => false]);
+        }
+
         $imageContent = $this->lineService->getImage($messageId);
     
         if (!$imageContent) {
@@ -43,7 +49,7 @@ class msgInfo extends Controller
     
         $imageUrl = route('preview.image', ['messageId' => $messageId]);
     
-        return view('viewImage', ['imageUrl' => $imageUrl, 'errorMessage' => null]);
+        return view('viewImage', ['imageUrl' => $imageUrl, 'download' => true]);
     }
 
     public function downloadImage($messageId)

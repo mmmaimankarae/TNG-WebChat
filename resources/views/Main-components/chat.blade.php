@@ -30,17 +30,30 @@
               <p id="content" class="py-2 mt-1 text-sm text-gray-900 break-words whitespace-pre-wrap">{{ $msg['messageContent'] }}</p>
               @break
             @case('image')
-              <form id="imageForm" method="POST" action="{{ route('view.image') }}" target="_blank">
-                @csrf
-                <input type="hidden" name="messageId" value="{{ $msg['messageId'] }}">
-                <button type="submit" class="mt-2">
-                  <img id="messageImage" class="rounded-md" src="{{ route('preview.image', ['messageId' => $msg['messageId']]) }}" 
-                    onerror="handleImageError()">
-                </button>
-              </form>
-              <a id="downloadLink" class="flex justify-end mt-2 text-xs underline text-blue-950" href="{{ route('download.image', ['messageId' => $msg['messageId']]) }}">
-                ดาวน์โหลดรูปภาพ
-              </a>
+              @if (strpos($msg['userId'], 'TNG') === 0)
+                @php
+                  $imagePath = str_replace('c:\xampp\htdocs\TNG-WebChat\storage\app\public\\', '', $msg['messageContent']);
+                  $imageUrl = asset('storage/' . $imagePath);
+                @endphp
+                <form id="imageForm" method="POST" action="{{ route('view.image') }}" target="_blank">
+                  @csrf
+                  <input type="hidden" name="messageId" value="{{ $imageUrl }}">
+                  <button type="submit" class="mt-2">
+                    <img id="messageImage" class="rounded-md" src="{{ $imageUrl }}" onerror="handleImageError()">
+                  </button>
+                </form>
+              @else
+                <form id="imageForm" method="POST" action="{{ route('view.image') }}" target="_blank">
+                  @csrf
+                  <input type="hidden" name="messageId" value="{{ $msg['messageId'] }}">
+                  <button type="submit" class="mt-2">
+                    <img id="messageImage" class="rounded-md" src="{{ route('preview.image', ['messageId' => $msg['messageId']]) }}" onerror="handleImageError()">
+                  </button>
+                </form>
+                <a id="downloadLink" class="flex justify-end mt-2 text-xs underline text-blue-950" href="{{ route('download.image', ['messageId' => $msg['messageId']]) }}">
+                  ดาวน์โหลดรูปภาพ
+                </a>
+              @endif
               @break
             @case('sticker')
               <img src="{{ $msg['messageContent'] }}" alt="image" class="w-2/3 h-auto mt-2"/>
