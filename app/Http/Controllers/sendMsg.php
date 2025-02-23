@@ -79,7 +79,9 @@ class sendMsg extends Controller
             $request->merge(['messageType' => 'text']);
             $this->saveMessage($request);
             $this->tasksModel->setUpdateTime($taskCode);
-            $request->session()->flash('TasksLineID', $replyId);
+            if ($request->hasSession()) {
+                $request->session()->flash('TasksLineID', $replyId);
+            }
             return redirect()->back()->withInput()->with('select', true);
         }
         return response()->json(['status' => 'error', 'message' => $response ? $response->getBody()->getContents() : 'Error occurred'], 500);

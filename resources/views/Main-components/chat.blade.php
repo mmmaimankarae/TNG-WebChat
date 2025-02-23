@@ -118,7 +118,7 @@
       <input type="hidden" name="empCode" value="{{ old('empCode', $empCode) }}">
       <input type="text" name="message" autocomplete="off" class="flex-1 px-3 py-2 border ml-2 border-gray-500 rounded-full focus:outline-none focus:border-blue-500 text-sm" placeholder="พิมพ์ข้อความ..." required/>
       <button type="submit" class="ml-2 text-blue-500 rounded-full hover:bg-blue-100">
-        <svg class="w-7 h-7 text-sky-600 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24" transform="rotate(90)">
+        <svg class="w-7 h-7 text-sky-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24" transform="rotate(90)">
           <path fill-rule="evenodd" d="M12 2a1 1 0 0 1 .932.638l7 18a1 1 0 0 1-1.326 1.281L13 19.517V13a1 1 0 1 0-2 0v6.517l-5.606 2.402a1 1 0 0 1-1.326-1.281l7-18A1 1 0 0 1 12 2Z" clip-rule="evenodd"/>
         </svg>
       </button>

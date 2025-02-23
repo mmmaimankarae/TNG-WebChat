@@ -43,6 +43,29 @@ class Nosql
             \Log::error('Nosql Error update message (m.Nosql): ' . $e->getMessage());
         }
     }
+    
+    public function updateQuota($quotaCode, $version)
+    {
+        try {
+            $collection = env('MONGO_COLLECTION_OCR');
+            // อัปเดต `invoice` ของเอกสารที่ตรงกันให้เป็น "true"
+            $collection->updateOne(
+                ['document_id' => $quotaCode, 'document_version' => $version],
+                ['$set' => ['invoice' => "true"]]
+            );
+
+            // อัปเดตเอกสารอื่น ๆ ที่มี document_id เดียวกัน แต่ version ไม่ตรง ให้เป็น "false"
+            $collection->updateMany(
+                ['document_id' => $quotaCode, 'document_version' => ['$ne' => $version]],
+                ['$set' => ['invoice' => "false"]]
+            );
+
+            return response()->json(['status' => 'success', 'message' => 'อัปเดตข้อมูลเรียบร้อยแล้ว']);
+        } catch (\Exception $e) {
+            Log::error('MongoDB Error: ' . $e->getMessage());
+            return response()->json(['status' => 'error', 'message' => 'เกิดข้อผิดพลาด'], 500);
+        }
+    }
 
     public function findMessages($collectionName, $filter)
     {

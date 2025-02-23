@@ -14,6 +14,8 @@
           <input type="hidden" name="userName" value="{{ old('userName', $accName->AccName) }}">
           <input type="hidden" name="taskStatus" value="{{ old('taskStatus', $taskStatus) }}">
           <input type="hidden" name="branchCode" value="{{ old('branchCode', $branchCode) }}">
+          <input type="hidden" name="update" value="true">
+          <input type="hidden" name="select" value="true">
           <div class="mt-4">
             <label class="inline-flex items-center">
               <input type="radio" name="quotaOption" value="AI" class="form-radio" required>

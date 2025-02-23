@@ -53,7 +53,7 @@ class controlPage extends Controller
             return view('main', compact('sidebarChat', 'select'));
         }
         
-        $taskCode = $req->input('TasksCode');
+        $taskCode = $req->input('TasksCode') ?? $req->input('taskCode');
         $taskLineID = $req->input('TasksLineID') ?? session('TasksLineID');
         $messages = $this->msgInfo->getMsgByUser($taskLineID);
         $checkQuota = $this->tasksInfo->checkQuota($taskCode) ?? 'not found';
@@ -62,12 +62,19 @@ class controlPage extends Controller
         if ($update) {
             $this->tasksModel->updateStatus($taskCode, $taskStatus, $empCode);
             if ($taskStatus === '6') {
-                $this->sendMsg->sendMessage(new Request([
-                    'file' => null,
-                    'message' => 'ขอบคุณสำหรับการสั่งซื้อ ทางเรากำลังจัดส่งสินค้าให้ คุณลูกค้ารอรับได้เลย🙏',
-                    'replyId' => $taskLineID
-                ]));
+                $req->merge(['file' => null]);
+                $req->merge(['message' => 'ขอบคุญสำหรับการสั่งซื้อ ทางเรากำลังจัดส่งสินค้าให้ คุณลูกค้ารอรับได้เลย🙏']);
+                $req->merge(['replyId' => $taskLineID]);
+
+                $this->sendMsg->sendMessage($req);
                 return view('main', compact('sidebarChat', 'select'));
+            }
+
+            if ($taskStatus === '4') {
+                $req->merge(['file' => null]);
+                $req->merge(['message' => 'ยอดชำระ ' . $req->input('totalPrice') . ' บาท ขอบคุณครับ']);
+                $req->merge(['replyId' => $req->input('replyId')]);
+                $this->sendMsg->sendMessage($req);
             }
         }
 

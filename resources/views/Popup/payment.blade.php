@@ -1,4 +1,3 @@
-<script src="{{ asset('/js/priceCal.js') }}"></script>
 <div id="paymentPopup" tabindex="-1" class="hidden fixed z-50 inset-0 flex justify-center items-center w-full h-full bg-gray-500/60">
   <div class="relative w-4xl p-4">
     <div class="relative bg-white rounded-lg shadow">
@@ -6,24 +5,31 @@
         <p class="text-lg font-semibold">แจ้งยอดการชำระเงิน</p>
         @if ($amountInfo != null)
           <div class="mt-4">
-            @php $quoteShow = false; @endphp
+            @php 
+              $quoteShow = false;
+              $quotaCode = '';
+            @endphp
             @foreach ($amountInfo as $item)
               @if ($quoteShow == false)
-              <label for="quoteCode" class="block text-left font-medium">เลขที่ใบเสนอราคา</label>
-              <input type="text" name="quoteCode" value="{{ $item['quoteCode'] }}" class="block w-full px-3 py-2 mt-2 bg-white rounded-md outline-1 -outline-offset-1 outline-gray-300
+              <label for="quotaCode" class="block text-left font-medium">เลขที่ใบเสนอราคาที่พบ</label>
+              <input type="text" name="quotaCode" id="quotaCodeInput" value="{{ $item['quotaCode'] }}" class="block w-full px-3 py-2 mt-2 bg-white rounded-md outline-1 -outline-offset-1 outline-gray-300
                 placeholder:text-sm placeholder:text-gray-400" placeholder="เลขที่ใบเสนอราคา" required>
-                @php $quoteShow = true; @endphp
+                @php 
+                  $quoteShow = true; 
+                  $quotaCode = $item['quotaCode'];
+                @endphp
                 <label class="block mt-4 text-left font-medium">เลือกใบเสนอราคาที่จะใช้แจ้งยอดชำระ</label>
               @endif
+              @if ($quotaCode != $item['quotaCode'])
+              <p class="mt-4 text-left text-red-500 font-medium">ใบเสนอราคาอื่นที่พบ</p>
+                <label for="quotaCode" class="block mt-4 -mb-2 text-left font-medium">{{ $item['quotaCode'] }}</label>
+              @endif
               <label class="inline-flex mt-4 ml-4">
-                <input type="radio" name="quotaVersion" value="{{ $item['amount'] }}" class="form-radio" required onchange="updateTotalPrice(this)">
+                <input type="radio" name="quotaVersion" value="{{ $item['amount'] }}" class="form-radio" required onchange="updateTotalPrice(this)" 
+                  data-version="{{ $item['version'] }}" data-quota-code="{{ $item['quotaCode'] }}">
                 <span class="ml-2 font-medium">version: {{ $item['version'] }},</span>
                 <span class="ml-2">{{ $item['itemsQty'] }} รายการสินค้า,</span>
                 <span class="ml-2">ราคารวม: {{ $item['amount'] }} บาท</span>
-
-                <input type="text" name="version" value="{{ $item['version'] }}" class="hidden">
-                <input type="text" name="itemsQty" value="{{ $item['itemsQty'] }}" class="hidden">
-                <input type="text" name="amount" value="{{ $item['amount'] }}" class="hidden">
                 
                 <form id="imageForm" method="POST" action="{{ route('view.image') }}" target="_blank">
                   @csrf
@@ -36,17 +42,30 @@
             @endforeach
           </div>
         @endif  
-        <div>
+        <form method="POST" action="" >
+          @csrf
           <label for="totalPrice" class="block text-left font-medium">ยอดชำระ</label>
           <div class="mt-2">
             <input type="text" name="totalPrice" id="totalPrice"
               class="block w-full px-3 py-2 bg-white rounded-md outline-1 -outline-offset-1 outline-gray-300
               placeholder:text-sm placeholder:text-gray-400" placeholder=" โปรดกรอกยอดชำระทั้งหมด">
           </div>
-        </div>
+          <input type="text" name="quotaCode" id="quotaCode" class="hidden">
+          <input type="text" name="version" id="version" class="hidden">
 
-        <button type="button" id="submitStatus" class="px-10 py-1.5 mt-4 text-white bg-[#FF0000] shadow-sm rounded-lg hover:text-black hover:bg-slate-300">ตกลง</button>
-        <button id="cancelPaymentPopup" type="button" class="px-10 py-1.5 mt-4 bg-white shadow-sm rounded-lg hover:bg-slate-200">ยกเลิก</button>
+          <input type="hidden" name="replyId" value="{{ old('replyId', $taskLineID) }}">
+          <input type="hidden" name="replyName" value="{{ old('replyName', $cusName) }}">
+          <input type="hidden" name="cusCode" value="{{ old('cusCode', $cusCode) }}">
+          <input type="hidden" name="taskCode" id="taskcodeQuota" value="{{ old('taskCode', $taskCode) }}">
+          <input type="hidden" name="userId" value="bot">
+          <input type="hidden" name="userName" value="tangbot">
+          <input type="hidden" name="taskStatus" value="4">
+          <input type="hidden" name="update" value="true">
+          <input type="hidden" name="select" value="true">
+          <input type="hidden" name="branchCode" value="{{ old('branchCode', $branchCode) }}">
+          <button type="submit" class="px-10 py-1.5 mt-4 text-white bg-[#FF0000] shadow-sm rounded-lg hover:text-black hover:bg-slate-300">ตกลง</button>
+          <button id="cancelPaymentPopup" type="button" class="px-10 py-1.5 mt-4 bg-white shadow-sm rounded-lg hover:bg-slate-200">ยกเลิก</button>
+        </form>
       </div>
     </div>
   </div>

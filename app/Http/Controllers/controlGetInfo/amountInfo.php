@@ -29,7 +29,7 @@ class amountInfo extends Controller
         foreach ($quota as $q) {
             $quotaInfo = $this->getquotaInfo($q->QuotaCode);
             $documents[] = [
-                'quoteCode' => $quotaInfo['document_id'],
+                'quotaCode' => $quotaInfo['document_id'],
                 'version' => $quotaInfo['document_version'],
                 'itemsQty' => count($quotaInfo['items']),
                 'amount' => $quotaInfo['total_amount'],
