@@ -12,10 +12,10 @@ class dupInsertCSV extends Controller
     {
         $file = $request->file('data_csv');
         $accCode = $request->input('accCode');
+        $table = $request->input('table');
         $filePath = $file->getRealPath();
         $file = fopen($filePath, 'r');
         $header = fgetcsv($file);
-        $count = count($header);
         $data = [];
 
         while ($row = fgetcsv($file)) {
@@ -24,7 +24,7 @@ class dupInsertCSV extends Controller
 
         fclose($file);
 
-        $result = $this->processData($count, $data, $accCode);
+        $result = $this->processData($table, $data, $accCode);
 
         if (isset($result['messageType'])) {
             session()->flash('messageInsertPd', $result['messageType']);
@@ -34,22 +34,31 @@ class dupInsertCSV extends Controller
         return redirect()->back();
     }
 
-    private function processData($count, $data, $accCode)
+    private function processData($table, $data, $accCode)
     {
         $insertBasedData = new InsertBasedData();
 
-        switch ($count) {
-            case 6:
+        switch ($table) {
+            case "employee":
                 $inserted = $insertBasedData->insertEmp($data, $accCode);
                 break;
-            case 12:
+            case "branch":
                 $inserted = $insertBasedData->insertBranch($data, $accCode);
                 break;
-            case 5:
+            case "prod":
                 $inserted = $insertBasedData->insertProd($data, $accCode);
                 break;
-            case 3:
+            case "prodType":
                 $inserted = $insertBasedData->insertProdType($data, $accCode);
+                if ($inserted) {
+                    return ['messageType' => 'ข้อมูลถูกเพิ่มเรียบร้อยแล้ว'];
+                } else {
+                    return ['messageType' => 'ข้อมูลไม่ถูกเพิ่ม กรุณาสอบข้อมูลอีกครั้ง'];
+                }
+                $inserted = null;
+                break;
+            case "payment":
+                $inserted = $insertBasedData->insertPayment($data, $accCode);
                 if ($inserted) {
                     return ['messageType' => 'ข้อมูลถูกเพิ่มเรียบร้อยแล้ว'];
                 } else {

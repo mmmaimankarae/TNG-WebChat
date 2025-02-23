@@ -284,4 +284,67 @@ class InsertBasedData extends Model
         }
         return true;
     }
+
+    public function insertPayment($data, $accCode)
+    {
+        $data = array_map(function($item) {
+            return [
+                'PayAccList' => $item[0],
+                'PayAccBank' => $item[1],
+                'PayAccNumber' => $item[2],
+                'PayAccBrchCode' => $item[3],
+                'PayAccClosed' => $item[4],
+            ];
+        }, $data);
+
+        foreach ($data as $item) {
+            if($item['PayAccClosed'] == '') {
+                $item['PayAccClosed'] = 'N';
+            }
+
+            /* ตรวจสอบว่าเคยมีข้อมูลนั่นๆ อยู่ไหม */
+            $existingPayment = DB::table('PAYMENT_ACCOUNT')->where('PayAccList', $item['PayAccList'])->first();
+
+            if ($existingPayment) {
+                /* ตรวจสอบว่าข้อมูลมีการเปลี่ยนแปลงหรือไม่ */
+                $updateData = [];
+                foreach ($item as $key => $value) {
+                    if ($existingPayment->$key != $value) {
+                        $updateData[$key] = $value;
+                    }
+                }
+
+                if (!empty($updateData)) {
+                    $updateData['PayAccUpdateDate'] = date('Y-m-d H:i:s');
+
+                    try {
+                        DB::table('PAYMENT_ACCOUNT')->where('PayAccList', $item['PayAccList'])->update($updateData);
+                    } catch (\Exception $e) {
+                        \Log::error('Update Error (m.InsertBasedData): ' . $e->getMessage());
+                        return false;
+                    }
+                }
+            } else {
+                try {
+                    $item['PayAccUpdateDate'] = date('Y-m-d H:i:s');
+                    DB::table('PAYMENT_ACCOUNT')->insert($item);
+                } catch (\Exception $e) {
+                    \Log::error('Insert Error (m.InsertBasedData): ' . $e->getMessage());
+                    return false;
+                }
+            }
+        }
+
+        try {
+            DB::table('LOG_DATA')->insert([
+                'LogAccCode' => $accCode,
+                'LogDate' => date('Y-m-d H:i:s'),
+                'LogTable' => 'PAYMENT_ACCOUNT',
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Model InsertBasedData, Database error: ' . $e->getMessage());
+            return false;
+        }
+        return true;
+    }
 }

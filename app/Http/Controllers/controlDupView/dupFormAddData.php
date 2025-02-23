@@ -62,8 +62,17 @@ class dupFormAddData extends Controller
             '11' => 'สถานะสาขา (Y = ปิด)',
             '12' => 'รหัสภูมิภาค',
         ];
+
+        $tableType = [
+            '1' => 'ลำดับ (เพิ่มข้อมูลต้องลำดับใหม่เท่านั้น ห้ามแทรกข้อมูล)',
+            '2' => 'ธนาคาร',
+            '3' => 'เลขที่บัญชี',
+            '4' => 'สาขา',
+            '5' => 'สถานะบัญชี (Y = ยกเลิกบัญชี)',
+        ];
         $data = $this->tableInfo->regionInfo();
-        return view('support-data', compact('title', 'table', 'data', 'accCode'));
+        $dataType = $this->tableInfo->paymentInfo();
+        return view('support-data', compact('title', 'table', 'data', 'accCode', 'tableType', 'dataType'));
     }
 
     private function sampleProd($accCode) {

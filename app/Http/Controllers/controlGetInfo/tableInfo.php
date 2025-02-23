@@ -47,4 +47,17 @@ class TableInfo extends Controller
             return false;
         }
     }
+
+    public function paymentInfo() {
+        try {
+            $payment = DB::table('PAYMENT_ACCOUNT')
+                ->select('PayAccBank')
+                ->groupBy('PayAccBank')
+                ->get();
+            return $payment;
+        } catch (\Exception $e) {
+            \Log::error('Find Error (c.controlGetInfo.tableInfo): ' . $e->getMessage());
+            return false;
+        }
+    }
 }
