@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use MongoDB\Client;
@@ -7,7 +6,7 @@ use MongoDB\Client;
 class Nosql
 {
     protected $client;
-    protected $collection;
+    protected $database;
 
     public function __construct()
     {
@@ -20,23 +19,33 @@ class Nosql
 
         $uri = "mongodb://{$username}:{$password}@{$host}:{$port}/{$authDatabase}";
         $this->client = new Client($uri);
-        $this->collection = $this->client->$database->{env('MONGO_COLLECTION')};
+        $this->database = $this->client->$database;
     }
 
-    public function insertDocument($document)
+    public function getCollection($collectionName)
     {
-        $this->collection->insertOne($document);
+        return $this->database->$collectionName;
     }
 
-    public function updateTaskId($oldTaskId, $newTaskId)
+    public function insertDocument($collectionName, $document)
+    {
+        $this->getCollection($collectionName)->insertOne($document);
+    }
+
+    public function updateTaskId($collectionName, $oldTaskId, $newTaskId)
     {
         try {
-            $this->collection->updateMany(
+            $this->getCollection($collectionName)->updateMany(
                 ['taskId' => $oldTaskId],
                 ['$set' => ['taskId' => $newTaskId]]
             );
         } catch (\Exception $e) {
             \Log::error('Nosql Error update message (m.Nosql): ' . $e->getMessage());
         }
+    }
+
+    public function findMessages($collectionName, $filter)
+    {
+        return $this->getCollection($collectionName)->find($filter)->toArray();
     }
 }

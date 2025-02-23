@@ -56,4 +56,18 @@ class empInfo extends Controller
             return $e->getMessage();
         }
     }
+
+    public function getRegionCode() {
+        $branchCode = $this->getBranchCode();
+        try {
+            $results = DB::table('BRANCH')
+            ->select('BrchRegionCode')
+            ->where('BrchCode', $branchCode)
+            ->get();
+            return $results->pluck('BrchRegionCode');
+        } catch (\Exception $e) {
+            \Log::error('Find Error (c.controlGetInfo.empInfo): ' . $e->getMessage());
+            return $e->getMessage();
+        }
+    }
 }

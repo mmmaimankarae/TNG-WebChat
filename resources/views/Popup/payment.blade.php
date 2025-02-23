@@ -4,29 +4,42 @@
     <div class="relative bg-white rounded-lg shadow">
       <div class="p-4 md:p-5 text-center">
         <p class="text-lg font-semibold">แจ้งยอดการชำระเงิน</p>
-        <div class="my-4 grid grid-cols-2 gap-4">
-          <div>
-            <label for="prodsPrice" class="block text-left text-sm font-medium">ค่าสินค้า</label>
-            <div class="mt-2">
-              <input type="text" name="prodsPrice" id="prodsPrice" autocomplete="off"
-                class="block w-full px-3 py-2 bg-white rounded-md outline-1 -outline-offset-1 outline-gray-300
-                placeholder:text-sm placeholder:text-gray-400" placeholder=" โปรดกรอกเลขที่ใบกำกับภาษี" required>
-            </div>
+        @if ($amountInfo != null)
+          <div class="mt-4">
+            @php $quoteShow = false; @endphp
+            @foreach ($amountInfo as $item)
+              @if ($quoteShow == false)
+              <label for="quoteCode" class="block text-left font-medium">เลขที่ใบเสนอราคา</label>
+              <input type="text" name="quoteCode" value="{{ $item['quoteCode'] }}" class="block w-full px-3 py-2 mt-2 bg-white rounded-md outline-1 -outline-offset-1 outline-gray-300
+                placeholder:text-sm placeholder:text-gray-400" placeholder="เลขที่ใบเสนอราคา" required>
+                @php $quoteShow = true; @endphp
+                <label class="block mt-4 text-left font-medium">เลือกใบเสนอราคาที่จะใช้แจ้งยอดชำระ</label>
+              @endif
+              <label class="inline-flex mt-4 ml-4">
+                <input type="radio" name="quotaVersion" value="{{ $item['amount'] }}" class="form-radio" required onchange="updateTotalPrice(this)">
+                <span class="ml-2 font-medium">version: {{ $item['version'] }},</span>
+                <span class="ml-2">{{ $item['itemsQty'] }} รายการสินค้า,</span>
+                <span class="ml-2">ราคารวม: {{ $item['amount'] }} บาท</span>
+
+                <input type="text" name="version" value="{{ $item['version'] }}" class="hidden">
+                <input type="text" name="itemsQty" value="{{ $item['itemsQty'] }}" class="hidden">
+                <input type="text" name="amount" value="{{ $item['amount'] }}" class="hidden">
+                
+                <form id="imageForm" method="POST" action="{{ route('view.image') }}" target="_blank">
+                  @csrf
+                  <input type="hidden" name="messageId" value="{{ $item['quotaPath'] }}">
+                  <button type="submit" class="ml-2 text-sm text-blue-500">
+                    ดูรูปภาพ
+                  </button>
+                </form>
+              </label>
+            @endforeach
           </div>
-          <div>
-            <label for="deliPrice" class="block text-left text-sm font-medium">ค่าจัดส่ง</label>
-            <div class="mt-2">
-              <input type="text" name="deliPrice" id="deliPrice" autocomplete="off"
-                class="block w-full px-3 py-2 bg-white rounded-md outline-1 -outline-offset-1 outline-gray-300
-                placeholder:text-sm placeholder:text-gray-400" placeholder=" โปรดกรอกค่าจัดส่ง">
-            </div>
-          </div>
-        </div>
-  
+        @endif  
         <div>
-          <label for="totalPrice" class="block text-left text-sm font-medium">ยอดชำระ</label>
+          <label for="totalPrice" class="block text-left font-medium">ยอดชำระ</label>
           <div class="mt-2">
-            <input type="text" name="totalPrice" id="totalPrice" readonly
+            <input type="text" name="totalPrice" id="totalPrice"
               class="block w-full px-3 py-2 bg-white rounded-md outline-1 -outline-offset-1 outline-gray-300
               placeholder:text-sm placeholder:text-gray-400" placeholder=" โปรดกรอกยอดชำระทั้งหมด">
           </div>
