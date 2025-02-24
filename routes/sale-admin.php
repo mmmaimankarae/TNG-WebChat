@@ -3,8 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\controlAuthenticate as authen;
 use App\Http\Controllers\controlAssignTask as assignTask;
-use App\Http\Controllers\controlDupView\dupFormAuthen;
 use App\Http\Controllers\controlPage as page;
+use App\Http\Controllers\controlDupView\dupFormAddData as addData;
 
 Route::middleware(['access.jwt', 'authorize.pages'])->group(function () {
     Route::prefix('sale-admin')->group(function () {
@@ -19,5 +19,8 @@ Route::middleware(['access.jwt', 'authorize.pages'])->group(function () {
 
         Route::post('/current-tasks/assign', [assignTask::class, 'assignTask'])
         ->name('sale-admin.confirm-assign');
+
+        Route::match(['get', 'post'], '/payment', [addData::class, 'default'])
+        ->name('sale-admin.payment');
     });
 });

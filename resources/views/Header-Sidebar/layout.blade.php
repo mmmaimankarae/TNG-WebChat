@@ -30,10 +30,5 @@
   <div id="content" class="content">
     @yield('content')
   </div>
-  @if (isset($select) && $select)
-    @include('Popup.quotation')
-    @include('Popup.invoice')
-    @include('Popup.payment')
-  @endif
 </body>
 </html>

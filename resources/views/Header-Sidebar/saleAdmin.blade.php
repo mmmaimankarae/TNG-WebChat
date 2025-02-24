@@ -11,6 +11,9 @@
       <a href="{{ route('sale-admin.current-tasks') }}" class="nav-style" aria-current="false">
         งานที่ดำเนินอยู่ <span class="notiHead-style" noti="false">4</span>
       </a>
+      <a href="{{ route('sale-admin.payment') }}" class="nav-style" aria-current="false">
+        ช่องทางการชำระเงิน
+      </a>
     </div>
   
     {{-- Right Icons --}}
@@ -55,6 +58,7 @@
     <div id="menu-buger" class="hidden sm:hidden fixed top-12 left-0 right-0 px-2 pt-2 pb-3 space-y-1 bg-white shadow-md">
       <a href="{{ route('sale-admin.new-tasks') }}" class="nav-style block" aria-current="false"> รายการงานใหม่ <span class="notiHead-style" noti="false">4</span></a>
       <a href="{{ route('sale-admin.current-tasks') }}" class="nav-style block" aria-current="false"> งานที่ดำเนินอยู่ <span class="notiHead-style" noti="false">4</span></a>
+      <a href="{{ route('sale-admin.payment') }}" class="nav-style block" aria-current="false"> ช่องทางการชำระเงิน</a>
       <a href="/authen/reset" class="nav-style block" aria-current="false">เปลี่ยนรหัสผ่าน</a>
       <a href="/signout" class="nav-style block" aria-current="false">ออกจากระบบ</a>
     </div>

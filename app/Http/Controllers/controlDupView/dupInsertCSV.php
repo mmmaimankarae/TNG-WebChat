@@ -4,33 +4,52 @@ namespace App\Http\Controllers\controlDupView;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use App\Models\InsertBasedData;
 
 class dupInsertCSV extends Controller
 {
     public function uploadCSV(Request $request)
     {
-        $file = $request->file('data_csv');
-        $accCode = $request->input('accCode');
         $table = $request->input('table');
-        $filePath = $file->getRealPath();
-        $file = fopen($filePath, 'r');
-        $header = fgetcsv($file);
-        $data = [];
+        if ($table == 'payment') {
+            // save รูปที่ได้มา
+            $file = $request->file('file');
+            $accCode = $request->input('accCode');
+            $branchCode = $request->input('brchCode'); 
 
-        while ($row = fgetcsv($file)) {
-            $data[] = $row;
-        }
+            $newFileName = $branchCode . '.' . $file->getClientOriginalExtension();
+            $filePath = 'public\payments\\' . $newFileName;
 
-        fclose($file);
+            $file->storeAs('public\payments', $newFileName);
+            $relativePath = 'storage\payments\\' . $newFileName;
 
-        $result = $this->processData($table, $data, $accCode);
-
-        if (isset($result['messageType'])) {
-            session()->flash('messageInsertPd', $result['messageType']);
+            $insertBasedData = new InsertBasedData();
+            $inserted = $insertBasedData->updatePayment($branchCode, $relativePath, $accCode);
             return redirect()->back();
         }
-        session()->flash('messageInsert', $result['message']);
+        else {
+            $file = $request->file('data_csv');
+            $accCode = $request->input('accCode');
+            $filePath = $file->getRealPath();
+            $file = fopen($filePath, 'r');
+            $header = fgetcsv($file);
+            $data = [];
+
+            while ($row = fgetcsv($file)) {
+                $data[] = $row;
+            }
+
+            fclose($file);
+
+            $result = $this->processData($table, $data, $accCode);
+
+            if (isset($result['messageType'])) {
+                session()->flash('messageInsertPd', $result['messageType']);
+                return redirect()->back();
+            }
+            session()->flash('messageInsert', $result['message']);
+        }
         return redirect()->back();
     }
 
@@ -55,16 +74,6 @@ class dupInsertCSV extends Controller
                 } else {
                     return ['messageType' => 'ข้อมูลไม่ถูกเพิ่ม กรุณาสอบข้อมูลอีกครั้ง'];
                 }
-                $inserted = null;
-                break;
-            case "payment":
-                $inserted = $insertBasedData->insertPayment($data, $accCode);
-                if ($inserted) {
-                    return ['messageType' => 'ข้อมูลถูกเพิ่มเรียบร้อยแล้ว'];
-                } else {
-                    return ['messageType' => 'ข้อมูลไม่ถูกเพิ่ม กรุณาสอบข้อมูลอีกครั้ง'];
-                }
-                $inserted = null;
                 break;
             default:
                 return ['message' => 'รูปแบบไฟล์ไม่ถูกต้อง'];

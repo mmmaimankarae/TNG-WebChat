@@ -15,3 +15,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+function showFileName(input) {
+    var fileName = input.files[0].name;
+    var fileLabel = document.getElementById('fileName_' + input.id.split('_')[1]);
+    fileLabel.textContent = fileName;
+}

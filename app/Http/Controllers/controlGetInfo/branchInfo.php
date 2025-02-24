@@ -10,12 +10,10 @@ class branchInfo extends Controller
 {
     function branchInfo(Request $request) {
         try {
-            $region = $request->input('region');
+            $region = $request->input('region') ?? '1';
             $branchs = DB::table('BRANCH')
                 ->where('BrchCode', '!=', 'HO')
-                ->when($region, function ($query, $region) {
-                    return $query->where('BrchRegionCode', $region);
-                })
+                ->where('BrchRegionCode', $region)
                 ->get();
             return $branchs;
         } catch (\Exception $e) {

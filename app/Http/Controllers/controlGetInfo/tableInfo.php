@@ -48,11 +48,15 @@ class TableInfo extends Controller
         }
     }
 
-    public function paymentInfo() {
+    public function paymentInfo($region) {
         try {
-            $payment = DB::table('PAYMENT_ACCOUNT')
-                ->select('PayAccBank')
-                ->groupBy('PayAccBank')
+            $payment = DB::table('BRANCH')
+                ->join('PAYMENT_ACCOUNT', 'PAYMENT_ACCOUNT.PayAccBrchCode', '=', 'BRANCH.BrchCode')
+                ->where(function ($query) {
+                    $query->where('BRANCH.BrchRegionCode', '!=', '1')
+                          ->orWhere('BRANCH.BrchCode', 'HO');
+                })
+                ->where('BRANCH.BrchRegionCode', $region)
                 ->get();
             return $payment;
         } catch (\Exception $e) {

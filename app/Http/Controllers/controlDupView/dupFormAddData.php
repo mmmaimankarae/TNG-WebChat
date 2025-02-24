@@ -4,23 +4,24 @@ namespace App\Http\Controllers\controlDupView;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Http\Controllers\controlGetInfo\tableInfo;
-use App\Http\Controllers\controlGetInfo\empInfo;
+use App\Http\Controllers\controlGetInfo\{empInfo, tableInfo, sidebarInfo};
 
 class dupFormAddData extends Controller
 {
     private $tableInfo;
     private $currentRoute;
+    private $sidebarInfo;
 
-    public function __construct(tableInfo $tableInfo, Request $request)
+    public function __construct(tableInfo $tableInfo, Request $req)
     {
         $this->tableInfo = $tableInfo;
-        $this->currentRoute = $request->segment(2);
+        $this->currentRoute = $req->segment(2);
     }
 
-    public function default() {
+    public function default(Request $req) {
         $empInfo = new empInfo();
         $accCode = $empInfo->getAccCode();
+        $branchCode = $empInfo->getBranchCode();
 
         if ($this->currentRoute === 'employee') {
             return $this->sampleEmp($accCode);
@@ -28,6 +29,8 @@ class dupFormAddData extends Controller
             return $this->sampleBranch($accCode);
         } else if ($this->currentRoute === 'product') {
             return $this->sampleProd($accCode);
+        } elseif ($this->currentRoute === 'payment') {
+            return $this->samplePayment($accCode, $branchCode, $req);
         }
     }
 
@@ -63,16 +66,8 @@ class dupFormAddData extends Controller
             '12' => 'รหัสภูมิภาค',
         ];
 
-        $tableType = [
-            '1' => 'ลำดับ (เพิ่มข้อมูลต้องลำดับใหม่เท่านั้น ห้ามแทรกข้อมูล)',
-            '2' => 'ธนาคาร',
-            '3' => 'เลขที่บัญชี',
-            '4' => 'สาขา',
-            '5' => 'สถานะบัญชี (Y = ยกเลิกบัญชี)',
-        ];
         $data = $this->tableInfo->regionInfo();
-        $dataType = $this->tableInfo->paymentInfo();
-        return view('support-data', compact('title', 'table', 'data', 'accCode', 'tableType', 'dataType'));
+        return view('support-data', compact('title', 'table', 'data', 'accCode'));
     }
 
     private function sampleProd($accCode) {
@@ -92,5 +87,22 @@ class dupFormAddData extends Controller
         ];
         $data = $this->tableInfo->prodTypeInfo();
         return view('support-data', compact('title', 'table', 'data', 'accCode', 'tableType'));
+    }
+
+    private function samplePayment($accCode, $branchCode, $req) {
+        $title = 'ช่องทางการชำระเงิน';
+        $table = [
+            '1' => 'สาขา',
+            '2' => 'รูปภาพ',
+            '3' => 'แก้ไขรูปภาพ',
+            '4' => '',
+        ];
+
+        $region = $req->input('region') ?? '1';
+        $data = $this->tableInfo->paymentInfo($region);
+        $sidebarInfo = new sidebarInfo();
+        $sidebarChat = $sidebarInfo->getEmpTasks($branchCode);
+        $regionThai = ['1' => 'กรุงเทพ', '2' => 'ภาคเหนือ', '3' => 'ภาคกลาง', '4' => 'ภาคใต้', '5' => 'ภาคอีสาน', '6' => 'ภาคตะวันออก'];
+        return view('payment-data', compact('title', 'table', 'data', 'accCode', 'sidebarChat', 'regionThai'));
     }
 }

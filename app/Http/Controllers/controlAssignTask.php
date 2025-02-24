@@ -22,7 +22,7 @@ class controlAssignTask extends Controller
 
         $sidebarChat = $sidebarInfo->getEmpTasks($branchCode, $empCode);
         $branchs = $branchs->branchInfo($req);
-        $regionThai = ['1' => 'กรุงเทพ', '2' => 'ภาคเหนือ', '3' => 'ภาคกลาง', '4' => 'ภาคอีสาน', '5' => 'ภาคใต้', '6' => 'ภาคตะวันออก'];
+        $regionThai = ['1' => 'กรุงเทพ', '2' => 'ภาคเหนือ', '3' => 'ภาคกลาง', '4' => 'ภาคใต้', '5' => 'ภาคอีสาน', '6' => 'ภาคตะวันออก'];
         $taskCode = $req->input('taskCode');
         $cusName = $req->input('cusName');
 
