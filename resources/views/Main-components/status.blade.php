@@ -1,45 +1,51 @@
+@php
+  if (!function_exists('getPopupId')) {
+    function getPopupId($key) {
+      switch ($key) {
+        case '3':
+          return 'showQuotationPopup';
+        case '4':
+          return 'showPaymentPopup';
+        case '5':
+          return 'showInvoicePopup';
+        default:
+          return '';
+      }
+    }
+  }
+
+  if (!function_exists('getHoverClass')) {
+    function getHoverClass($key) {
+      return in_array($key, ['3', '4', '5']) ? 'hover:text-black hover:bg-red-300' : '';
+    }
+  }
+@endphp
+
+
 <div class="sticky top-12 z-10 p-4 tracking-wider bg-white shadow-md">
   <div class="grid grid-cols-5 text-sm">
     @foreach ($statusThai as $key => $status)
       <div class="px-3">
         @if (old('taskStatus', $taskStatus) == $key)
-          @if ($key == '3')
-            <span id="showQuotationPopup" type="button" class="inline-flex justify-center w-full px-3 py-1.5 bg-[#FF4343] shadow-sm rounded-md text-white hover:text-black hover:bg-red-300">
-              {{ $status }}
-            </span>
-          @elseif ($key == '4')
-            <span id="showPaymentPopup" type="button" class="inline-flex justify-center w-full px-3 py-1.5 bg-[#FF4343] shadow-sm rounded-md text-white hover:text-black hover:bg-red-300">
-              {{ $status }}
-            </span>
-          @elseif ($key == '5')
-            <span id="showInvoicePopup" type="button" class="inline-flex justify-center w-full px-3 py-1.5 bg-[#FF4343] shadow-sm rounded-md text-white hover:text-black hover:bg-red-300">
-              {{ $status }}
-            </span>
-          @else
-            <span class="inline-flex justify-center w-full px-3 py-1.5 bg-[#FF4343] shadow-sm rounded-md text-white">
-              {{ $status }}
-            </span>
-          @endif
+          <span id="{{ getPopupId($key) }}" type="button" class="inline-flex justify-center w-full px-3 py-1.5 bg-[#FF4343] shadow-sm rounded-md text-white {{ getHoverClass($key) }}">
+            {{ $status }}
+          </span>
         @else
           <form method="POST" action="">
             @csrf
-            <input type="hidden" name="TasksLineID" value="{{ old('replyId', $taskLineID) }}">
-            <input type="hidden" name="TasksCode" value="{{ old('taskCode', $taskCode) }}">
+            <input type="hidden" name="taskLineID" value="{{ old('replyId', $taskLineID) }}">
+            <input type="hidden" name="taskCode" value="{{ old('taskCode', $taskCode) }}">
             <input type="hidden" name="cusCode" value="{{ old('cusCode', $cusCode) }}">
             <input type="hidden" name="cusName" value="{{ old('replyName', $cusName) }}">
-            <input type="hidden" name="select" value="true">
-            <input type="hidden" name="update" value="true">
+            <input type="hidden" name="showchat" value="true">
+            <input type="hidden" name="updateStatus" value="true">
             <input type="hidden" name="taskStatus" value="{{ $key }}">
-            @if($key == '3')
-              <button id="showQuotationPopup" type="button" class="inline-flex justify-center w-full px-3 py-1.5 bg-white shadow-sm rounded-md ring-1 ring-inset ring-gray-300 hover:bg-gray-50 hover:ring-[#FF4343]">
+            @if(in_array($key, ['3', '4', '5']))
+              <button id="{{ getPopupId($key) }}" type="button" class="inline-flex justify-center w-full px-3 py-1.5 bg-white shadow-sm rounded-md ring-1 ring-inset ring-gray-300 hover:bg-gray-50 hover:ring-[#FF4343]">
                 {{ $status }}
               </button>
-            @elseif($key == '4')
-              <button id="showPaymentPopup" type="button" class="inline-flex justify-center w-full px-3 py-1.5 bg-white shadow-sm rounded-md ring-1 ring-inset ring-gray-300 hover:bg-gray-50 hover:ring-[#FF4343]">
-                {{ $status }}
-              </button>
-            @elseif($key == '5')
-              <button id="showInvoicePopup" type="button" class="inline-flex justify-center w-full px-3 py-1.5 bg-white shadow-sm rounded-md ring-1 ring-inset ring-gray-300 hover:bg-gray-50 hover:ring-[#FF4343]">
+            @elseif($key == '6')
+              <button type="submit" class="inline-flex justify-center w-full px-3 py-1.5 bg-white shadow-sm rounded-md ring-1 ring-inset ring-gray-300 hover:bg-gray-50 hover:ring-[#FF4343]">
                 {{ $status }}
               </button>
             @else

@@ -1,5 +1,5 @@
 <script src="{{ asset('/js/pdf.js') }}"></script>
-<div id="quotationPopup" tabindex="-1" class="hidden fixed z-50 inset-0 flex justify-center items-center w-full h-full bg-gray-500/60">
+<div id="quotationPopup" tabindex="-1" class="hidden fixed z-50 overflow-y-auto inset-0 flex justify-center items-center w-full h-full bg-gray-500/60">
   <div class="relative w-4xl p-4">
     <div class="relative bg-white rounded-lg shadow">
       <div class="p-4 md:p-5 text-center">

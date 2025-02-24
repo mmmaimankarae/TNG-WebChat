@@ -1,6 +1,6 @@
 <div id="paymentPopup" tabindex="-1" class="hidden fixed z-50 inset-0 flex justify-center items-center w-full h-full bg-gray-500/60">
   <div class="relative w-4xl p-4">
-    <div class="relative bg-white rounded-lg shadow">
+    <div class="relative bg-white rounded-lg shadow max-h-[80vh] overflow-y-auto">
       <div class="p-4 md:p-5 text-center">
         <p class="text-lg font-semibold">แจ้งยอดการชำระเงิน</p>
         @if ($amountInfo != null)
@@ -60,8 +60,8 @@
           <input type="hidden" name="userId" value="bot">
           <input type="hidden" name="userName" value="tangbot">
           <input type="hidden" name="taskStatus" value="4">
-          <input type="hidden" name="update" value="true">
-          <input type="hidden" name="select" value="true">
+          <input type="hidden" name="updateStatus" value="true">
+          <input type="hidden" name="showchat" value="true">
           <input type="hidden" name="branchCode" value="{{ old('branchCode', $branchCode) }}">
           <button type="submit" class="px-10 py-1.5 mt-4 text-white bg-[#FF0000] shadow-sm rounded-lg hover:text-black hover:bg-slate-300">ตกลง</button>
           <button id="cancelPaymentPopup" type="button" class="px-10 py-1.5 mt-4 bg-white shadow-sm rounded-lg hover:bg-slate-200">ยกเลิก</button>

@@ -1,86 +1,88 @@
 {{-- ประวัติแชท --}}
 <div id="chat-history" class="flex-1 pb-5 overflow-y-auto">
+  @php
+    $previousTaskId = null;
+  @endphp
   @foreach ($messages as $msg)
-    {{-- ส่วนของ bot --}}
-    @if ($msg['userId'] === 'TNG-bot')
-    <div class="flex items-start justify-end gap-2.5 mt-5 mr-2">
-      <div class="flex flex-col w-full max-w-[320px] leading-1.5 p-4 bg-green-100 rounded-xl">
-    {{-- ส่วนของ พนง. --}}
-    @elseif (strpos($msg['userId'], 'TNG') === 0)
-      <div class="flex items-start justify-end gap-2.5 mt-5 mr-2">
-        <div class="flex flex-col w-full max-w-[320px] leading-1.5 p-3 bg-gray-200 rounded-xl">
-    {{-- ส่วนของ ลค. --}}
-    @else
-      <div class="flex items-start justify-start gap-2.5 mt-5 ml-3">
-        <div class="flex flex-col w-full max-w-[320px] leading-1.5 px-4 py-2 bg-blue-100 rounded-xl">
+    @php
+      /* จัดการ element ว่าเป็นข้อความของใคร */
+      $isBot = $msg['userId'] === 'TNG-bot';
+      $isEmployee = strpos($msg['userId'], 'TNG') === 0;
+      $isCustomer = !$isBot && !$isEmployee;
+      $bgColor = $isBot ? 'bg-green-100' : ($isEmployee ? 'bg-gray-200' : 'bg-blue-100');
+      $alignment = $isCustomer ? 'justify-start ml-3' : 'justify-end mr-2';
+      $padding = $isBot ? 'p-4' : 'p-3';
+    @endphp
+
+    @if ($previousTaskId !== null && $previousTaskId !== $msg['taskId'])
+      <div class="flex justify-center my-2">
+        <button class="px-2 py-1 text-xs text-white bg-gray-500 rounded-full">งานใหม่</button>
+      </div>
     @endif
-          {{-- detail --}}
-          @if (isset($msg['quoteType']) && $msg['quoteType'] === 'text')
-            <div class="flex items-center space-x-2 rtl:space-x-reverse text-sm">
-              <span class="w-2/5 truncate">{{ $msg['quoteContent'] }}</span>
-            </div>
+
+    <div class="flex items-start {{ $alignment }} gap-2.5 mt-5">
+      <div class="flex flex-col w-full max-w-[320px] leading-1.5 {{ $padding }} {{ $bgColor }} rounded-xl">
+        {{-- detail --}}
+        @if (isset($msg['quoteType']) && $msg['quoteType'] === 'text')
+          <div class="flex items-center space-x-2 rtl:space-x-reverse text-sm">
+            <span class="w-2/5 truncate">{{ $msg['quoteContent'] }}</span>
+          </div>
           <hr class="my-2">
-          @endif
-          <div class="flex items-center space-x-2 rtl:space-x-reverse text-xs">
-            <span id="userName" class="font-semibold w-2/5 truncate">{{ $msg['userName'] }}</span>
-            <span class="text-gray-700">{{ $msg['messageDate'] . ' ' . $msg['messagetime'] }}</span>
-          </div>
-          @switch($msg['messageType'])
-            @case('text')
-              <p id="content" class="py-2 mt-1 text-sm text-gray-900 break-words whitespace-pre-wrap">{{ $msg['messageContent'] }}</p>
-              @break
-            @case('image')
-              @if (strpos($msg['userId'], 'TNG') === 0)
-                @php
-                  $imagePath = str_replace('c:\xampp\htdocs\TNG-WebChat\storage\app\public\\', '', $msg['messageContent']);
-                  $imageUrl = asset('storage/' . $imagePath);
-                @endphp
-                <form id="imageForm" method="POST" action="{{ route('view.image') }}" target="_blank">
-                  @csrf
-                  <input type="hidden" name="messageId" value="{{ $imageUrl }}">
-                  <button type="submit" class="mt-2">
-                    <img id="messageImage" class="rounded-md" src="{{ $imageUrl }}" onerror="handleImageError()">
-                  </button>
-                </form>
-              @else
-                <form id="imageForm" method="POST" action="{{ route('view.image') }}" target="_blank">
-                  @csrf
-                  <input type="hidden" name="messageId" value="{{ $msg['messageId'] }}">
-                  <button type="submit" class="mt-2">
-                    <img id="messageImage" class="rounded-md" src="{{ route('preview.image', ['messageId' => $msg['messageId']]) }}" onerror="handleImageError()">
-                  </button>
-                </form>
-                <a id="downloadLink" class="flex justify-end mt-2 text-xs underline text-blue-950" href="{{ route('download.image', ['messageId' => $msg['messageId']]) }}">
-                  ดาวน์โหลดรูปภาพ
-                </a>
-              @endif
-              @break
-            @case('sticker')
-              <img src="{{ $msg['messageContent'] }}" alt="image" class="w-2/3 h-auto mt-2"/>
-              @break
-            @default
-            @endswitch
-        </div>
-        {{-- reply of msg ลค. --}}
-        @if (!(strpos($msg['userId'], 'TNG') === 0))
-          <div class="relative inline-block text-left">
-            <button id="actionMsg" type="button" data-quoteData="{{ $msg['quoteToken']}}" data-userName="{{ $msg['userName'] }}"
-              data-msgType="{{ $msg['messageType'] }}" data-msgContent="{{ $msg['messageContent'] }}"
-              class="inline-flex items-center p-2 text-sm text-center rounded-lg hover:bg-gray-100">
-              <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 4 15">
-                <path d="M3.5 1.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 6.041a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 5.959a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z"/>
-              </svg>
-            </button>
-            <div class="actionDots hidden absolute left-0 mt-2 w-48 border border-gray-300 rounded-md shadow-lg">
-              <ul class="py-1 text-xs text-gray-700">
-                <li>
-                  <button onclick="quoteMsg()" id="quoteMsg" class="block w-full text-left px-4 py-2 hover:bg-gray-100">ตอบกลับข้อความนี้</button>
-                </li>
-              </ul>
-            </div>
-          </div>
         @endif
+        <div class="flex items-center space-x-2 rtl:space-x-reverse text-xs">
+          <span id="userName" class="font-semibold w-2/5 truncate">{{ $msg['userName'] }}</span>
+          <span class="text-gray-700">{{ $msg['messageDate'] . ' ' . $msg['messagetime'] }}</span>
+        </div>
+        @switch($msg['messageType'])
+          @case('text')
+            <p id="content" class="py-2 mt-1 text-sm text-gray-900 break-words whitespace-pre-wrap">{{ $msg['messageContent'] }}</p>
+            @break
+          @case('image')
+            @php
+              $imagePath = $isEmployee ? str_replace('c:\xampp\htdocs\TNG-WebChat\storage\app\public\\', '', $msg['messageContent']) : $msg['messageId'];
+              $imageUrl = $isEmployee ? asset('storage/' . $imagePath) : route('preview.image', ['messageId' => $msg['messageId']]);
+            @endphp
+            <form id="imageForm" method="POST" action="{{ route('view.image') }}" target="_blank">
+              @csrf
+              <input type="hidden" name="messageId" value="{{ $imageUrl }}">
+              <button type="submit" class="mt-2">
+                <img id="messageImage" class="rounded-md" src="{{ $imageUrl }}" onerror="handleImageError()">
+              </button>
+            </form>
+            @if (!$isEmployee)
+              <a id="downloadLink" class="flex justify-end mt-2 text-xs underline text-blue-950" href="{{ route('download.image', ['messageId' => $msg['messageId']]) }}">
+                ดาวน์โหลดรูปภาพ
+              </a>
+            @endif
+            @break
+          @case('sticker')
+            <img src="{{ $msg['messageContent'] }}" alt="image" class="w-2/3 h-auto mt-2"/>
+            @break
+        @endswitch
+      </div>
+      {{-- reply of msg ลค. --}}
+      @if ($isCustomer)
+        <div class="relative inline-block text-left">
+          <button id="actionMsg" type="button" data-quoteData="{{ $msg['quoteToken']}}" data-userName="{{ $msg['userName'] }}"
+            data-msgType="{{ $msg['messageType'] }}" data-msgContent="{{ $msg['messageContent'] }}"
+            class="inline-flex items-center p-2 text-sm text-center rounded-lg hover:bg-gray-100">
+            <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 4 15">
+              <path d="M3.5 1.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 6.041a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 5.959a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z"/>
+            </svg>
+          </button>
+          <div class="actionDots hidden absolute left-0 mt-2 w-48 bg-white border border-gray-300 rounded-md shadow-lg">
+            <ul class="py-1 text-xs text-gray-700">
+              <li>
+                <button onclick="quoteMsg()" id="quoteMsg" class="block w-full text-left px-4 py-2 hover:bg-gray-100">ตอบกลับข้อความนี้</button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      @endif
     </div>
+    @php
+      $previousTaskId = $msg['taskId'];
+    @endphp
   @endforeach
 </div>
 

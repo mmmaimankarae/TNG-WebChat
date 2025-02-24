@@ -24,23 +24,25 @@
       @if (count($sidebarChat) > 0)
         @foreach ($sidebarChat as $chat)
           @php
+            /* set เวลาที่จะแสดง */
             $tasksUpdate = Carbon::parse($chat->TaskUpdate);
             $timeAgo = $tasksUpdate->diffForHumans();
             $prevEmpAccName = $chat->PrevEmpAccName;
+            /* path role ปัจจุบัน */
             $path = request()->segment(1);
           @endphp
           <form action="{{ route( $path . '.current-tasks') }}" method="POST" id="chat-form-{{ $chat->TaskLineID }}">
             @csrf
-            <input type="hidden" name="TasksLineID" value="{{ $chat->TaskLineID }}">
-            <input type="hidden" name="TasksCode" value="{{ $chat->TaskCode }}">
+            <input type="hidden" name="taskLineID" value="{{ $chat->TaskLineID }}">
+            <input type="hidden" name="taskCode" value="{{ $chat->TaskCode }}">
             <input type="hidden" name="cusCode" value="{{ $chat->CusCode }}">
             <input type="hidden" name="cusName" value="{{ $chat->CusName }}">
             <input type="hidden" name="taskStatus" value="{{ $chat->TaskStatusCode }}">
             @if ($chat->TaskStatusCode == '1')
-              <input type="hidden" name="update" value="true">
+              <input type="hidden" name="updateStatus" value="true">
               <input type="hidden" name="taskStatus" value="2">
             @endif
-            <input type="hidden" name="select" value="true">
+            <input type="hidden" name="showchat" value="true">
             <div class="grid grid-cols-4 items-center p-2 rounded-lg cursor-pointer hover:bg-gray-200" onclick="document.getElementById('chat-form-{{ $chat->TaskLineID }}').submit();">
               <div class="flex justify-center -ml-5">
                 <svg class="w-10 h-10 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">

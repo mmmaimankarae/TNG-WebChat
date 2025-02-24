@@ -10,16 +10,20 @@ class Nosql
 
     public function __construct()
     {
-        $host = env('MONGO_HOST');
-        $port = env('MONGO_PORT');
-        $database = env('MONGO_DATABASE');
-        $username = env('MONGO_USERNAME');
-        $password = env('MONGO_PASSWORD');
-        $authDatabase = env('DB_AUTHENTICATION_DATABASE', 'admin');
+        try {
+            $host = env('MONGO_HOST');
+            $port = env('MONGO_PORT');
+            $database = env('MONGO_DATABASE');
+            $username = env('MONGO_USERNAME');
+            $password = env('MONGO_PASSWORD');
+            $authDatabase = env('DB_AUTHENTICATION_DATABASE', 'admin');
 
-        $uri = "mongodb://{$username}:{$password}@{$host}:{$port}/{$authDatabase}";
-        $this->client = new Client($uri);
-        $this->database = $this->client->$database;
+            $uri = "mongodb://{$username}:{$password}@{$host}:{$port}/{$authDatabase}";
+            $this->client = new Client($uri);
+            $this->database = $this->client->$database;
+        } catch (\Exception $e) {
+            \Log::error('Nosql Error (m.Nosql): ' . $e->getMessage());
+        }
     }
 
     public function getCollection($collectionName)
@@ -29,7 +33,11 @@ class Nosql
 
     public function insertDocument($collectionName, $document)
     {
-        $this->getCollection($collectionName)->insertOne($document);
+        try {
+            $this->getCollection($collectionName)->insertOne($document);
+        } catch (\Exception $e) {
+            \Log::error('Nosql Error insert message (m.Nosql): ' . $e->getMessage());
+        }
     }
 
     public function updateTaskId($collectionName, $oldTaskId, $newTaskId)
@@ -44,31 +52,34 @@ class Nosql
         }
     }
     
-    public function updateQuota($quotaCode, $version)
+    public function updateQuota($collectionName, $quotaCode, $version)
     {
         try {
-            $collection = env('MONGO_COLLECTION_OCR');
-            // อัปเดต `invoice` ของเอกสารที่ตรงกันให้เป็น "true"
+            $collection = $this->getCollection($collectionName);
+
             $collection->updateOne(
                 ['document_id' => $quotaCode, 'document_version' => $version],
                 ['$set' => ['invoice' => "true"]]
             );
 
-            // อัปเดตเอกสารอื่น ๆ ที่มี document_id เดียวกัน แต่ version ไม่ตรง ให้เป็น "false"
             $collection->updateMany(
                 ['document_id' => $quotaCode, 'document_version' => ['$ne' => $version]],
                 ['$set' => ['invoice' => "false"]]
             );
 
-            return response()->json(['status' => 'success', 'message' => 'อัปเดตข้อมูลเรียบร้อยแล้ว']);
+            return true;
         } catch (\Exception $e) {
             Log::error('MongoDB Error: ' . $e->getMessage());
-            return response()->json(['status' => 'error', 'message' => 'เกิดข้อผิดพลาด'], 500);
+            return false;
         }
     }
 
     public function findMessages($collectionName, $filter)
     {
-        return $this->getCollection($collectionName)->find($filter)->toArray();
+        try {
+            return $this->getCollection($collectionName)->find($filter)->toArray();
+        } catch (\Exception $e) {
+            \Log::error('Nosql Error find message (m.Nosql): ' . $e->getMessage());
+        }
     }
 }

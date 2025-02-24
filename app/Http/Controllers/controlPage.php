@@ -36,30 +36,35 @@ class controlPage extends Controller
         $empInfo = new empInfo();
         $sidebarInfo = new sidebarInfo();
         
-        $branchCode = $req->input('branchCode', $empInfo->getBranchCode());
-        $accCode = $req->input('accCode', $empInfo->getAccCode());
+        /* setting ค่า default ที่จำเป็น */
+        $branchCode = $empInfo->getBranchCode();
+        $accCode = $empInfo->getAccCode();
         $empCode = $empInfo->getAccName()->AccName;
         $current = request()->segment(2) === 'current-tasks';
         
         $sidebarChat = $current 
             ? $sidebarInfo->getEmpTasks($branchCode, $empCode) 
             : $sidebarInfo->getEmpTasks($branchCode);
-        
-        $select = $req->boolean('select') || session('select');
-        $update = $req->boolean('update');
+        $showchat = session('showchat', $req->boolean('showchat'));
+        $updateStatus = $req->boolean('updateStatus');
         $taskStatus = $req->input('taskStatus');
 
-        if (!$select && !$update) {
-            return view('main', compact('sidebarChat', 'select'));
+        /* เริ่มต้นหน้า แสดงแค่ sidebar */
+        if (!$showchat && !$updateStatus) {
+            return view('main', compact('sidebarChat', 'showchat'));
         }
-        
-        $taskCode = $req->input('TasksCode') ?? $req->input('taskCode');
-        $taskLineID = $req->input('TasksLineID') ?? session('TasksLineID');
-        $messages = $this->msgInfo->getMsgByUser($taskLineID);
-        $checkQuota = $this->tasksInfo->checkQuota($taskCode) ?? 'not found';
-        $amountInfo = $this->amountInfo->amountInfo($taskCode);
+        $taskCode = $req->input('taskCode');
+        $taskLineID = session('taskLineID', $req->input('taskLineID'));
 
-        if ($update) {
+        $messages = $this->msgInfo->getMsgByUser($taskLineID);
+
+        if ($showchat) { /* !!!!! */
+            /* ส่วนของข้อมูลใน status */
+            $checkQuota = $this->tasksInfo->checkQuota($taskCode) ?? 'not found';
+            $amountInfo = $this->amountInfo->amountInfo($taskCode);
+        }
+
+        if ($updateStatus) {
             $this->tasksModel->updateStatus($taskCode, $taskStatus, $empCode);
             if ($taskStatus === '6') {
                 $req->merge(['file' => null]);
@@ -67,7 +72,8 @@ class controlPage extends Controller
                 $req->merge(['replyId' => $taskLineID]);
 
                 $this->sendMsg->sendMessage($req);
-                return view('main', compact('sidebarChat', 'select'));
+                $showchat = false;
+                return view('main', compact('sidebarChat', 'showchat'));
             }
 
             if ($taskStatus === '4') {
@@ -80,7 +86,7 @@ class controlPage extends Controller
 
         return view('main', [
             'sidebarChat' => $sidebarChat,
-            'select' => $select,
+            'showchat' => $showchat,
             'messages' => $messages,
             'roleCode' => $empInfo->getRole(),
             'taskCode' => $taskCode,
