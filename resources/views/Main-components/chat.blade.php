@@ -37,10 +37,12 @@
           @case('text')
             <p id="content" class="py-2 mt-1 text-sm text-gray-900 break-words whitespace-pre-wrap">{{ $msg['messageContent'] }}</p>
             @break
-          @case('image')
+          @case('image' || 'image-quotation')
             @php
-              $imagePath = $isEmployee ? str_replace('c:\xampp\htdocs\TNG-WebChat\storage\app\public\\', '', $msg['messageContent']) : $msg['messageId'];
-              $imageUrl = $isEmployee ? asset('storage/' . $imagePath) : route('preview.image', ['messageId' => $msg['messageId']]);
+              $filename = basename($msg['messageContent']);
+              $dirname = basename(dirname($msg['messageContent']));
+              $imagePath = $dirname . '/' . $filename;
+              $imageUrl = $isEmployee ? ($msg['messageType'] == 'image' ? asset('storage/uploads/' . $imagePath) : asset('storage/quotations/' . $imagePath)) : route('preview.image', ['messageId' => $msg['messageId']]);
             @endphp
             <form id="imageForm" method="POST" action="{{ route('view.image') }}" target="_blank">
               @csrf

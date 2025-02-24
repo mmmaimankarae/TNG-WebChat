@@ -16,7 +16,6 @@ class OcrController extends Controller
 
         // อัปโหลดไฟล์ไปยัง Storage
         $file = $request->file('file');
-        $filePath = $file->store('quotations', 'local');
 
         // กำหนด API ของ Python ที่ใช้ OCR
         $pythonOcrApiUrl = 'http://127.0.0.1:3500/ocr';
@@ -24,7 +23,7 @@ class OcrController extends Controller
         // ส่งไฟล์ไปให้ Python
         try {
             $response = Http::attach(
-                'file', file_get_contents(storage_path("app/$filePath")), $file->getClientOriginalName()
+                'file', file_get_contents($file->getPathname()), $file->getClientOriginalName()
             )->post($pythonOcrApiUrl, [
                 'quotaOption' => $request->quotaOption,
                 'replyId' => $request->replyId,
