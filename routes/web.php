@@ -31,6 +31,10 @@ Route::middleware(['access.jwt'])->group(function () {
     Route::get('/preview/{messageId}', [msgInfo::class, 'previewImage'])->name('preview.image');
     Route::get('/download/{messageId}', [msgInfo::class, 'downloadImage'])->name('download.image');
     Route::post('/view', [msgInfo::class, 'viewImage'])->name('view.image');
+
+    /* กรอกข้อมูลใบกำกับภาษี */
+    // Route::match(['get', 'post'], '/invoice', [addData::class, 'default'])
+    //     ->name('invoice');
 });
 
 /* กระบวนการส่ง Mag */
@@ -45,3 +49,7 @@ Route::post('/add-data', [csv::class, 'uploadCSV'])->name('add-data');
 
 /* ออกจากระบบ */
 Route::get('/signout', [authen::class, 'authenSignout']);
+
+Route::get('/invoice', function () {
+    return view('invoice');
+});

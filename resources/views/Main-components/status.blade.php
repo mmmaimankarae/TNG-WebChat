@@ -40,10 +40,14 @@
             <input type="hidden" name="showchat" value="true">
             <input type="hidden" name="updateStatus" value="true">
             <input type="hidden" name="taskStatus" value="{{ $key }}">
-            @if(in_array($key, ['3', '4', '5']))
+            @if(in_array($key, ['3', '4']))
               <button id="{{ getPopupId($key) }}" type="button" class="inline-flex justify-center w-full px-3 py-1.5 bg-white shadow-sm rounded-md ring-1 ring-inset ring-gray-300 hover:bg-gray-50 hover:ring-[#FF4343]">
                 {{ $status }}
               </button>
+            @elseif($key == '5')
+              <a href="" class="inline-flex justify-center w-full px-3 py-1.5 bg-white shadow-sm rounded-md ring-1 ring-inset ring-gray-300 hover:bg-gray-50 hover:ring-[#FF4343]">
+                {{ $status }}
+              </a>
             @elseif($key == '6')
               <button type="submit" class="inline-flex justify-center w-full px-3 py-1.5 bg-white shadow-sm rounded-md ring-1 ring-inset ring-gray-300 hover:bg-gray-50 hover:ring-[#FF4343]">
                 {{ $status }}
