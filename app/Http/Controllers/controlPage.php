@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Tasks;
 use App\Http\Controllers\sendMsg;
-use App\Http\Controllers\controlGetInfo\{empInfo, sidebarInfo, msgInfo, tasksInfo, amountInfo};
+use App\Http\Controllers\controlGetInfo\{empInfo, sidebarInfo, msgInfo, tasksInfo, amountInfo, tableInfo};
 
 class controlPage extends Controller
 {
@@ -14,6 +14,7 @@ class controlPage extends Controller
     private Tasks $tasksModel;
     private tasksInfo $tasksInfo;
     private amountInfo $amountInfo;
+    private tableInfo $tableInfo;
     private array $statusThai = [
         '2' => 'รับเรื่องแล้ว', 
         '3' => 'แนบใบเสนอราคา',
@@ -77,9 +78,13 @@ class controlPage extends Controller
             }
 
             if ($taskStatus === '4') {
+                $tableInfo = new tableInfo();
+                $payment_desc = $tableInfo->paymentDescInfo();
+
+                $payment = str_replace('** จำนวนเงิน **',  $req->input('totalPrice') , $payment_desc);
+
                 /* ส่งข้อความแจ้งยอดชำระ */
-                $req->merge(['message' => 
-                'ยอดชำระ ' . $req->input('totalPrice') . ' บาท ขอบคุณครับ']);
+                $req->merge(['message' => $payment]);
                 $req->merge(['replyId' => $req->input('replyId')]);
                 $this->sendMsg->sendMessage($req);
 

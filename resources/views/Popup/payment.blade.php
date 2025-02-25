@@ -42,31 +42,34 @@
               </label>
             @endforeach
           </div>
-        @endif  
-        <form method="POST" action="" >
-          @csrf
-          <label for="totalPrice" class="block text-left font-medium">ยอดชำระ</label>
-          <div class="mt-2">
-            <input type="text" name="totalPrice" id="totalPrice" value=""
-              class="block w-full px-3 py-2 bg-white rounded-md outline-1 -outline-offset-1 outline-gray-300
-              placeholder:text-sm placeholder:text-gray-400" placeholder=" โปรดกรอกยอดชำระทั้งหมด" required>
-          </div>
-          <input type="text" name="quotaCode" id="quotaCode" class="hidden">
-          <input type="text" name="version" id="version" class="hidden">
+          <form method="POST" action="" >
+            @csrf
+            <label for="totalPrice" class="block text-left font-medium">ยอดชำระ</label>
+            <div class="mt-2">
+              <input type="text" name="totalPrice" id="totalPrice" value=""
+                class="block w-full px-3 py-2 bg-white rounded-md outline-1 -outline-offset-1 outline-gray-300
+                placeholder:text-sm placeholder:text-gray-400" placeholder=" โปรดกรอกยอดชำระทั้งหมด" required>
+            </div>
+            <input type="text" name="quotaCode" id="quotaCode" class="hidden">
+            <input type="text" name="version" id="version" class="hidden">
 
-          <input type="hidden" name="replyId" value="{{ old('replyId', $taskLineID) }}">
-          <input type="hidden" name="replyName" value="{{ old('replyName', $cusName) }}">
-          <input type="hidden" name="cusCode" value="{{ old('cusCode', $cusCode) }}">
-          <input type="hidden" name="taskCode" id="taskcodeQuota" value="{{ old('taskCode', $taskCode) }}">
-          <input type="hidden" name="userId" value="bot">
-          <input type="hidden" name="userName" value="tangbot">
-          <input type="hidden" name="taskStatus" value="4">
-          <input type="hidden" name="updateStatus" value="true">
-          <input type="hidden" name="showchat" value="true">
-          <input type="hidden" name="branchCode" value="{{ old('branchCode', $branchCode) }}">
-          <button type="submit" class="px-10 py-1.5 mt-4 text-white bg-[#FF0000] shadow-sm rounded-lg hover:text-black hover:bg-slate-300">ตกลง</button>
-          <button id="cancelPaymentPopup" type="button" class="px-10 py-1.5 mt-4 bg-white shadow-sm rounded-lg hover:bg-slate-200">ยกเลิก</button>
-        </form>
+            <input type="hidden" name="replyId" value="{{ old('replyId', $taskLineID) }}">
+            <input type="hidden" name="replyName" value="{{ old('replyName', $cusName) }}">
+            <input type="hidden" name="cusCode" value="{{ old('cusCode', $cusCode) }}">
+            <input type="hidden" name="taskCode" id="taskcodeQuota" value="{{ old('taskCode', $taskCode) }}">
+            <input type="hidden" name="userId" value="bot">
+            <input type="hidden" name="userName" value="tangbot">
+            <input type="hidden" name="taskStatus" value="4">
+            <input type="hidden" name="updateStatus" value="true">
+            <input type="hidden" name="showchat" value="true">
+            <input type="hidden" name="branchCode" value="{{ old('branchCode', $branchCode) }}">
+            <button type="submit" class="px-10 py-1.5 mt-4 text-white bg-[#FF0000] shadow-sm rounded-lg hover:text-black hover:bg-slate-300">ตกลง</button>
+            <button id="cancelPaymentPopup" type="button" class="px-10 py-1.5 mt-4 bg-white shadow-sm rounded-lg hover:bg-slate-200">ยกเลิก</button>
+          </form>
+        @else
+        <p class="mt-4 text-center text-red-500 font-medium">ไม่พบใบเสนอราคา</p>
+        <button id="cancelPaymentPopup" type="button" class="px-10 py-1.5 mt-4 text-white bg-[#FF0000] shadow-sm rounded-lg hover:text-black hover:bg-slate-300">ยกเลิก</button>
+      @endif 
       </div>
     </div>
   </div>

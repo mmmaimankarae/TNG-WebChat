@@ -6,9 +6,30 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Models\InsertBasedData;
+use Illuminate\Support\Facades\Validator;
 
 class dupInsertCSV extends Controller
 {
+    public function description(Request $request)
+    {
+        /* เพิ่มการตรวจสอบแบบกำหนดเอง */
+        Validator::extend('contains', function ($attribute, $value, $parameters, $validator) {
+            return is_string($value) && strpos($value, '** จำนวนเงิน **') !== false;
+        });
+        
+        $request->validate([
+            'desc' => ['required', 'contains'],
+        ], [
+            'desc.contains' => 'ข้อความแจ้งการชำระเงินต้องมีคำว่า "** จำนวนเงิน **"',
+        ]);
+
+        $desc = $request->input('desc');
+        $accCode = $request->input('accCode');
+        $insertBasedData = new InsertBasedData();
+        $inserted = $insertBasedData->insertPaymentDesc($desc, $accCode);
+        return redirect()->back()->withErrors("ข้อความถูกเพิ่มเรียบร้อยแล้ว");
+    }
+
     public function uploadCSV(Request $request)
     {
         $table = $request->input('table');

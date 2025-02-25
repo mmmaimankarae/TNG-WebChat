@@ -338,4 +338,27 @@ class InsertBasedData extends Model
             return false;
         }
     }
+
+    public function insertPaymentDesc($desc, $accCode) {
+        try {
+            DB::table('PAYMENT_DESCRIPTION')->insert([
+                'PayDesc' => $desc,
+                'PayDescUpdateDate' => date('Y-m-d H:i:s')
+            ]);
+            
+            try {
+                DB::table('LOG_DATA')->insert([
+                    'LogAccCode' => $accCode,
+                    'LogDate' => date('Y-m-d H:i:s'),
+                    'LogTable' => 'PAYMENT_DESCRIPTION',
+                ]);
+            } catch (\Exception $e) {
+                \Log::error('Model InsertBasedData, Database error: ' . $e->getMessage());
+                return false;
+            }
+        } catch (\Exception $e) {
+            \Log::error('Insert Error (m.InsertBasedData): ' . $e->getMessage());
+            return false;
+        }
+    }
 }

@@ -20,6 +20,7 @@ class ApiController extends Controller
     {
         $empCode = $request->input('userName');
         $taskCode = $request->input('taskCode');
+        $taskStatus = $request->input('taskStatus');
         if ($empCode !== tasksInfo::getLastEmp($taskCode)) {
             $this->tasksModel->updateStatus($taskCode, $taskStatus, $empCode);
         }

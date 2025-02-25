@@ -27,14 +27,17 @@ class amountInfo extends Controller
         $documents = [];
 
         foreach ($quota as $q) {
+            $documents = [];
             $quotaInfo = $this->getquotaInfo($q->QuotaCode);
-            $documents[] = [
-                'quotaCode' => $quotaInfo['document_id'],
-                'version' => $quotaInfo['document_version'],
-                'itemsQty' => count($quotaInfo['items']),
-                'amount' => $quotaInfo['total_amount'],
-                'quotaPath' => $q->QuotaPath
-            ];
+            if ($quotaInfo) {
+                $documents[] = [
+                    'quotaCode' => $quotaInfo['document_id'],
+                    'version' => $quotaInfo['document_version'],
+                    'itemsQty' => count($quotaInfo['items']),
+                    'amount' => $quotaInfo['total_amount'],
+                    'quotaPath' => $q->QuotaPath
+                ];
+            }
         }
 
         return $documents;
@@ -64,7 +67,8 @@ class amountInfo extends Controller
 
         return $collection->findOne([
             'document_id' => $documentId,
-            'document_version' => $version
+            'document_version' => $version,
+            'invoice' => null
         ]);
     }
 }

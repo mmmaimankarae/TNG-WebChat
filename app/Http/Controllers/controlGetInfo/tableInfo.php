@@ -64,4 +64,16 @@ class TableInfo extends Controller
             return false;
         }
     }
+
+    public function paymentDescInfo() {
+        try {
+            $paymentDesc = DB::table('PAYMENT_DESCRIPTION')
+                ->orderBy('PayDescList', 'desc')
+                ->first();
+            return $paymentDesc->PayDesc;
+        } catch (\Exception $e) {
+            \Log::error('Find Error (c.controlGetInfo.tableInfo): ' . $e->getMessage());
+            return false;
+        }
+    }
 }

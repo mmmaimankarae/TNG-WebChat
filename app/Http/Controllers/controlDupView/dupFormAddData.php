@@ -100,9 +100,10 @@ class dupFormAddData extends Controller
 
         $region = $req->input('region') ?? '1';
         $data = $this->tableInfo->paymentInfo($region);
+        $dataDesc = $this->tableInfo->paymentDescInfo();
         $sidebarInfo = new sidebarInfo();
         $sidebarChat = $sidebarInfo->getEmpTasks($branchCode);
         $regionThai = ['1' => 'กรุงเทพ', '2' => 'ภาคเหนือ', '3' => 'ภาคกลาง', '4' => 'ภาคใต้', '5' => 'ภาคอีสาน', '6' => 'ภาคตะวันออก'];
-        return view('payment-data', compact('title', 'table', 'data', 'accCode', 'sidebarChat', 'regionThai'));
+        return view('payment-data', compact('title', 'table', 'data', 'accCode', 'sidebarChat', 'regionThai', 'dataDesc'));
     }
 }

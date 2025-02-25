@@ -58,12 +58,12 @@ class Nosql
             $collection = $this->getCollection($collectionName);
 
             $collection->updateOne(
-                ['document_id' => $quotaCode, 'document_version' => $version],
+                ['document_id' => $quotaCode, 'document_version' => (int) $version],
                 ['$set' => ['invoice' => "true"]]
             );
 
             $collection->updateMany(
-                ['document_id' => $quotaCode, 'document_version' => ['$ne' => $version]],
+                ['document_id' => $quotaCode, 'document_version' => ['$ne' => (int) $version]],
                 ['$set' => ['invoice' => "false"]]
             );
 

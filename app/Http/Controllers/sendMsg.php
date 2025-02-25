@@ -43,6 +43,7 @@ class sendMsg extends Controller
                 $req->merge(['messageType' => "image"]);
             } else {
                 $req->merge(['messageType' => "image-payment"]);
+                $this->selecteQuota($req->input('quotaCode'), $req->input('version'));
             }
             $apiController = new ApiController($this->tasksModel);
             return $apiController->uploadImages($req);
@@ -118,6 +119,11 @@ class sendMsg extends Controller
         } catch (\Exception $e) {
             \Log::error('Nosql Error saving message (c.sendMsg): ' . $e->getMessage());
         }
+    }
+
+    private function selecteQuota($quotaCode, $version)
+    {
+        return $this->nosql->updateQuota(env('MONGO_COLLECTION_OCR'), $quotaCode, $version);
     }
 
     private function msgPattern(Request $req)
