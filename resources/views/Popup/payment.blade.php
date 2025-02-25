@@ -21,7 +21,8 @@
                 <label class="block mt-4 text-left font-medium">เลือกใบเสนอราคาที่จะใช้แจ้งยอดชำระ</label>
               @endif
               @if ($quotaCode != $item['quotaCode'])
-              <p class="mt-4 text-left text-red-500 font-medium">ใบเสนอราคาอื่นที่พบ</p>
+                @php $quotaCode = $item['quotaCode']; @endphp
+                <p class="mt-4 text-left text-red-500 font-medium">ใบเสนอราคาอื่นที่พบ</p>
                 <label for="quotaCode" class="block mt-4 -mb-2 text-left font-medium">{{ $item['quotaCode'] }}</label>
               @endif
               <label class="inline-flex mt-4 ml-4">
@@ -46,9 +47,9 @@
           @csrf
           <label for="totalPrice" class="block text-left font-medium">ยอดชำระ</label>
           <div class="mt-2">
-            <input type="text" name="totalPrice" id="totalPrice"
+            <input type="text" name="totalPrice" id="totalPrice" value=""
               class="block w-full px-3 py-2 bg-white rounded-md outline-1 -outline-offset-1 outline-gray-300
-              placeholder:text-sm placeholder:text-gray-400" placeholder=" โปรดกรอกยอดชำระทั้งหมด">
+              placeholder:text-sm placeholder:text-gray-400" placeholder=" โปรดกรอกยอดชำระทั้งหมด" required>
           </div>
           <input type="text" name="quotaCode" id="quotaCode" class="hidden">
           <input type="text" name="version" id="version" class="hidden">

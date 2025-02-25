@@ -42,7 +42,11 @@
               $filename = basename($msg['messageContent']);
               $dirname = basename(dirname($msg['messageContent']));
               $imagePath = $dirname . '/' . $filename;
-              $imageUrl = $isEmployee ? ($msg['messageType'] == 'image' ? asset('storage/uploads/' . $imagePath) : asset('storage/quotations/' . $imagePath)) : route('preview.image', ['messageId' => $msg['messageId']]);
+              $imageUrl = $isEmployee ? 
+                ($msg['messageType'] == 'image' ? asset('storage/uploads/' . $imagePath) : 
+                ($msg['messageType'] === 'image-payment' ? asset('storage/' . $imagePath) : 
+                asset('storage/quotations/' . $imagePath))) 
+                : route('preview.image', ['messageId' => $msg['messageId']]);
             @endphp
             <form id="imageForm" method="POST" action="{{ route('view.image') }}" target="_blank">
               @csrf

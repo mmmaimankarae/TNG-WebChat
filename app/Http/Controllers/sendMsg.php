@@ -28,7 +28,7 @@ class sendMsg extends Controller
     {
         $replyId = $req->input('replyId');
         $message = $req->input('message');
-        $file = $req->file('file');
+        $file = $req->file('file') ?? $req->input('file');
         $quote = $req->input('quoteToken');
         $empCode = $req->input('empCode');
         $taskCode = $req->input('taskCode');
@@ -39,6 +39,11 @@ class sendMsg extends Controller
         }
 
         if ($file) {
+            if($req->file('file')) {
+                $req->merge(['messageType' => "image"]);
+            } else {
+                $req->merge(['messageType' => "image-payment"]);
+            }
             $apiController = new ApiController($this->tasksModel);
             return $apiController->uploadImages($req);
         } elseif ($quote) {

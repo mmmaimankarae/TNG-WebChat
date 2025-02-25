@@ -77,10 +77,25 @@ class controlPage extends Controller
             }
 
             if ($taskStatus === '4') {
-                $req->merge(['file' => null]);
-                $req->merge(['message' => 'ยอดชำระ ' . $req->input('totalPrice') . ' บาท ขอบคุณครับ']);
+                /* ส่งข้อความแจ้งยอดชำระ */
+                $req->merge(['message' => 
+                'ยอดชำระ ' . $req->input('totalPrice') . ' บาท ขอบคุณครับ']);
                 $req->merge(['replyId' => $req->input('replyId')]);
                 $this->sendMsg->sendMessage($req);
+
+                /* รูปช่องทางการชำระ */
+                $region = $empInfo->getRegionCode($branchCode);
+                if ($region === '1') {
+                    $file_path = 'public/payments/HO.JPEG';
+                } else {
+                    $file_path = 'public/payments/' . $branchCode . '.jpeg';
+                }
+
+                $req->merge(['file' => "path"]);
+                $req->merge(['file_path' => $file_path]);
+                $this->sendMsg->sendMessage($req);
+                $showchat = false;
+                return view('main', compact('sidebarChat', 'showchat'));
             }
         }
 

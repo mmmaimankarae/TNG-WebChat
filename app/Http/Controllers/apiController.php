@@ -64,7 +64,8 @@ class ApiController extends Controller
     public function uploadImages(Request $request)
     {   
         if ($request->input('file_path')) {
-            $file_path = $request->file('file_path');
+            $path = $request->input('file_path');
+            $file_path = (Storage::path($path));
         } else {
             /* อัปโหลดไฟล์ไปยัง Storage */
             $file = $request->file('file');
@@ -87,6 +88,7 @@ class ApiController extends Controller
                 'userName' => $request->userName,
                 'taskStatus' => $request->taskStatus,
                 'branchCode' => $request->branchCode,
+                'messageType' => $request->messageType,
             ]);
 
             // ตรวจสอบสถานะการตอบกลับ
