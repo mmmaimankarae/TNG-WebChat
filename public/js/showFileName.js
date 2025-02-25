@@ -17,6 +17,12 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function showFileName(input) {
+    const maxSize = 10 * 1024 * 1024; // 10MB
+    if (input.files[0].size > maxSize) {
+        input.value = '';
+        return;
+    }
+
     var fileName = input.files[0].name;
     var fileLabel = document.getElementById('fileName_' + input.id.split('_')[1]);
     fileLabel.textContent = fileName;

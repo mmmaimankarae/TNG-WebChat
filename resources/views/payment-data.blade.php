@@ -52,7 +52,7 @@
                   <input type='text' name='brchCode' value='{{ $item->BrchCode }}' class="hidden">
                   <input type="file" name="file" id="file_{{ $item->BrchCode }}" accept=".JPEG" class="hidden" required onchange="showFileName(this)">
                   <label for="file_{{ $item->BrchCode }}" id="fileName_{{ $item->BrchCode }}" class="block w-full px-3 py-2 mt-2 text-center text-gray-400 bg-white rounded-md outline-1 -outline-offset-1 outline-gray-500 cursor-pointer">
-                    เลือกไฟล์ที่มีนามสกุล .JPEG
+                    เลือกไฟล์ที่มีนามสกุล .JPEG ไม่เกิน 10MB
                   </label>
               </td>
               <td scope="col" class="px-3 py-3 rounded-s-lg">

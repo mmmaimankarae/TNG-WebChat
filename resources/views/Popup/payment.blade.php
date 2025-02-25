@@ -1,4 +1,4 @@
-<div id="paymentPopup" tabindex="-1" class="hidden fixed z-50 inset-0 flex justify-center items-center w-full h-full bg-gray-500/60">
+<div id="paymentPopup" tabindex="-1" class="hidden fixed z-50 inset-0 justify-center items-center w-full h-full bg-gray-500/60">
   <div class="relative w-4xl p-4">
     <div class="relative bg-white rounded-lg shadow max-h-[80vh] overflow-y-auto">
       <div class="p-4 md:p-5 text-center">

@@ -8,6 +8,7 @@ use App\Models\Nosql;
 use Carbon\Carbon;
 use App\Models\Tasks;
 use App\Http\Controllers\controlGetInfo\tasksInfo;
+use App\Http\Controllers\ApiController;
 use Illuminate\Support\Facades\Storage;
 
 class sendMsg extends Controller
@@ -38,22 +39,13 @@ class sendMsg extends Controller
         }
 
         if ($file) {
-            return $this->handleFileUpload($file, $replyId);
+            $apiController = new ApiController($this->tasksModel);
+            return $apiController->uploadImages($req);
         } elseif ($quote) {
             return $this->handleQuoteMessage($req, $replyId, $message, $quote, $taskCode);
         } else {
             return $this->handleTextMessage($req, $replyId, $message, $taskCode);
         }
-    }
-
-    private function handleFileUpload($file, $replyId)
-    {
-        $path = $file->store('uploads', 'public');
-        $url = url(Storage::url($path));
-        \Log::info('Image URL: ' . $url);
-
-        $response = $this->lineService->sendImageMessage($replyId, $url, $url);
-        return $this->handleResponse($response);
     }
 
     private function handleQuoteMessage(Request $req, $replyId, $message, $quote, $taskCode)

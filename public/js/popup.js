@@ -6,10 +6,12 @@ document.addEventListener("DOMContentLoaded", () => {
     if (showQuotationPopup) {
         showQuotationPopup.addEventListener('click', () => {
             quotationPopup.classList.remove('hidden');
+            quotationPopup.classList.add('flex');
         });
 
         cancelQuotaPopup.addEventListener('click', () => {
             quotationPopup.classList.add('hidden');
+            quotationPopup.classList.remove('flex');
         });
     }
 
@@ -19,10 +21,12 @@ document.addEventListener("DOMContentLoaded", () => {
     if (showInvoicePopup) {
         showInvoicePopup.addEventListener('click', () => {
             invoicePopup.classList.remove('hidden');
+            invoicePopup.classList.add('flex');
         });
 
         cancelInvoicePopup.addEventListener('click', () => {
             invoicePopup.classList.add('hidden');
+            invoicePopup.classList.remove('flex');
         });
     }
 
@@ -32,10 +36,12 @@ document.addEventListener("DOMContentLoaded", () => {
     if (showPaymentPopup) {
         showPaymentPopup.addEventListener('click', () => {
             paymentPopup.classList.remove('hidden');
+            paymentPopup.classList.add('flex');
         });
 
         cancelPaymentPopup.addEventListener('click', () => {
             paymentPopup.classList.add('hidden');
+            paymentPopup.classList.remove('flex');
         });
     }
 

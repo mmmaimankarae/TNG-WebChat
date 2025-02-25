@@ -48,7 +48,7 @@
               @csrf
               <input type="hidden" name="messageId" value="{{ $imageUrl }}">
               <button type="submit" class="mt-2">
-                <img id="messageImage" class="rounded-md" src="{{ $imageUrl }}" onerror="handleImageError()">
+                <img id="messageImage" class="rounded-md" src="{{ $imageUrl }}" onerror="handleImageError(this)">
               </button>
             </form>
             @if (!$isEmployee)
@@ -120,6 +120,7 @@
       <input type="hidden" name="select" value="true">
       <input type="hidden" name="taskStatus" value="{{ old('taskStatus', $taskStatus) }}">
       <input type="hidden" name="empCode" value="{{ old('empCode', $empCode) }}">
+      <input type="hidden" name="branchCode" value="{{ old('branchCode', $branchCode) }}">
       <input type="text" name="message" autocomplete="off" class="flex-1 px-3 py-2 border ml-2 border-gray-500 rounded-full focus:outline-none focus:border-blue-500 text-sm" placeholder="พิมพ์ข้อความ..." required/>
       <button type="submit" class="ml-2 text-blue-500 rounded-full hover:bg-blue-100">
         <svg class="w-7 h-7 text-sky-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24" transform="rotate(90)">
