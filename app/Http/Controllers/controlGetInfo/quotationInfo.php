@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Nosql;
 
-class amountInfo extends Controller
+class quotationInfo extends Controller
 {
     protected $nosql;
 
@@ -21,14 +21,13 @@ class amountInfo extends Controller
         return $this->nosql->getCollection($collectionName);
     }
 
-    public function amountInfo($taskCode)
+    public function quotationInfo($taskCode, $invoiceOption = null)
     {
         $quota = $this->getQuota($taskCode);
         $documents = [];
 
         foreach ($quota as $q) {
-            $documents = [];
-            $quotaInfo = $this->getquotaInfo($q->QuotaCode);
+            $quotaInfo = $this->getquotaInfo($q->QuotaCode, $invoiceOption);
             if ($quotaInfo) {
                 $documents[] = [
                     'quotaCode' => $quotaInfo['document_id'],
@@ -56,7 +55,7 @@ class amountInfo extends Controller
         }
     }
 
-    private function getquotaInfo($quotaCode)
+    private function getquotaInfo($quotaCode, $invoiceOption)
     {
         $collection = $this->getCollections(env('MONGO_COLLECTION_OCR'));
 
@@ -68,7 +67,7 @@ class amountInfo extends Controller
         return $collection->findOne([
             'document_id' => $documentId,
             'document_version' => $version,
-            'invoice' => null
+            'invoice' => $invoiceOption
         ]);
     }
 }

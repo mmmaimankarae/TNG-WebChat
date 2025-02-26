@@ -45,13 +45,9 @@
                 {{ $status }}
               </button>
             @elseif($key == '5')
-              <a href="" class="inline-flex justify-center w-full px-3 py-1.5 bg-white shadow-sm rounded-md ring-1 ring-inset ring-gray-300 hover:bg-gray-50 hover:ring-[#FF4343]">
+              <a href="{{ route('invoice', ['taskCode' => $taskCode] )}}" class="inline-flex justify-center w-full px-3 py-1.5 bg-white shadow-sm rounded-md ring-1 ring-inset ring-gray-300 hover:bg-gray-50 hover:ring-[#FF4343]">
                 {{ $status }}
               </a>
-            @elseif($key == '6')
-              <button type="submit" class="inline-flex justify-center w-full px-3 py-1.5 bg-white shadow-sm rounded-md ring-1 ring-inset ring-gray-300 hover:bg-gray-50 hover:ring-[#FF4343]">
-                {{ $status }}
-              </button>
             @else
               <input type="hidden" name="userId" value="bot">
               <input type="hidden" name="userName" value="tangbot">

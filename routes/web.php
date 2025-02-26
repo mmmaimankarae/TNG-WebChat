@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\controlAuthenticate as authen;
 use App\Http\Controllers\controlDupView\dupFormAuthen;
+use App\Http\Controllers\controlDupView\dupFormInvoice as invoice;
 use App\Http\Controllers\controlDupView\dupInsertCSV as csv;
 use App\Http\Controllers\controlGetInfo\msgInfo;
 use App\Models\Tasks;
@@ -33,8 +34,8 @@ Route::middleware(['access.jwt'])->group(function () {
     Route::post('/view', [msgInfo::class, 'viewImage'])->name('view.image');
 
     /* กรอกข้อมูลใบกำกับภาษี */
-    // Route::match(['get', 'post'], '/invoice', [addData::class, 'default'])
-    //     ->name('invoice');
+    Route::match(['get', 'post'], '/invoice', [invoice::class, 'default'])
+        ->name('invoice');
 });
 
 /* กระบวนการส่ง Mag */
@@ -52,6 +53,6 @@ Route::post('/payment-desc', [csv::class, 'description'])
 /* ออกจากระบบ */
 Route::get('/signout', [authen::class, 'authenSignout']);
 
-Route::get('/invoice', function () {
-    return view('invoice');
-});
+// Route::get('/invoice', function () {
+//     return view('invoice');
+// });

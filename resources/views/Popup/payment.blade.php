@@ -66,7 +66,7 @@
             <button type="submit" class="px-10 py-1.5 mt-4 text-white bg-[#FF0000] shadow-sm rounded-lg hover:text-black hover:bg-slate-300">ตกลง</button>
             <button id="cancelPaymentPopup" type="button" class="px-10 py-1.5 mt-4 bg-white shadow-sm rounded-lg hover:bg-slate-200">ยกเลิก</button>
           </form>
-        @else
+      @else
         <p class="mt-4 text-center text-red-500 font-medium">ไม่พบใบเสนอราคา</p>
         <button id="cancelPaymentPopup" type="button" class="px-10 py-1.5 mt-4 text-white bg-[#FF0000] shadow-sm rounded-lg hover:text-black hover:bg-slate-300">ยกเลิก</button>
       @endif 

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Tasks;
 use App\Http\Controllers\sendMsg;
-use App\Http\Controllers\controlGetInfo\{empInfo, sidebarInfo, msgInfo, tasksInfo, amountInfo, tableInfo};
+use App\Http\Controllers\controlGetInfo\{empInfo, sidebarInfo, msgInfo, tasksInfo, quotationInfo, tableInfo};
 
 class controlPage extends Controller
 {
@@ -13,7 +13,7 @@ class controlPage extends Controller
     private sendMsg $sendMsg;
     private Tasks $tasksModel;
     private tasksInfo $tasksInfo;
-    private amountInfo $amountInfo;
+    private quotationInfo $quotationInfo;
     private tableInfo $tableInfo;
     private array $statusThai = [
         '2' => 'รับเรื่องแล้ว', 
@@ -23,13 +23,13 @@ class controlPage extends Controller
         '6' => 'เสร็จสิ้น'
     ];
 
-    public function __construct(msgInfo $msgInfo, sendMsg $sendMsg, Tasks $tasksModel, tasksInfo $tasksInfo, amountInfo $amountInfo)
+    public function __construct(msgInfo $msgInfo, sendMsg $sendMsg, Tasks $tasksModel, tasksInfo $tasksInfo, quotationInfo $quotationInfo)
     {
         $this->msgInfo = $msgInfo;
         $this->sendMsg = $sendMsg;
         $this->tasksModel = $tasksModel;
         $this->tasksInfo = $tasksInfo;
-        $this->amountInfo = $amountInfo;
+        $this->quotationInfo = $quotationInfo;
     }
 
     public function default(Request $req)
@@ -62,7 +62,7 @@ class controlPage extends Controller
         if ($showchat) { /* !!!!! */
             /* ส่วนของข้อมูลใน status */
             $checkQuota = $this->tasksInfo->checkQuota($taskCode) ?? 'not found';
-            $amountInfo = $this->amountInfo->amountInfo($taskCode);
+            $quotationInfo = $this->quotationInfo->quotationInfo($taskCode);
         }
 
         if ($updateStatus) {
@@ -120,7 +120,7 @@ class controlPage extends Controller
             'empCode' => $empCode,
             'branchCode' => $branchCode,
             'checkQuota' => $checkQuota,
-            'amountInfo' => $amountInfo
+            'amountInfo' => $quotationInfo
         ]);
     }
 }

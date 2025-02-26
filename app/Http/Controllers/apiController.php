@@ -33,7 +33,7 @@ class ApiController extends Controller
         $file = $request->file('file');
 
         /* กำหนด API ของ Python ที่ใช้ OCR */
-        $apiUrl = 'http://127.0.0.1:3500/ocr';
+        $apiUrl = 'http://127.0.0.1:3500/';
 
         try {
             $response = Http::attach(
