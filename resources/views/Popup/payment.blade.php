@@ -46,7 +46,7 @@
             @csrf
             <label for="totalPrice" class="block text-left font-medium">ยอดชำระ</label>
             <div class="mt-2">
-              <input type="text" name="totalPrice" id="totalPrice" value=""
+              <input type="number" name="totalPrice" id="totalPrice" value=""
                 class="block w-full px-3 py-2 bg-white rounded-md outline-1 -outline-offset-1 outline-gray-300
                 placeholder:text-sm placeholder:text-gray-400" placeholder=" โปรดกรอกยอดชำระทั้งหมด" required>
             </div>

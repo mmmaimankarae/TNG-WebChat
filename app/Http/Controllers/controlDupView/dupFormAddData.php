@@ -12,13 +12,13 @@ class dupFormAddData extends Controller
     private $currentRoute;
     private $sidebarInfo;
 
-    public function __construct(tableInfo $tableInfo, Request $req)
+    public function __construct(tableInfo $tableInfo, Request $request)
     {
         $this->tableInfo = $tableInfo;
-        $this->currentRoute = $req->segment(2);
+        $this->currentRoute = $request->segment(2);
     }
 
-    public function default(Request $req) {
+    public function default(Request $request) {
         $empInfo = new empInfo();
         $accCode = $empInfo->getAccCode();
         $branchCode = $empInfo->getBranchCode();
@@ -30,7 +30,7 @@ class dupFormAddData extends Controller
         } else if ($this->currentRoute === 'product') {
             return $this->sampleProd($accCode);
         } elseif ($this->currentRoute === 'payment') {
-            return $this->samplePayment($accCode, $branchCode, $req);
+            return $this->samplePayment($accCode, $branchCode, $request);
         }
     }
 
@@ -89,7 +89,7 @@ class dupFormAddData extends Controller
         return view('it-support.support-data', compact('title', 'table', 'data', 'accCode', 'tableType'));
     }
 
-    private function samplePayment($accCode, $branchCode, $req) {
+    private function samplePayment($accCode, $branchCode, $request) {
         $title = 'ช่องทางการชำระเงิน';
         $table = [
             '1' => 'สาขา',
@@ -98,7 +98,7 @@ class dupFormAddData extends Controller
             '4' => '',
         ];
 
-        $region = $req->input('region') ?? '1';
+        $region = $request->input('region') ?? '1';
         $data = $this->tableInfo->paymentInfo($region);
         $dataDesc = $this->tableInfo->paymentDescInfo();
         $sidebarInfo = new sidebarInfo();

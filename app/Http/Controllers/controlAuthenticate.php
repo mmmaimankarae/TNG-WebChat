@@ -12,8 +12,8 @@ use App\Models\authenticate as Auth;
 class controlAuthenticate extends Controller
 {
     /* ตรวจสอบการกรอกข้อมูล เพื่อเข้าสู่ระบบ */
-    public function authValidate(Request $req){
-        $req->validate(
+    public function authValidate(Request $request){
+        $request->validate(
             [ /* ตรวจสอบ req */
             'accName' => 'required',
             'password' => 'required'
@@ -23,12 +23,12 @@ class controlAuthenticate extends Controller
             'password.required' => '* กรุณากรอกรหัสผ่าน'
             ]
         );
-        return $this->authenCheck($req);
+        return $this->authenCheck($request);
     }
 
     /* ตรวจสอบการกรอกข้อมูล username สำหรับการลืมรหัสผ่าน */
-    public function forgotPopupValidate(Request $req){
-        $req->validate(
+    public function forgotPopupValidate(Request $request){
+        $request->validate(
             [ /* ตรวจสอบ req */
             'forgotAcc' => 'required'
             ],
@@ -36,12 +36,12 @@ class controlAuthenticate extends Controller
             'forgotAcc.required' => '* กรุณากรอกชื่อผู้ใช้'
             ]
         );
-        return $this->authenCheck($req);
+        return $this->authenCheck($request);
     }
 
     /* ตรวจสอบการกรอกข้อมูลเปลี่ยนรหัสผ่าน */
-    public function resetPopupValidate(Request $req){
-        $req->validate(
+    public function resetPopupValidate(Request $request){
+        $request->validate(
             [ /* ตรวจสอบ req */
             'oldPass' => 'required',
             'newPass' => 'required'
@@ -50,16 +50,16 @@ class controlAuthenticate extends Controller
             'oldPass.required' => '* กรุณากรอกรหัสผ่านเดิม',
             ]
         );
-        return $this->authenCheck($req);
+        return $this->authenCheck($request);
     }
 
     /* ตรวจสอบความถูกต้องของการเข้าสู่ระบบ */
-    public function authenCheck(Request $req){
-        $accName = $req->input('accName') ?? $req->input('forgotAcc');
-        $password = $req->input('password') ?? null;
-        $newPass = $req->input('newPass') ?? null;
-        $oldPass = $req->input('oldPass') ?? null;
-        $action = $req->input('actionFor');
+    public function authenCheck(Request $request){
+        $accName = $request->input('accName') ?? $request->input('forgotAcc');
+        $password = $request->input('password') ?? null;
+        $newPass = $request->input('newPass') ?? null;
+        $oldPass = $request->input('oldPass') ?? null;
+        $action = $request->input('actionFor');
 
         $account = $this->haveAccount($accName);
 

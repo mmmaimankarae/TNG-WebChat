@@ -2,48 +2,71 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    @vite('resources/css/app.css')
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Kodchasan:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700&display=swap"
-        rel="stylesheet">
-    <title>เพิ่มข้อมูลใบกำกับภาษี</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  @vite('resources/css/app.css')
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+      href="https://fonts.googleapis.com/css2?family=Kodchasan:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700&display=swap"
+      rel="stylesheet">
+  <title>เพิ่มข้อมูลใบกำกับภาษี</title>
 
-    {{-- JQUERY --}}
-    <link rel="stylesheet" href="{{ asset('css/jquery.Thailand.min.css') }}">
-    <script src="{{ asset('js/addressThailand/jquery-3.7.1.min.js') }}"></script>
-    <script src="{{ asset('js/addressThailand/JQL.min.js') }}"></script>
-    <script src="{{ asset('js/addressThailand/typeahead.bundle.js') }}"></script>
-    <script src="{{ asset('js/addressThailand/jquery.Thailand.js') }}"></script> <!-- jQuery -->
-    <script src="{{ asset('js/addressThailand/jquery.Thailand.min.js') }}"></script> <!-- Plugin -->
+  <style>
+    /* ซ่อนปุ่มเลื่อนตัวเลขขึ้นลงใน input type="number" */
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
 
-    <script>
-      /* Address Thailand */
-      $(document).ready(function() {
-        $.Thailand({
-          database: '{{ asset('js/addressThailand/db.json') }}',
-          $district: $('#district'),
-          $amphoe: $('#amphoe'),
-          $province: $('#province'),
-          $zipcode: $('#zipcode'),
-        });
+    input[type=number] {
+      -moz-appearance: textfield;
+    }
+  </style>
+
+  {{-- JQUERY --}}
+  <link rel="stylesheet" href="{{ asset('css/jquery.Thailand.min.css') }}">
+  <script src="{{ asset('js/addressThailand/jquery-3.7.1.min.js') }}"></script>
+  <script src="{{ asset('js/addressThailand/JQL.min.js') }}"></script>
+  <script src="{{ asset('js/addressThailand/typeahead.bundle.js') }}"></script>
+  <script src="{{ asset('js/addressThailand/jquery.Thailand.js') }}"></script> <!-- jQuery -->
+  <script src="{{ asset('js/addressThailand/jquery.Thailand.min.js') }}"></script> <!-- Plugin -->
+
+  <script>
+    /* Address Thailand */
+    $(document).ready(function() {
+      $.Thailand({
+        database: '{{ asset('js/addressThailand/db.json') }}',
+        $district: $('#district'),
+        $amphoe: $('#amphoe'),
+        $province: $('#province'),
+        $zipcode: $('#zipcode'),
       });
+    });
 
-      /* Date Picker */
-      document.addEventListener('DOMContentLoaded', function() {
-        var today = new Date().toISOString().split('T')[0];
-        var invoiceShipDateInput = document.getElementById('invoiceShipDate');
-        invoiceShipDateInput.setAttribute('min', today);
-        invoiceShipDateInput.value = today;
-      });
-    </script>
+    /* Date Picker */
+    document.addEventListener('DOMContentLoaded', function() {
+      var today = new Date().toISOString().split('T')[0];
+      var invoiceShipDateInput = document.getElementById('invoiceShipDate');
+      invoiceShipDateInput.setAttribute('min', today);
+      invoiceShipDateInput.value = today;
+    });
+
+    /* Update Invoice Value */
+    function updateInvoiceValue() {
+      var select = document.getElementById('invoiceQuotaCode');
+      var selectedOption = select.options[select.selectedIndex];
+      var amount = selectedOption.getAttribute('data-amount').replace(/,/g, '');
+      document.getElementById('invoiceValue').value = amount;
+      var version = selectedOption.getAttribute('data-version');
+      document.getElementById('quotaVersion').value = version;
+    }
+  </script>
 </head>
 
 <body class="bg-gray-100 font-sans leading-normal tracking-normal">
-  <form method="POST" action="">
+  <form method="POST" action="{{ route('add-invoice') }}">
     @csrf
   <div class="container mx-auto p-4 md:p-5 bg-white shadow-md rounded-lg">
     <p class="text-2xl font-semibold mb-4">กรอกข้อมูลใบกำกับภาษี และข้อมูลของลูกค้า</p>
@@ -75,25 +98,30 @@
       </div>
     </div>
 
-    <div class="my-4 grid grid-cols-3 gap-4">
+    <div class="my-4 grid grid-cols-2 gap-4">
       @if ($info)
+        <input type="hidden" name="invoiceCusCode" value="{{ $invoiceInfo['cusInfo']['CusPhoneCode'] }}">
         <div>
           <label for="invoiceQuotaCode" class="block text-left font-medium">เลขที่ใบเสนอราคา</label>
           <div class="mt-5">
             <select name="invoiceQuotaCode" id="invoiceQuotaCode"
-              class="block w-full px-3 py-2 bg-white rounded-md outline-1 -outline-offset-1 outline-gray-300text-gray-400">
+              class="block w-full px-3 py-2 bg-white rounded-md outline-1 -outline-offset-1 outline-gray-300text-gray-400"
+              onchange="updateInvoiceValue()">>
               <option value="" class="text-gray-400" disabled selected>เลือกเลขที่ใบเสนอราคา</option>
               @foreach ($invoiceInfo['quotations'] as $quotation)
-                <option value="{{ $quotation['quotaCode'] }}">{{ $quotation['quotaCode'] }}</option>
+                <option value="{{ $quotation['quotaCode'] }}"  data-amount="{{ $quotation['amount'] }}" data-version="{{ $quotation['version'] }}">
+                  {{ $quotation['quotaCode'] }}
+                </option>
               @endforeach
             </select>
+            <input type="hidden" name="quotaVersion" id="quotaVersion">
           </div>
         </div>
       @else
         <div>
           <label for="invoiceCusCode" class="block text-left font-medium">รหัสลูกค้า</label>
             <div class="mt-5">
-              <input type="text" name="invoiceCusCode" id="invoiceCusCode" value="@if ($info) {{ $invoiceInfo['cusInfo']['CusCode'] }} @endif"
+              <input type="text" name="invoiceCusCode" id="invoiceCusCode"
                 class="block w-full px-3 py-2 bg-white rounded-md outline-1 -outline-offset-1 outline-gray-300
                 placeholder:text-gray-400"  placeholder=" โปรดกรอกเลขที่ใบเสนอราคา" required>
             </div>
@@ -108,14 +136,42 @@
             placeholder:text-gray-400" placeholder=" โปรดกรอกเลขที่ใบกำกับภาษี" required>
         </div>
       </div>
+    </div>
+
+    <div class="my-4 grid grid-cols-3 gap-4">
+      <div>
+        <label for="invoiceValue" class="block text-left font-medium">ยอดราคารวม</label>
+          <div class="mt-5">
+            <input type="number" name="invoiceValue" id="invoiceValue"
+              class="block w-full px-3 py-2 bg-white rounded-md outline-1 -outline-offset-1 outline-gray-300
+              placeholder:text-gray-400"  placeholder=" โปรดกรอกยอดราคารวม" required>
+          </div>
+      </div>
+
       <div>
         <label for="invoiceWeight" class="block text-left font-medium">น้ำหนักสินค้า</label>
         <div class="mt-5">
           <input type="number" name="invoiceWeight" id="invoiceWeight"
             class="block w-full px-3 py-2 bg-white rounded-md outline-1 -outline-offset-1 outline-gray-300
-            placeholder:text-gray-400" placeholder=" โปรดกรอกน้ำหนักสินค้าที่จะขนส่ง" required>
+            placeholder:text-gray-400" placeholder=" โปรดกรอกน้ำหนักสินค้าที่จะขนส่ง (กิโลกรัม)" required>
         </div>
       </div>
+
+      @if (!($info))
+        <div>
+          <label for="invoiceWeight" class="block text-left font-medium">ต้องการรถโฟร์คลิฟต์</label>
+          <div class="flex items-center space-x-4 mt-5">
+            <label class="inline-flex items-center">
+              <input type="radio" name="forkLiftOption" value="Y" class="form-radio" required>
+              <span class="ml-2">ใช่</span>
+            </label>
+            <label class="inline-flex items-center">
+              <input type="radio" name="forkLiftOption" value="N" class="form-radio" required>
+              <span class="ml-2">ไม่</span>
+            </label>
+          </div>
+        </div>
+      @endif
     </div>
 
     <div class="mt-4">
@@ -175,7 +231,7 @@
       <div>
         <label for="invoiceReceiverPhone" class="block text-left font-medium">เบอร์โทรศัพท์ผู้รับของ</label>
         <div class="mt-5">
-          <input type="text" name="invoiceReceiverPhone" id="invoiceReceiverPhone" value="@if ($info) {{ $invoiceInfo['cusInfo']['CusPhoneCode'] }} @endif"
+          <input type="text" name="invoiceReceiverPhone" id="invoiceReceiverPhone" value="@if ($info) {{ $invoiceInfo['cusInfo']['CusPhone'] }} @endif"
             class="block w-full px-3 py-2 bg-white rounded-md outline-1 -outline-offset-1 outline-gray-300
               placeholder:text-gray-400" placeholder=" โปรดกรอกเบอร์โทรศัพท์ผู้รับของ" required>
         </div>

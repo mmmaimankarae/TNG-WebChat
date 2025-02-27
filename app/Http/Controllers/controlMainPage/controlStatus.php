@@ -9,13 +9,13 @@ use App\Http\Controllers\controlMainPage\sendMsg;
 
 class controlStatus extends Controller
 {
-    public function quota(Request $req) {
-        $quotaOption = $req->input('quotaOption');
+    public function quota(Request $request) {
+        $quotaOption = $request->input('quotaOption');
         if ($quotaOption === 'AI') {
 
         } elseif ($quotaOption === 'image') {
-            $req->merge(['select' => 'true']);
-            sendMsg::sendMessage($req);
+            $request->merge(['select' => 'true']);
+            sendMsg::sendMessage($request);
         }
     }
 }

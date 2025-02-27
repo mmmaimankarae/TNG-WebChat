@@ -28,13 +28,13 @@ body {
     @apply text-[#FF0000] bg-white;
 }
 
+/* ซ่อนปุ่มเลื่อนตัวเลขขึ้นลงใน input type="number" */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
 
-  #preview-container {
-    max-height: 300px; /* กำหนดขนาดสูงสุดของพื้นที่แสดงผล */
-    overflow-y: auto; /* ทำให้พื้นที่แสดงผลสามารถเลื่อนดูได้ */
-  }
-
-  #preview-image {
-    max-width: 150%; /* กำหนดขนาดกว้างสุดของรูปภาพ */
-    height: auto; /* ทำให้รูปภาพปรับขนาดตามอัตราส่วน */
-  }
+input[type=number] {
+    -moz-appearance: textfield;
+}

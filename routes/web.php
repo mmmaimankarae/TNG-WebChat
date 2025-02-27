@@ -3,9 +3,10 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Models\Tasks;
+use App\Models\Invoice;
 
 use App\Http\Controllers\controlDupView\dupFormAuthen;
-use App\Http\Controllers\controlDupView\dupFormInvoice as invoice;
+use App\Http\Controllers\controlDupView\dupFormInvoice as formInvoice;
 use App\Http\Controllers\controlDupView\dupInsertCSV as csv;
 
 use App\Http\Controllers\controlAuthenticate as authen;
@@ -39,7 +40,7 @@ Route::middleware(['access.jwt'])->group(function () {
     Route::post('/view', [msgInfo::class, 'viewImage'])->name('view.image');
 
     /* กรอกข้อมูลใบกำกับภาษี */
-    Route::match(['get', 'post'], '/invoice', [invoice::class, 'default'])
+    Route::match(['get', 'post'], '/invoice', [formInvoice::class, 'default'])
         ->name('invoice');
 });
 
@@ -52,6 +53,7 @@ Route::post('/quota', [controlStatus::class, 'quota'])->name('status.quota');
 
 /* เพิ่มข้อมูล */
 Route::post('/add-data', [csv::class, 'uploadCSV'])->name('add-data');
+Route::post('/add-invoice', [invoice::class, 'setInvoice'])->name('add-invoice');
 Route::post('/payment-desc', [csv::class, 'description'])
     ->name('sale-admin.payment-desc');
 

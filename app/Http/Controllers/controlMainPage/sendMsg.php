@@ -26,58 +26,58 @@ class sendMsg extends Controller
         $this->tasksModel = $tasksModel;
     }
 
-    public function sendMessage(Request $req)
+    public function sendMessage(Request $request)
     {
-        $replyId = $req->input('replyId');
-        $message = $req->input('message');
-        $file = $req->file('file') ?? $req->input('file');
-        $quote = $req->input('quoteToken');
-        $empCode = $req->input('empCode');
-        $taskCode = $req->input('taskCode');
-        $taskStatus = $req->input('taskStatus');
+        $replyId = $request->input('replyId');
+        $message = $request->input('message');
+        $file = $request->file('file') ?? $request->input('file');
+        $quote = $request->input('quoteToken');
+        $empCode = $request->input('empCode');
+        $taskCode = $request->input('taskCode');
+        $taskStatus = $request->input('taskStatus');
 
         if ($empCode !== tasksInfo::getLastEmp($taskCode)) {
             $this->tasksModel->updateStatus($taskCode, $taskStatus, $empCode);
         }
 
         if ($file) {
-            if($req->file('file')) {
-                $req->merge(['messageType' => "image"]);
+            if($request->file('file')) {
+                $request->merge(['messageType' => "image"]);
             } else {
-                $req->merge(['messageType' => "image-payment"]);
-                $this->selecteQuota($req->input('quotaCode'), $req->input('version'));
+                $request->merge(['messageType' => "image-payment"]);
+                $this->selecteQuota($request->input('quotaCode'), $request->input('version'));
             }
             $apiController = new ApiController($this->tasksModel);
-            return $apiController->uploadImages($req);
+            return $apiController->uploadImages($request);
         } elseif ($quote) {
-            return $this->handleQuoteMessage($req, $replyId, $message, $quote, $taskCode);
+            return $this->handleQuoteMessage($request, $replyId, $message, $quote, $taskCode);
         } else {
-            return $this->handleTextMessage($req, $replyId, $message, $taskCode);
+            return $this->handleTextMessage($request, $replyId, $message, $taskCode);
         }
     }
 
-    private function handleQuoteMessage(Request $req, $replyId, $message, $quote, $taskCode)
+    private function handleQuoteMessage(Request $request, $replyId, $message, $quote, $taskCode)
     {
         $response = $this->lineService->quoteMessage($replyId, $message, $quote);
         if ($response && $response->getStatusCode() === 200) {
-            $this->prepareQuoteMessage($req);
-            $this->saveMessage($req);
+            $this->prepareQuoteMessage($request);
+            $this->saveMessage($request);
             $this->tasksModel->setUpdateTime($taskCode);
             return redirect()->back()->withInput()->with('showchat', true);
         }
         return $this->handleErrorResponse($response);
     }
 
-    private function handleTextMessage(Request $req, $replyId, $message, $taskCode)
+    private function handleTextMessage(Request $request, $replyId, $message, $taskCode)
     {
        $response = $this->lineService->sendMessage($replyId, $message);
         if ($response && $response->getStatusCode() === 200) {
-            $req->merge(['messageType' => 'text']);
-            $this->saveMessage($req);
+            $request->merge(['messageType' => 'text']);
+            $this->saveMessage($request);
             $this->tasksModel->setUpdateTime($taskCode);
-            if ($req->hasSession()) {
-                $req->session()->flash('taskLineID', $replyId);
-                $req->session()->flash('showchat', true);
+            if ($request->hasSession()) {
+                $request->session()->flash('taskLineID', $replyId);
+                $request->session()->flash('showchat', true);
             }
             return redirect()->back()->withInput();
         }
@@ -98,26 +98,26 @@ class sendMsg extends Controller
         return redirect()->back()->withInput()->withErrors(['message' => 'ไม่สามารถส่งข้อความได้: ' . $errorMessage]);
     }
 
-    private function prepareQuoteMessage(Request $req)
+    private function prepareQuoteMessage(Request $request)
     {
-        $quoteType = $req->input('quoteTypeInput');
+        $quoteType = $request->input('quoteTypeInput');
         $quoteContent = match ($quoteType) {
             'image' => 'รูปภาพ',
             'sticker' => 'สติกเกอร์',
-            default => $req->input('quoteContentInput')
+            default => $request->input('quoteContentInput')
         };
 
-        $req->merge([
+        $request->merge([
             'quoteType' => 'text',
             'messageType' => 'text',
             'quoteContentInput' => $quoteContent
         ]);
     }
 
-    private function saveMessage(Request $req)
+    private function saveMessage(Request $request)
     {
         try {
-            $this->nosql->insertDocument(env('MONGO_COLLECTION'), $this->msgPattern($req));
+            $this->nosql->insertDocument(env('MONGO_COLLECTION'), $this->msgPattern($request));
         } catch (\Exception $e) {
             \Log::error('Nosql Error saving message (c.sendMsg): ' . $e->getMessage());
         }
@@ -128,21 +128,21 @@ class sendMsg extends Controller
         return $this->nosql->updateQuota(env('MONGO_COLLECTION_OCR'), $quotaCode, $version);
     }
 
-    private function msgPattern(Request $req)
+    private function msgPattern(Request $request)
     {
         return [
             'messageDate' => Carbon::now()->toDateString(),
             'messagetime' => Carbon::now()->toTimeString(),
-            'taskId' => $req->input('taskCode') ?? $req->input('TasksCode'),
-            'messageContent' => $req->input('message'),
-            'messageType' => $req->input('messageType'),
-            'replyToId' => $req->input('replyId'),
-            'replyToName' => $req->input('replyName') ?? $req->input('cusName'),
-            'userId' => "TNG-" . $req->input('userId'),
-            'userName' => $req->input('userName'),
-            'quoteToken' => $req->input('quoteToken'),
-            'quoteType' => $req->input('quoteType'),
-            'quoteContent' => $req->input('quoteContentInput'),
+            'taskId' => $request->input('taskCode') ?? $request->input('TasksCode'),
+            'messageContent' => $request->input('message'),
+            'messageType' => $request->input('messageType'),
+            'replyToId' => $request->input('replyId'),
+            'replyToName' => $request->input('replyName') ?? $request->input('cusName'),
+            'userId' => "TNG-" . $request->input('userId'),
+            'userName' => $request->input('userName'),
+            'quoteToken' => $request->input('quoteToken'),
+            'quoteType' => $request->input('quoteType'),
+            'quoteContent' => $request->input('quoteContentInput'),
         ];
     }
 }

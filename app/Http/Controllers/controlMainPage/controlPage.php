@@ -33,7 +33,7 @@ class controlPage extends Controller
         $this->quotationInfo = $quotationInfo;
     }
 
-    public function default(Request $req)
+    public function default(Request $request)
     {
         $empInfo = new empInfo();
         $sidebarInfo = new sidebarInfo();
@@ -47,16 +47,16 @@ class controlPage extends Controller
         $sidebarChat = $current 
             ? $sidebarInfo->getEmpTasks($branchCode, $empCode) 
             : $sidebarInfo->getEmpTasks($branchCode);
-        $showchat = session('showchat', $req->boolean('showchat'));
-        $updateStatus = $req->boolean('updateStatus');
-        $taskStatus = $req->input('taskStatus');
+        $showchat = session('showchat', $request->boolean('showchat'));
+        $updateStatus = $request->boolean('updateStatus');
+        $taskStatus = $request->input('taskStatus');
 
         /* เริ่มต้นหน้า แสดงแค่ sidebar */
         if (!$showchat && !$updateStatus) {
             return view('main', compact('sidebarChat', 'showchat'));
         }
-        $taskCode = $req->input('taskCode');
-        $taskLineID = session('taskLineID', $req->input('taskLineID'));
+        $taskCode = $request->input('taskCode');
+        $taskLineID = session('taskLineID', $request->input('taskLineID'));
 
         $messages = $this->msgInfo->getMsgByUser($taskLineID);
 
@@ -69,11 +69,11 @@ class controlPage extends Controller
         if ($updateStatus) {
             $this->tasksModel->updateStatus($taskCode, $taskStatus, $empCode);
             if ($taskStatus === '6') {
-                $req->merge(['file' => null]);
-                $req->merge(['message' => 'ขอบคุญสำหรับการสั่งซื้อ ทางเรากำลังจัดส่งสินค้าให้ คุณลูกค้ารอรับได้เลย🙏']);
-                $req->merge(['replyId' => $taskLineID]);
+                $request->merge(['file' => null]);
+                $request->merge(['message' => 'ขอบคุญสำหรับการสั่งซื้อ ทางเรากำลังจัดส่งสินค้าให้ คุณลูกค้ารอรับได้เลย🙏']);
+                $request->merge(['replyId' => $taskLineID]);
 
-                $this->sendMsg->sendMessage($req);
+                $this->sendMsg->sendMessage($request);
                 $showchat = false;
                 return view('main', compact('sidebarChat', 'showchat'));
             }
@@ -82,12 +82,12 @@ class controlPage extends Controller
                 $tableInfo = new tableInfo();
                 $payment_desc = $tableInfo->paymentDescInfo();
 
-                $payment = str_replace('** จำนวนเงิน **',  $req->input('totalPrice') , $payment_desc);
+                $payment = str_replace('** จำนวนเงิน **',  $request->input('totalPrice') , $payment_desc);
 
                 /* ส่งข้อความแจ้งยอดชำระ */
-                $req->merge(['message' => $payment]);
-                $req->merge(['replyId' => $req->input('replyId')]);
-                $this->sendMsg->sendMessage($req);
+                $request->merge(['message' => $payment]);
+                $request->merge(['replyId' => $request->input('replyId')]);
+                $this->sendMsg->sendMessage($request);
 
                 /* รูปช่องทางการชำระ */
                 $region = $empInfo->getRegionCode($branchCode);
@@ -97,9 +97,9 @@ class controlPage extends Controller
                     $file_path = 'public/payments/' . $branchCode . '.jpeg';
                 }
 
-                $req->merge(['file' => "path"]);
-                $req->merge(['file_path' => $file_path]);
-                $this->sendMsg->sendMessage($req);
+                $request->merge(['file' => "path"]);
+                $request->merge(['file_path' => $file_path]);
+                $this->sendMsg->sendMessage($request);
                 $showchat = false;
                 return view('main', compact('sidebarChat', 'showchat'));
             }
@@ -111,8 +111,8 @@ class controlPage extends Controller
             'messages' => $messages,
             'roleCode' => $empInfo->getRole(),
             'taskCode' => $taskCode,
-            'cusCode' => $req->input('cusCode'),
-            'cusName' => $req->input('cusName'),
+            'cusCode' => $request->input('cusCode'),
+            'cusName' => $request->input('cusName'),
             'taskLineID' => $taskLineID,
             'statusThai' => $this->statusThai,
             'taskStatus' => $taskStatus,

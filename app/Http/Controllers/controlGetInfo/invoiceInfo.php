@@ -23,7 +23,7 @@ class invoiceInfo extends Controller
 
         if (empty($cusInfo)) {
             $cusInfo = [
-                'CusPhoneCode' => '',
+                'CusPhoneCode' => '6706157AY',
                 'CusName' => '',
                 'CusPhone' => '',
                 'TaskCode' => $taskCode
@@ -35,9 +35,9 @@ class invoiceInfo extends Controller
 
     public function getCusInfo($taskCode) {
         try {
-            $results = DB::table('CUSTOMER_PHONE as cp')
-            ->join('TASK as t', 'cp.CusPhoneCode', '=', 't.TaskCusCode')
-            ->join('CUSTOMER as c', 'cp.CusCode', '=', 'c.CusCode')
+            $results = DB::table('CUSTOMER as c')
+            ->join('CUSTOMER_PHONE as cp', 'cp.CusPhoneCode', '=', 'c.CusCode')
+            ->join('TASK as t', 'c.CusCode', '=', 't.TaskCusCode')
             ->where('t.TaskCode', $taskCode)
             ->select('cp.*', 't.TaskCode', 'c.CusName')
             ->first();

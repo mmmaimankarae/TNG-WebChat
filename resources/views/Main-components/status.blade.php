@@ -21,7 +21,6 @@
   }
 @endphp
 
-
 <div class="sticky top-12 z-10 p-4 tracking-wider bg-white shadow-md">
   <div class="grid grid-cols-5 text-sm">
     @foreach ($statusThai as $key => $status)
@@ -45,7 +44,7 @@
                 {{ $status }}
               </button>
             @elseif($key == '5')
-              <a href="{{ route('invoice', ['taskCode' => $taskCode] )}}" class="inline-flex justify-center w-full px-3 py-1.5 bg-white shadow-sm rounded-md ring-1 ring-inset ring-gray-300 hover:bg-gray-50 hover:ring-[#FF4343]">
+              <a href="{{ route('invoice', ['taskCode' => $taskCode] )}}" target="_blank" class="inline-flex justify-center w-full px-3 py-1.5 bg-white shadow-sm rounded-md ring-1 ring-inset ring-gray-300 hover:bg-gray-50 hover:ring-[#FF4343]">
                 {{ $status }}
               </a>
             @else
