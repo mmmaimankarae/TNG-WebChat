@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\controlGetInfo;
 
 use App\Http\Controllers\Controller;

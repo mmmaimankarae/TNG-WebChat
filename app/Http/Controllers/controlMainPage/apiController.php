@@ -1,9 +1,11 @@
 <?php
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\controlMainPage;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Http\Request;
+
 use App\Models\Tasks;
 use App\Http\Controllers\controlGetInfo\tasksInfo;
 

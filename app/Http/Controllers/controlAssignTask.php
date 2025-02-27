@@ -1,13 +1,11 @@
 <?php
-
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
-use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\controlGetInfo\{branchInfo, sidebarInfo, empInfo};
-
 use App\Models\Tasks;
+use App\Http\Controllers\controlGetInfo\{branchInfo, sidebarInfo, empInfo};
 
 class controlAssignTask extends Controller
 {

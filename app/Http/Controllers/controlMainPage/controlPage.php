@@ -1,10 +1,11 @@
 <?php
+namespace App\Http\Controllers\controlMainPage;
 
-namespace App\Http\Controllers;
-
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Tasks;
-use App\Http\Controllers\sendMsg;
+
+use App\Http\Controllers\controlMainPage\sendMsg;
 use App\Http\Controllers\controlGetInfo\{empInfo, sidebarInfo, msgInfo, tasksInfo, quotationInfo, tableInfo};
 
 class controlPage extends Controller

@@ -1,15 +1,17 @@
 <?php
+namespace App\Http\Controllers\controlMainPage;
 
-namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
+
 use App\Services\LineService;
 use App\Models\Nosql;
-use Carbon\Carbon;
 use App\Models\Tasks;
+
 use App\Http\Controllers\controlGetInfo\tasksInfo;
-use App\Http\Controllers\ApiController;
-use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\controlMainPage\ApiController;
 
 class sendMsg extends Controller
 {

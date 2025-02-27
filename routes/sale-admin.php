@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\controlAuthenticate as authen;
 use App\Http\Controllers\controlAssignTask as assignTask;
-use App\Http\Controllers\controlPage as page;
+use App\Http\Controllers\controlMainPage\controlPage as page;
 use App\Http\Controllers\controlDupView\dupFormAddData as addData;
 
 Route::middleware(['access.jwt', 'authorize.pages'])->group(function () {

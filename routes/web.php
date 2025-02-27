@@ -1,13 +1,18 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\controlAuthenticate as authen;
+
+use App\Models\Tasks;
+
 use App\Http\Controllers\controlDupView\dupFormAuthen;
 use App\Http\Controllers\controlDupView\dupFormInvoice as invoice;
 use App\Http\Controllers\controlDupView\dupInsertCSV as csv;
+
+use App\Http\Controllers\controlAuthenticate as authen;
+
 use App\Http\Controllers\controlGetInfo\msgInfo;
-use App\Models\Tasks;
-use App\Http\Controllers\sendMsg;
+
+use App\Http\Controllers\controlMainPage\sendMsg;
 use App\Http\Controllers\controlStatus;
 
 require __DIR__.'/sale-admin.php';

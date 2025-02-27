@@ -1,12 +1,12 @@
 <?php
-
 namespace App\Http\Controllers\controlDupView;
 
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+
 use App\Models\InsertBasedData;
-use Illuminate\Support\Facades\Validator;
 
 class dupInsertCSV extends Controller
 {

@@ -1,11 +1,11 @@
 <?php
-
 namespace App\Http\Controllers\controlGetInfo;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Nosql;
+
 use App\Services\LineService;
+use App\Models\Nosql;
 
 class msgInfo extends Controller
 {
