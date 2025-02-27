@@ -1,4 +1,4 @@
-<script src="{{ asset('/js/pdf.js') }}"></script>
+<script src="{{ asset('/js/showFileName.js') }}"></script>
 <div id="quotationPopup" tabindex="-1" class="hidden fixed z-50 overflow-y-auto inset-0 justify-center items-center w-full h-full bg-gray-500/60">
   <div class="relative w-4xl p-4">
     <div class="relative bg-white rounded-lg shadow">

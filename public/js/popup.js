@@ -15,21 +15,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    const showInvoicePopup = document.getElementById('showInvoicePopup');
-    const invoicePopup = document.getElementById('invoicePopup');
-    const cancelInvoicePopup = document.getElementById('cancelInvoicePopup');
-    if (showInvoicePopup) {
-        showInvoicePopup.addEventListener('click', () => {
-            invoicePopup.classList.remove('hidden');
-            invoicePopup.classList.add('flex');
-        });
-
-        cancelInvoicePopup.addEventListener('click', () => {
-            invoicePopup.classList.add('hidden');
-            invoicePopup.classList.remove('flex');
-        });
-    }
-
     const showPaymentPopup = document.getElementById('showPaymentPopup');
     const paymentPopup = document.getElementById('paymentPopup');
     const cancelPaymentPopup = document.getElementById('cancelPaymentPopup');

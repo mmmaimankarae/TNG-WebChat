@@ -52,7 +52,3 @@ Route::post('/payment-desc', [csv::class, 'description'])
 
 /* ออกจากระบบ */
 Route::get('/signout', [authen::class, 'authenSignout']);
-
-// Route::get('/invoice', function () {
-//     return view('invoice');
-// });

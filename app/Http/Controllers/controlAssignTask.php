@@ -26,7 +26,7 @@ class controlAssignTask extends Controller
         $taskCode = $req->input('taskCode');
         $cusName = $req->input('cusName');
 
-        return view('assignTask', compact('cusName', 'taskCode', 'regionThai', 'branchs', 'sidebarChat', 'select'));
+        return view('sale-admin.assignTask', compact('cusName', 'taskCode', 'regionThai', 'branchs', 'sidebarChat', 'select'));
     }
 
     public function assignTask(Request $req) {

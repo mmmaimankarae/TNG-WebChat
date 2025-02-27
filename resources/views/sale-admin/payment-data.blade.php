@@ -1,6 +1,6 @@
 <script src="{{ asset('/js/detailMsg/handleNoimage.js') }}"></script>
 <script src="{{ asset('/js/showFileName.js') }}"></script>
-<script src="{{ asset('/js/showDesc.js') }}"></script>
+<script src="{{ asset('/js/sale-admin/showDesc.js') }}"></script>
 @extends('Header-Sidebar.layout')
 @section('title')
   {{ $title }}

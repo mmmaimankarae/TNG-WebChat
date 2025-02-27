@@ -26,7 +26,6 @@
     @include('Main-Components.rightSide')
     @include('Popup.quotation')
     @include('Popup.payment')
-    @include('Popup.invoice')
   @else
     <div class="flex flex-col justify-center items-center h-screen -mt-12">
       <img src="{{ asset('images/logo2.png') }}" alt="notfound" class="w-1/3 h-auto mb-4 opacity-75 shadow-md shadow-red-200"/>

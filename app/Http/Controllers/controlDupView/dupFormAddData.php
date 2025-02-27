@@ -46,7 +46,7 @@ class dupFormAddData extends Controller
         ];
         $data = $this->tableInfo->roleInfo();
         $branch = $this->tableInfo->branchInfo();
-        return view('support-data', compact('title', 'table', 'data', 'branch', 'accCode'));
+        return view('it-support.support-data', compact('title', 'table', 'data', 'branch', 'accCode'));
     }
 
     private function sampleBranch($accCode) {
@@ -67,7 +67,7 @@ class dupFormAddData extends Controller
         ];
 
         $data = $this->tableInfo->regionInfo();
-        return view('support-data', compact('title', 'table', 'data', 'accCode'));
+        return view('it-support.support-data', compact('title', 'table', 'data', 'accCode'));
     }
 
     private function sampleProd($accCode) {
@@ -86,7 +86,7 @@ class dupFormAddData extends Controller
             '3' => 'สถานะประเภท (Y = ยกเลิกประเภท)',
         ];
         $data = $this->tableInfo->prodTypeInfo();
-        return view('support-data', compact('title', 'table', 'data', 'accCode', 'tableType'));
+        return view('it-support.support-data', compact('title', 'table', 'data', 'accCode', 'tableType'));
     }
 
     private function samplePayment($accCode, $branchCode, $req) {
@@ -104,6 +104,6 @@ class dupFormAddData extends Controller
         $sidebarInfo = new sidebarInfo();
         $sidebarChat = $sidebarInfo->getEmpTasks($branchCode);
         $regionThai = ['1' => 'กรุงเทพ', '2' => 'ภาคเหนือ', '3' => 'ภาคกลาง', '4' => 'ภาคใต้', '5' => 'ภาคอีสาน', '6' => 'ภาคตะวันออก'];
-        return view('payment-data', compact('title', 'table', 'data', 'accCode', 'sidebarChat', 'regionThai', 'dataDesc'));
+        return view('sale-admin.payment-data', compact('title', 'table', 'data', 'accCode', 'sidebarChat', 'regionThai', 'dataDesc'));
     }
 }

@@ -12,6 +12,7 @@
         rel="stylesheet">
     <title>เพิ่มข้อมูลใบกำกับภาษี</title>
 
+    {{-- JQUERY --}}
     <link rel="stylesheet" href="{{ asset('css/jquery.Thailand.min.css') }}">
     <script src="{{ asset('js/addressThailand/jquery-3.7.1.min.js') }}"></script>
     <script src="{{ asset('js/addressThailand/JQL.min.js') }}"></script>
@@ -20,24 +21,24 @@
     <script src="{{ asset('js/addressThailand/jquery.Thailand.min.js') }}"></script> <!-- Plugin -->
 
     <script>
-        $(document).ready(function() {
-            $.Thailand({
-                database: '{{ asset('js/addressThailand/db.json') }}',
-                $district: $('#district'),
-                $amphoe: $('#amphoe'),
-                $province: $('#province'),
-                $zipcode: $('#zipcode'),
-            });
+      /* Address Thailand */
+      $(document).ready(function() {
+        $.Thailand({
+          database: '{{ asset('js/addressThailand/db.json') }}',
+          $district: $('#district'),
+          $amphoe: $('#amphoe'),
+          $province: $('#province'),
+          $zipcode: $('#zipcode'),
         });
-    </script>
+      });
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var today = new Date().toISOString().split('T')[0];
-            var invoiceShipDateInput = document.getElementById('invoiceShipDate');
-            invoiceShipDateInput.setAttribute('min', today);
-            invoiceShipDateInput.value = today;
-        });
+      /* Date Picker */
+      document.addEventListener('DOMContentLoaded', function() {
+        var today = new Date().toISOString().split('T')[0];
+        var invoiceShipDateInput = document.getElementById('invoiceShipDate');
+        invoiceShipDateInput.setAttribute('min', today);
+        invoiceShipDateInput.value = today;
+      });
     </script>
 </head>
 

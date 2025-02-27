@@ -1,4 +1,4 @@
-<script src="{{ asset('/js/assignTask.js') }}"></script>
+<script src="{{ asset('/js/sale-admin/assignTask.js') }}"></script>
 @extends('Header-Sidebar.layout')
 @section('title')
   มอบหมายงานให้สาขา
