@@ -74,7 +74,7 @@ class controlPage extends Controller
                 $request->merge(['replyId' => $taskLineID]);
 
                 $this->sendMsg->sendMessage($request);
-                $showchat = false;
+                session()->flash('showchat', false);
                 return view('main', compact('sidebarChat', 'showchat'));
             }
 
@@ -100,7 +100,7 @@ class controlPage extends Controller
                 $request->merge(['file' => "path"]);
                 $request->merge(['file_path' => $file_path]);
                 $this->sendMsg->sendMessage($request);
-                $showchat = false;
+                session()->flash('showchat', false);
                 return view('main', compact('sidebarChat', 'showchat'));
             }
         }

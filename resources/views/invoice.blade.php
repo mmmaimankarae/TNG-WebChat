@@ -63,11 +63,46 @@
       document.getElementById('quotaVersion').value = version;
     }
   </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const form = document.querySelector('form');
+      const errorMessage = document.getElementById('error-message');
+
+      console.log(localStorage);
+      form.addEventListener('submit', function (event) {
+        event.preventDefault();
+        const formData = new FormData(form);
+
+        fetch(form.action, {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            window.close();
+          } else {
+              errorMessage.textContent = 'เกิดข้อผิดพลาด โปรดตรวจสอบข้อมูลอีกครั้ง';
+              errorMessage.classList.remove('hidden');
+            }
+          })
+          .catch(error => {
+            errorMessage.textContent = 'เกิดข้อผิดพลาด โปรดตรวจสอบข้อมูลอีกครั้ง';
+            errorMessage.classList.remove('hidden');
+          });
+      });
+    });
+  </script>
 </head>
 
 <body class="bg-gray-100 font-sans leading-normal tracking-normal">
-  <form method="POST" action="{{ route('add-invoice') }}">
+<form method="POST" action="{{ route('add-invoice') }}">
     @csrf
+  <input type="hidden" name="invoiceEmpCode" value="{{ $empCode }}">
   <div class="container mx-auto p-4 md:p-5 bg-white shadow-md rounded-lg">
     <p class="text-2xl font-semibold mb-4">กรอกข้อมูลใบกำกับภาษี และข้อมูลของลูกค้า</p>
     <div class="flex items-center mb-4">
@@ -100,6 +135,7 @@
 
     <div class="my-4 grid grid-cols-2 gap-4">
       @if ($info)
+        <input type="hidden" name="taskCode" value="{{ $invoiceInfo['cusInfo']['TaskCode'] }}">
         <input type="hidden" name="invoiceCusCode" value="{{ $invoiceInfo['cusInfo']['CusPhoneCode'] }}">
         <div>
           <label for="invoiceQuotaCode" class="block text-left font-medium">เลขที่ใบเสนอราคา</label>
@@ -246,12 +282,12 @@
             placeholder:text-gray-400" placeholder="กรอกข้อมูลเพิ่มเติม (ไม่เกิน 500 ตัวอักษร)"></textarea>
       </div>
     </div>
-
+    <div id="error-message" class="text-sm text-red-500 my-4 hidden"></div>
     <div class="flex justify-end space-x-4 mt-4">
       <button type="submit" class="px-10 py-1.5 text-white bg-[#FF0000] shadow-sm rounded-lg hover:text-black hover:bg-slate-300">ตกลง</button>
       <button type="button" onclick="window.close()" class="px-10 py-1.5 bg-white shadow-sm rounded-lg hover:bg-slate-200">ยกเลิก</button>
     </div>
   </div>
-  </form>
+</form>
 </body>
 </html>

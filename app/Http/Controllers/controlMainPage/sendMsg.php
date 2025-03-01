@@ -48,7 +48,11 @@ class sendMsg extends Controller
                 $this->selecteQuota($request->input('quotaCode'), $request->input('version'));
             }
             $apiController = new ApiController($this->tasksModel);
-            return $apiController->uploadImages($request);
+            $sucess = $apiController->uploadImages($request);
+            if ($sucess) {
+                session()->flash('showchat', true);
+                return redirect()->back()->withInput();
+            }
         } elseif ($quote) {
             return $this->handleQuoteMessage($request, $replyId, $message, $quote, $taskCode);
         } else {
@@ -63,7 +67,8 @@ class sendMsg extends Controller
             $this->prepareQuoteMessage($request);
             $this->saveMessage($request);
             $this->tasksModel->setUpdateTime($taskCode);
-            return redirect()->back()->withInput()->with('showchat', true);
+            session()->flash('showchat', true);
+            return redirect()->back()->withInput();
         }
         return $this->handleErrorResponse($response);
     }
@@ -75,10 +80,7 @@ class sendMsg extends Controller
             $request->merge(['messageType' => 'text']);
             $this->saveMessage($request);
             $this->tasksModel->setUpdateTime($taskCode);
-            if ($request->hasSession()) {
-                $request->session()->flash('taskLineID', $replyId);
-                $request->session()->flash('showchat', true);
-            }
+            session()->flash('showchat', true);
             return redirect()->back()->withInput();
         }
         return $this->handleErrorResponse($response);

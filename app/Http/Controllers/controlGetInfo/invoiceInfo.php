@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 use App\Models\Nosql;
-use App\Http\Controllers\controlGetInfo\{quotationInfo, tableInfo, sidebarInfo};
+use App\Http\Controllers\controlGetInfo\quotationInfo;
 
 class invoiceInfo extends Controller
 {

@@ -8,13 +8,16 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 
 use App\Models\Nosql;
+use App\Models\Tasks;
 
 class Invoice extends Model
 {   
     private $nosql;
+    private $currentRoute;
 
     public function __construct() {
         $this->nosql = new Nosql();
+        $this->tasksModel = new Tasks();
     }
 
     public function setInvoice(Request $request) {
@@ -28,7 +31,7 @@ class Invoice extends Model
 
             $insert = DB::table('INVOICE')->insert([
                 'InvoiceCode' => $request->invoiceCode,
-                'InvoiceTaskCode' => $request->invoiceTaskCode,
+                'InvoiceTaskCode' => $request->taskCode,
                 'InvoiceQuotaCode' => $quotaCode,
                 'InvoiceCusCode' => $request->invoiceCusCode,
                 'InvoiceEmpCode' => $request->invoiceEmpCode,
@@ -46,7 +49,12 @@ class Invoice extends Model
 
             if($insert) {
                 $this->setInvoiceProdList($request);
+                if ($request->taskCode != null) {
+                    $success = $this->tasksModel->updateStatus($request->taskCode, '5', $request->invoiceEmpCode);  
+                }
             }
+
+            return response()->json(['success' => true, 'message' => 'บันทึกสำเร็จ']);
         } catch (\Exception $e) {
             \Log::error('Insert Error (m.Invoice): ' . $e->getMessage());
             return false;

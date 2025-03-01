@@ -39,7 +39,8 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function updateTotalPrice(radio) {
-    document.getElementById('totalPrice').value = radio.value;
+    const amount = radio.value.replace(/,/g, '');
+    document.getElementById('totalPrice').value = amount;
     document.getElementById('version').value = radio.getAttribute('data-version');
     const quotaCodeInput = document.getElementById('quotaCodeInput');
     if (quotaCodeInput != radio.getAttribute('data-quota-code')) {

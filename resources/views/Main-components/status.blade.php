@@ -6,8 +6,6 @@
           return 'showQuotationPopup';
         case '4':
           return 'showPaymentPopup';
-        case '5':
-          return 'showInvoicePopup';
         default:
           return '';
       }
@@ -16,7 +14,7 @@
 
   if (!function_exists('getHoverClass')) {
     function getHoverClass($key) {
-      return in_array($key, ['3', '4', '5']) ? 'hover:text-black hover:bg-red-300' : '';
+      return in_array($key, ['3', '4']) ? 'hover:text-black hover:bg-red-300' : '';
     }
   }
 @endphp
@@ -26,9 +24,15 @@
     @foreach ($statusThai as $key => $status)
       <div class="px-3">
         @if (old('taskStatus', $taskStatus) == $key)
-          <span id="{{ getPopupId($key) }}" type="button" class="inline-flex justify-center w-full px-3 py-1.5 bg-[#FF4343] shadow-sm rounded-md text-white {{ getHoverClass($key) }}">
-            {{ $status }}
-          </span>
+          @if ($key == '5')
+            <a href="{{ route('invoice', ['taskCode' => $taskCode] )}}" target="_blank" class="inline-flex justify-center w-full px-3 py-1.5 bg-[#FF4343] shadow-sm rounded-md text-white hover:text-black hover:bg-red-300">
+              {{ $status }}
+            </a>
+          @else
+            <span id="{{ getPopupId($key) }}" type="button" class="inline-flex justify-center w-full px-3 py-1.5 bg-[#FF4343] shadow-sm rounded-md text-white {{ getHoverClass($key) }}">
+              {{ $status }}
+            </span>
+          @endif
         @else
           <form method="POST" action="">
             @csrf
