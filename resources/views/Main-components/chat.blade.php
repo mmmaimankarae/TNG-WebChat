@@ -141,3 +141,33 @@
     </form>
   </div>
 </div>
+
+<script src="https://js.pusher.com/7.0/pusher.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        Pusher.logToConsole = true;
+
+        var pusher = new Pusher('bd7243421ec35da4e189', {
+            cluster: 'ap1',
+            forceTLS: true
+        });
+
+        var channel = pusher.subscribe('chat');
+        channel.bind('message-sent', function(data) {
+            var chatHistory = document.getElementById('chat-history');
+            var newMessage = document.createElement('div');
+            newMessage.classList.add('flex', 'items-start', 'justify-start', 'ml-3', 'gap-2.5', 'mt-5');
+            newMessage.innerHTML = `
+                <div class="flex flex-col w-full max-w-[320px] leading-1.5 p-3 bg-blue-100 rounded-xl">
+                    <div class="flex items-center space-x-2 rtl:space-x-reverse text-xs">
+                        <span id="userName" class="font-semibold w-2/5 truncate">${data.message.userName}</span>
+                        <span class="text-gray-700">${data.message.messageDate} ${data.message.messagetime}</span>
+                    </div>
+                    <p id="content" class="py-2 mt-1 text-sm text-gray-900 break-words whitespace-pre-wrap">${data.message.messageContent}</p>
+                </div>
+            `;
+            chatHistory.appendChild(newMessage);
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+        });
+    });
+</script>
