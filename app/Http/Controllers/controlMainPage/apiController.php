@@ -54,13 +54,17 @@ class ApiController extends Controller
 
             // ตรวจสอบสถานะการตอบกลับ
             if ($response->successful() && $response->json('status') == 'success') {
-                return redirect()->back()->withInput()->with('select', true);
+                session()->flash('showchat', true);
+                return redirect()->back()->withInput();
             } else {
-                return redirect()->back()->withErrors(['quotaError' => 'เกิดข้อผิดพลาด โปรดลองใหม่อีกครั้ง'])->withInput()->with('select', true);
+                \Log::error('Error sending image: ' . $response);
+                session()->flash('showchat', true);
+                return redirect()->back()->withInput()->with('error', 'ไม่สามารถใช้งาน AI ได้ โปรดลองใหม่อีกครั้ง');
             }
         } catch (\Exception $e) {
             \Log::error('Error occurred while sending file to Python: ' . $e->getMessage());
-            return redirect()->back()->withErrors(['quotaError' => 'เกิดข้อผิดพลาด โปรดลองใหม่อีกครั้ง'])->withInput()->with('select', true);
+            session()->flash('showchat', true);
+            return redirect()->back()->withInput()->with('error', 'ไม่สามารถใช้งาน AI ได้ โปรดลองใหม่อีกครั้ง');
         }
     }
 
@@ -98,11 +102,11 @@ class ApiController extends Controller
             if ($response->successful() && $response->json('status') == 'success') {
                 return true;
             } else {
-                return false;
+                return $response;
             }
         } catch (\Exception $e) {
             \Log::error('Error occurred while sending file to Python: ' . $e->getMessage());
-            return false;
+            return $e->getMessage();
         }
     }
 }

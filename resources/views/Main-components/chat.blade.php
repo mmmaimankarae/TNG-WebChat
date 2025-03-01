@@ -92,6 +92,13 @@
   @endforeach
 </div>
 
+@if (session('error'))
+<div class="bg-red-100 border border-red-400 text-sm text-red-700 p-2 rounded relative my-2" role="alert">
+  <strong class="font-bold">Error!</strong>
+  <span class="block sm:inline">{{ session('error') }}</span>
+</div>
+@endif
+
 {{-- ช่องส่งข้อมูล --}}
 <div class="sticky bottom-0 bg-white border-t border-gray-300">
   {{-- ข้อความที่ Quote ถึง --}}

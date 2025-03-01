@@ -47,12 +47,15 @@ class sendMsg extends Controller
                 $request->merge(['messageType' => "image-payment"]);
                 $this->selecteQuota($request->input('quotaCode'), $request->input('version'));
             }
+
             $apiController = new ApiController($this->tasksModel);
-            $sucess = $apiController->uploadImages($request);
-            if ($sucess) {
+            $response = $apiController->uploadImages($request);
+            if ($response === true) {
                 session()->flash('showchat', true);
                 return redirect()->back()->withInput();
             }
+
+            return $this->handleErrorResponse($response);
         } elseif ($quote) {
             return $this->handleQuoteMessage($request, $replyId, $message, $quote, $taskCode);
         } else {
@@ -86,18 +89,11 @@ class sendMsg extends Controller
         return $this->handleErrorResponse($response);
     }
 
-    private function handleResponse($response)
-    {
-        if ($response && $response->getStatusCode() === 200) {
-            return redirect()->back()->withInput()->with('showchat', true);
-        }
-        return $this->handleErrorResponse($response);
-    }
-
     private function handleErrorResponse($response)
     {
-        $errorMessage = $response ? $response->getBody()->getContents() : 'Error occurred';
-        return redirect()->back()->withInput()->withErrors(['message' => 'ไม่สามารถส่งข้อความได้: ' . $errorMessage]);
+        \Log::error('Error sending message: ' . $response);
+        session()->flash('showchat', true);
+        return redirect()->back()->withInput()->with('error', 'ไม่สามารถส่งข้อความ หรือ รูปภาพได้ โปรดลอง refesh');
     }
 
     private function prepareQuoteMessage(Request $request)
