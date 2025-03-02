@@ -112,51 +112,49 @@
     <div id="quoteContent" class="text-sm ml-10 w-3/4 truncate"></div>
   </div>
   <div class="flex items-center py-4 mx-5 space-x-2">
-    <form id="lineMessageForm" method="POST" action="{{ route('send-message') }}" enctype="multipart/form-data" class="flex w-full">
-      @csrf
-      {{-- ปุ่มอัพโหลดไฟล์ --}}
-      <input type="file" id="fileInput" name="file" style="display: none;" accept=".JPEG, .PNG" multiple>
-      <svg id="fileButton" class="w-9 h-9 text-sky-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-        <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4.243a1 1 0 1 0-2 0V11H7.757a1 1 0 1 0 0 2H11v3.243a1 1 0 1 0 2 0V13h3.243a1 1 0 1 0 0-2H13V7.757Z" clip-rule="evenodd"/>
+    <!-- <form id="lineMessageForm" method="POST" action="{{ route('send-message') }}" enctype="multipart/form-data" class="flex w-full"> -->
+    {{-- ปุ่มอัพโหลดไฟล์ --}}
+    <input type="file" id="fileInput" name="file" style="display: none;" accept=".JPEG, .PNG" multiple>
+    <svg id="fileButton" class="w-9 h-9 text-sky-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+      <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4.243a1 1 0 1 0-2 0V11H7.757a1 1 0 1 0 0 2H11v3.243a1 1 0 1 0 2 0V13h3.243a1 1 0 1 0 0-2H13V7.757Z" clip-rule="evenodd"/>
+    </svg>
+  
+    {{-- ช่องกรอกข้อความ --}}
+    <input type="hidden" name="quoteToken" id="quoteToken">
+    <input type="hidden" name="quoteContentInput" id="quoteContentInput">
+    <input type="hidden" name="quoteTypeInput" id="quoteTypeInput">
+    <input type="hidden" name="replyId" value="{{ old('replyId', $taskLineID) }}">
+    <input type="hidden" name="replyName" value="{{ old('replyName', $cusName) }}">
+    <input type="hidden" name="cusCode" value="{{ old('cusCode', $cusCode) }}">
+    <input type="hidden" name="taskCode" value="{{ old('taskCode', $taskCode) }}">
+    <input type="hidden" name="userId" value="{{ old('userId', $accCode) }}">
+    <input type="hidden" name="userName" value="{{ old('userName', $accName->AccName) }}">
+    <input type="hidden" name="select" value="true">
+    <input type="hidden" name="taskStatus" value="{{ old('taskStatus', $taskStatus) }}">
+    <input type="hidden" name="empCode" value="{{ old('empCode', $empCode) }}">
+    <input type="hidden" name="branchCode" value="{{ old('branchCode', $branchCode) }}">
+    <input id="text-msg" type="text" name="message" autocomplete="off" class="flex-1 px-3 py-2 border ml-2 border-gray-500 rounded-full focus:outline-none focus:border-blue-500 text-sm" placeholder="พิมพ์ข้อความ..." required/>
+    <button onclick="sendMsg()" class="ml-2 text-blue-500 rounded-full hover:bg-blue-100">
+      <svg class="w-7 h-7 text-sky-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24" transform="rotate(90)">
+        <path fill-rule="evenodd" d="M12 2a1 1 0 0 1 .932.638l7 18a1 1 0 0 1-1.326 1.281L13 19.517V13a1 1 0 1 0-2 0v6.517l-5.606 2.402a1 1 0 0 1-1.326-1.281l7-18A1 1 0 0 1 12 2Z" clip-rule="evenodd"/>
       </svg>
-    
-      {{-- ช่องกรอกข้อความ --}}
-      <input type="hidden" name="quoteToken" id="quoteToken">
-      <input type="hidden" name="quoteContentInput" id="quoteContentInput">
-      <input type="hidden" name="quoteTypeInput" id="quoteTypeInput">
-      <input type="hidden" name="replyId" value="{{ old('replyId', $taskLineID) }}">
-      <input type="hidden" name="replyName" value="{{ old('replyName', $cusName) }}">
-      <input type="hidden" name="cusCode" value="{{ old('cusCode', $cusCode) }}">
-      <input type="hidden" name="taskCode" value="{{ old('taskCode', $taskCode) }}">
-      <input type="hidden" name="userId" value="{{ old('userId', $accCode) }}">
-      <input type="hidden" name="userName" value="{{ old('userName', $accName->AccName) }}">
-      <input type="hidden" name="select" value="true">
-      <input type="hidden" name="taskStatus" value="{{ old('taskStatus', $taskStatus) }}">
-      <input type="hidden" name="empCode" value="{{ old('empCode', $empCode) }}">
-      <input type="hidden" name="branchCode" value="{{ old('branchCode', $branchCode) }}">
-      <input type="text" name="message" autocomplete="off" class="flex-1 px-3 py-2 border ml-2 border-gray-500 rounded-full focus:outline-none focus:border-blue-500 text-sm" placeholder="พิมพ์ข้อความ..." required/>
-      <button type="submit" class="ml-2 text-blue-500 rounded-full hover:bg-blue-100">
-        <svg class="w-7 h-7 text-sky-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24" transform="rotate(90)">
-          <path fill-rule="evenodd" d="M12 2a1 1 0 0 1 .932.638l7 18a1 1 0 0 1-1.326 1.281L13 19.517V13a1 1 0 1 0-2 0v6.517l-5.606 2.402a1 1 0 0 1-1.326-1.281l7-18A1 1 0 0 1 12 2Z" clip-rule="evenodd"/>
-        </svg>
-      </button>
-    </form>
+    </button>
   </div>
 </div>
 
 {{-- Pusher: RealTime Chat --}}
 <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
 <script>
+  Pusher.logToConsole = true;
+  var pusher = new Pusher('{{ $pusher }}', {
+      cluster: '{{ $cluster }}',
+      forceTLS: true
+  });
+
+  var taskCode = '{{ $taskCode }}'; 
+  var channel = pusher.subscribe('chat.' + taskCode);
+
   document.addEventListener('DOMContentLoaded', function () {
-    Pusher.logToConsole = true;
-    var pusher = new Pusher('{{ $pusher }}', {
-        cluster: '{{ $cluster }}',
-        forceTLS: true
-    });
-
-    var taskCode = '{{ $taskCode }}'; 
-    var channel = pusher.subscribe('chat.' + taskCode);
-
     channel.bind('message-sent', function(data) {
       var chatHistory = document.getElementById('chat-history');
       var { userId, userName, messageDate, messagetime, messageType, messageContent, messageId } = data.message;
@@ -211,4 +209,37 @@
         chatHistory.scrollTop = chatHistory.scrollHeight;
     });
   });
+
+  const sendMsg = async (e) => {
+    const msg = document.getElementById("text-msg")
+    const file = document.getElementById("file")
+    const qouteToken = document.getElementById("quoteToken")
+    const qouteContentInput = document.getElementById("quoteContentInput")
+    const qouteTypeInput = document.getElementById("quoteTypeInput")
+    await fetch('{{ route('send-message') }}', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+      },
+      body: JSON.stringify({
+        quoteToken: qouteToken,
+        quoteContentInput: qouteContentInput,
+        quoteTypeInput: qouteTypeInput,
+        replyId: "{{ old('replyId', $taskLineID) }}",
+        replyName: "{{ old('replyName', $cusName) }}",
+        cusCode: "{{ old('cusCode', $cusCode) }}",
+        taskCode: "{{ old('taskCode', $taskCode) }}",
+        userId: "{{ old('userId', $accCode) }}",
+        userName: "{{ old('userName', $accName->AccName) }}",
+        select: true,
+        taskStatus: "{{ old('taskStatus', $taskStatus) }}",
+        empCode: "{{ old('empCode', $empCode) }}",
+        branchCode: "{{ old('branchCode', $branchCode) }}",
+        message: msg.value,
+        file: file.files[0]
+      })
+    })
+    msg.value = ""
+  }
 </script>

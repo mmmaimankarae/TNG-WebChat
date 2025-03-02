@@ -27,9 +27,4 @@ class MessageSent implements ShouldBroadcast
     {
         return new PrivateChannel('chat.' . $this->taskCode);
     }
-
-    public function broadcastAs()
-    {
-        return 'message-sent';
-    }
 }
