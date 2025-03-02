@@ -37,7 +37,9 @@
           @case('text')
             <p id="content" class="py-2 mt-1 text-sm text-gray-900 break-words whitespace-pre-wrap">{{ $msg['messageContent'] }}</p>
             @break
-          @case('image' || 'image-quotation')
+          @case('image')
+          @case('image-payment')
+          @case('image-quotation')
             @php
               $filename = basename($msg['messageContent']);
               $dirname = basename(dirname($msg['messageContent']));
@@ -93,10 +95,10 @@
 </div>
 
 @if (session('error'))
-<div class="bg-red-100 border border-red-400 text-sm text-red-700 p-2 rounded relative my-2" role="alert">
-  <strong class="font-bold">Error!</strong>
-  <span class="block sm:inline">{{ session('error') }}</span>
-</div>
+  <div class="bg-red-100 border border-red-400 text-sm text-red-700 p-2 rounded relative my-2" role="alert">
+    <strong class="font-bold">Error!</strong>
+    <span class="block sm:inline">{{ session('error') }}</span>
+  </div>
 @endif
 
 {{-- ช่องส่งข้อมูล --}}
@@ -142,32 +144,71 @@
   </div>
 </div>
 
+{{-- Pusher: RealTime Chat --}}
 <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        Pusher.logToConsole = true;
-
-        var pusher = new Pusher('bd7243421ec35da4e189', {
-            cluster: 'ap1',
-            forceTLS: true
-        });
-
-        var channel = pusher.subscribe('chat');
-        channel.bind('message-sent', function(data) {
-            var chatHistory = document.getElementById('chat-history');
-            var newMessage = document.createElement('div');
-            newMessage.classList.add('flex', 'items-start', 'justify-start', 'ml-3', 'gap-2.5', 'mt-5');
-            newMessage.innerHTML = `
-                <div class="flex flex-col w-full max-w-[320px] leading-1.5 p-3 bg-blue-100 rounded-xl">
-                    <div class="flex items-center space-x-2 rtl:space-x-reverse text-xs">
-                        <span id="userName" class="font-semibold w-2/5 truncate">${data.message.userName}</span>
-                        <span class="text-gray-700">${data.message.messageDate} ${data.message.messagetime}</span>
-                    </div>
-                    <p id="content" class="py-2 mt-1 text-sm text-gray-900 break-words whitespace-pre-wrap">${data.message.messageContent}</p>
-                </div>
-            `;
-            chatHistory.appendChild(newMessage);
-            chatHistory.scrollTop = chatHistory.scrollHeight;
-        });
+  document.addEventListener('DOMContentLoaded', function () {
+    Pusher.logToConsole = true;
+    var pusher = new Pusher('{{ $pusher }}', {
+        cluster: '{{ $cluster }}',
+        forceTLS: true
     });
+
+    var taskCode = '{{ $taskCode }}'; 
+    var channel = pusher.subscribe('chat.' + taskCode);
+
+    channel.bind('message-sent', function(data) {
+      var chatHistory = document.getElementById('chat-history');
+      var { userId, userName, messageDate, messagetime, messageType, messageContent, messageId } = data.message;
+      
+      var isBot = userId === 'TNG-bot';
+      var isEmployee = userId.startsWith('TNG');
+      var isCustomer = !isBot && !isEmployee;
+      
+      var bgColor = isBot ? 'bg-green-100' : (isEmployee ? 'bg-gray-200' : 'bg-blue-100');
+      var alignment = isCustomer ? 'justify-start ml-3' : 'justify-end mr-2';
+      var padding = isBot ? 'p-4' : 'p-3';
+
+      var newMessage = document.createElement('div');
+      newMessage.classList.add('flex', 'items-start', ...alignment.split(' '), 'gap-2.5', 'mt-5');
+
+      switch (messageType) {
+        case 'text':
+          newMessage.innerHTML = `
+          <div class="flex flex-col w-full max-w-[320px] leading-1.5 ${padding} ${bgColor} rounded-xl">
+            <div class="flex items-center space-x-2 text-xs">
+              <span class="font-semibold w-2/5 truncate">${userName}</span>
+              <span class="text-gray-700">${messageDate} ${messagetime}</span>
+            </div>
+            <p class="py-2 mt-1 text-sm text-gray-900 break-words whitespace-pre-wrap">${messageContent}</p>
+          </div>`;
+          break;
+        
+        case 'image':
+        case 'image-quotation':
+        case 'image-payment':
+          newMessage.innerHTML = `
+          <div class="flex flex-col w-full max-w-[320px] leading-1.5 ${padding} ${bgColor} rounded-xl">
+            <div class="flex items-center space-x-2 text-xs">
+              <span class="font-semibold w-2/5 truncate">${userName}</span>
+              <span class="text-gray-700">${messageDate} ${messagetime}</span>
+            </div>
+            <img class="rounded-md" src="${messageContent}"/>
+          </div>`;
+          break;
+        case 'sticker':
+          newMessage.innerHTML = `
+          <div class="flex flex-col w-full max-w-[320px] leading-1.5 ${padding} ${bgColor} rounded-xl">
+            <div class="flex items-center space-x-2 text-xs">
+              <span class="font-semibold w-2/5 truncate">${userName}</span>
+              <span class="text-gray-700">${messageDate} ${messagetime}</span>
+            </div>
+            <img src="${messageContent}" alt="sticker" class="w-2/5 h-auto mt-2"/>
+          </div>`;
+          break;
+        }
+        chatHistory.appendChild(newMessage);
+        chatHistory.scrollTop = chatHistory.scrollHeight;
+    });
+  });
 </script>

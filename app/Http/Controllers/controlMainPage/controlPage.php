@@ -37,6 +37,8 @@ class controlPage extends Controller
     {
         $empInfo = new empInfo();
         $sidebarInfo = new sidebarInfo();
+        $pusherKey = env('PUSHER_APP_KEY');
+        $pusherCluster = env('PUSHER_APP_CLUSTER');
         
         /* setting ค่า default ที่จำเป็น */
         $branchCode = $empInfo->getBranchCode();
@@ -121,7 +123,9 @@ class controlPage extends Controller
             'empCode' => $empCode,
             'branchCode' => $branchCode,
             'checkQuota' => $checkQuota,
-            'amountInfo' => $quotationInfo
+            'amountInfo' => $quotationInfo,
+            'pusher' => $pusherKey,
+            'cluster' => $pusherCluster
         ]);
     }
 }

@@ -15,14 +15,21 @@ class MessageSent implements ShouldBroadcast
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $message;
+    public $taskCode;
 
-    public function __construct($message)
+    public function __construct($message, $taskCode)
     {
         $this->message = $message;
+        $this->taskCode = $taskCode;
     }
 
     public function broadcastOn()
     {
-        return new PrivateChannel('chat');
+        return new PrivateChannel('chat.' . $this->taskCode);
+    }
+
+    public function broadcastAs()
+    {
+        return 'message-sent';
     }
 }
