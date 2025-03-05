@@ -1,6 +1,41 @@
 @import "tailwindcss";
 @source "../views";
 
+@font-face {
+    font-family: 'Kodchasan';
+    src: url('../fonts/Kodchasan-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Kodchasan';
+    src: url('../fonts/Kodchasan-SemiBold.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Kodchasan';
+    src: url('../fonts/Kodchasan-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Kodchasan';
+    src: url('../fonts/Kodchasan-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Kodchasan';
+    src: url('../fonts/Kodchasan-ExtraLight.ttf') format('truetype');
+    font-weight: 200;
+    font-style: normal;
+}
+
 body {
     font-family: 'Kodchasan', sans-serif;
 }

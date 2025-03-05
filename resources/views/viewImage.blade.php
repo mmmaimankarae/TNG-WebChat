@@ -3,8 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title> รูปภาพ </title>
+
   @vite('resources/css/app.css')
-  <title>รูปภาพ</title>
 </head>
 <body>
   <button type="button" onclick="window.close()" class="absolute top-5 left-20 px-10 py-1.5 text-sm font-semibold text-white bg-[#FF0000] rounded-full shadow-sm hover:bg-slate-400">
