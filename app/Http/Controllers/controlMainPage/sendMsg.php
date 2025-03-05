@@ -13,8 +13,6 @@ use App\Models\Tasks;
 use App\Http\Controllers\controlGetInfo\tasksInfo;
 use App\Http\Controllers\controlMainPage\ApiController;
 
-use Pusher\Pusher;
-
 class sendMsg extends Controller
 {
     private LineService $lineService;
@@ -52,11 +50,12 @@ class sendMsg extends Controller
 
             $apiController = new ApiController($this->tasksModel);
             $response = $apiController->uploadImages($request);
-            if ($response !== true) {
-                return $this->handleErrorResponse($response);
+            if ($response === true) {
+                session()->flash('showchat', true);
+                return redirect()->back()->withInput();
             }
 
-
+            return $this->handleErrorResponse($response);
         } elseif ($quote) {
             return $this->handleQuoteMessage($request, $replyId, $message, $quote, $taskCode);
         } else {
@@ -71,6 +70,8 @@ class sendMsg extends Controller
             $this->prepareQuoteMessage($request);
             $this->saveMessage($request);
             $this->tasksModel->setUpdateTime($taskCode);
+            session()->flash('showchat', true);
+            return redirect()->back()->withInput();
         }
         return $this->handleErrorResponse($response);
     }
@@ -82,29 +83,15 @@ class sendMsg extends Controller
             $request->merge(['messageType' => 'text']);
             $this->saveMessage($request);
             $this->tasksModel->setUpdateTime($taskCode);
+            session()->flash('showchat', true);
+            return redirect()->back()->withInput();
         }
         return $this->handleErrorResponse($response);
     }
 
-    private function sendPusher($message, $taskCode)
-    {
-        $pusher = new Pusher(
-            env('PUSHER_APP_KEY'),
-            env('PUSHER_APP_SECRET'),
-            env('PUSHER_APP_ID'),
-            [
-                'cluster' => env('PUSHER_APP_CLUSTER'),
-                'useTLS' => true,
-            ]
-        );
-        $pusher->trigger("chat.$taskCode", 'message-sent', [
-            'message' => $message
-        ]);
-    }
-
     private function handleErrorResponse($response)
     {
-        // \Log::error('Error sending message: ' . $response);
+        \Log::error('Error sending message: ' . $response);
         session()->flash('showchat', true);
         return redirect()->back()->withInput()->with('error', 'ไม่สามารถส่งข้อความ หรือ รูปภาพได้ โปรดลอง refesh');
     }
@@ -128,9 +115,7 @@ class sendMsg extends Controller
     private function saveMessage(Request $request)
     {
         try {
-            $message = $this->msgPattern($request);
-            $this->nosql->insertDocument(env('MONGO_COLLECTION'), $message);
-            $this->sendPusher($message, $request->input('taskCode'));
+            $this->nosql->insertDocument(env('MONGO_COLLECTION'), $this->msgPattern($request));
         } catch (\Exception $e) {
             \Log::error('Nosql Error saving message (c.sendMsg): ' . $e->getMessage());
         }
